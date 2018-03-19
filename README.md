@@ -1,3 +1,8 @@
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/COS301-OptimizePrime/COS301-DnD.png?columns=all)](https://waffle.io/COS301-OptimizePrime/COS301-DnD?utm_source=badge)
-# COS301-D-D
-Our COS 301 Year Project. Dungeons and Dragons Game State Manager.
+# cos301_demo
+
+A new Flutter application.
+
+## Getting Started
+
+For help getting started with Flutter, view our online
+[documentation](https://flutter.io/).

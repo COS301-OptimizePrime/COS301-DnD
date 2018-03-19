@@ -1,8 +1,9 @@
-# cos301_demo
+# Our first demo Use Case
 
-A new Flutter application.
+Make sure you have Flutter SDK installed on your computer and setup in your environment.
+I recommend using the developer options on your android phone if you have one.
+Otherwise install an emulator.
 
-## Getting Started
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+## What you need 
+https://flutter.io/get-started/install/

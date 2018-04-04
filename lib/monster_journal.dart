@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:dnd_301_final/login_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class Monster {
@@ -238,6 +243,27 @@ class MonsterJournal extends StatelessWidget {
           key: scaffoldKey,
           appBar: new AppBar( //AppBars are the bars on top of the view
             title: const Text('Monster Journal'),
+            actions: <Widget>[
+          new Padding(
+          padding: new EdgeInsets.symmetric(vertical: 16.0),
+        child: new Material(
+          borderRadius: new BorderRadius.circular(30.0),
+          elevation: 5.0,
+          child: new MaterialButton(
+            minWidth: 200.0,
+            height: 42.0,
+            onPressed: () async {
+              GoogleSignIn _googleSignIn = new GoogleSignIn();
+              FirebaseAuth.instance.signOut();
+              await _googleSignIn.signOut();
+              Navigator.of(context).pushNamed(LoginPage.tag);
+            },
+            color: Colors.deepOrange,
+            child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+          ),
+        ),
+      ),
+            ],
           ),
           //this holds our 'Card's
           //it's a listview widget that 'lists'

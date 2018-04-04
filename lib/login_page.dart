@@ -1,8 +1,12 @@
 import 'dart:async';
-//import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:flutter/material.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -11,6 +15,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = new GoogleSignIn();
+
+  Future<String> _testSignInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser.authentication;
+    final FirebaseUser user = await _auth.signInWithGoogle(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+
+    Navigator.pop(context); //pop dialog
+    Navigator.of(context).pushNamed(MonsterJournal.tag);
+
+    print("This user is signed in: $user");
+    return 'signInWithGoogle succeeded: $user';
+  }
+
+  Future <LoginPage> _signOut()  async{
+    await FirebaseAuth.instance.signOut();
+    _googleSignIn.signOut();
+    return new LoginPage();
+  }
 
   //firebase signin
 //  final googleSignIn = new GoogleSignIn();
@@ -115,6 +153,36 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
+    final googleButton = new Padding(
+      padding: new EdgeInsets.symmetric(vertical: 16.0),
+      child: new Material(
+        borderRadius: new BorderRadius.circular(30.0),
+        elevation: 5.0,
+        child: new MaterialButton(
+          minWidth: 200.0,
+          height: 42.0,
+          onPressed: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              child: loginDialog,
+            );
+
+            _testSignInWithGoogle();
+
+
+//            new Future.delayed(new Duration(seconds: 3), () {
+//              Navigator.pop(context); //pop dialog
+//              Navigator.of(context).pushNamed(MonsterJournal.tag);
+
+//            });
+          },
+          color: Colors.deepOrange,
+          child: new Text('Google Sign In!', style: new TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
+
 
     return new Scaffold(
       body: new Center(
@@ -130,7 +198,8 @@ class _LoginPageState extends State<LoginPage> {
             password,
             new SizedBox(height: 24.0),
             loginButton,
-            signUpButton
+            signUpButton,
+            googleButton
           ],
         ),
       ),

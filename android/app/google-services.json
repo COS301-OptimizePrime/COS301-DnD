@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "756118574251",
+    "firebase_url": "https://dnd-game-manager.firebaseio.com",
+    "project_id": "dnd-game-manager",
+    "storage_bucket": "dnd-game-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756118574251:android:c087f06d6ac8a325",
+        "android_client_info": {
+          "package_name": "com.optimizieprime.dnd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756118574251-aodmgbm3l9dnjrleh9a2fkr5d5fupbud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.optimizieprime.dnd",
+            "certificate_hash": "e9d547d6bbbb21a533c4bdeea0bddcf413730dff"
+          }
+        },
+        {
+          "client_id": "756118574251-7r644hrg7qn6ndlaai5tti66mnvro38u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPXcOxHPkavbdrBDgGr2c8I6e4yzO8vU4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756118574251-7r644hrg7qn6ndlaai5tti66mnvro38u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -256,7 +256,7 @@ class MonsterJournal extends StatelessWidget {
               GoogleSignIn _googleSignIn = new GoogleSignIn();
               FirebaseAuth.instance.signOut();
               await _googleSignIn.signOut();
-              Navigator.of(context).pushNamed(LoginPage.tag);
+              Navigator.pop(context);
             },
             color: Colors.deepOrange,
             child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),

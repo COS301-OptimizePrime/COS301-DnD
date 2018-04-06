@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
     MonsterJournal.tag: (context) => new MonsterJournal()
+//    SignUpPage.tsg: (context) => new SignUpPage();
   };
 
   @override

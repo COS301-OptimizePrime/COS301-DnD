@@ -65,61 +65,7 @@ class MonsterItem extends StatelessWidget {
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.white);//make our title text look nice
     final TextStyle descriptionStyle = theme.textTheme.subhead; //give our description a matching style
 
-    Column flatbtnCol = new Column(
-      children: <Widget>[
-        new SizedBox( //holds our image
-          height: 184.0,
-          child: new Stack( //this stack is redundant - was originally to place text name over image
-              children: <Widget>[
-                new Positioned.fill(
-                  child: new Image.asset(
-                    mon.assetName,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ]
-          ),
-        ),
-        new Row( //allows us to place items consecutively on the horizontal
-          children: <Widget>[
-            new Padding(  //padding on top and bottom to space from image box and description
-              padding: new EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-              child: new Text(mon.title,  //text box with name
-                style: titleStyle,
-                textAlign: TextAlign.left,),//aligned left of row
-            ),
-            const SizedBox(), //all rows must contain the same amount of coloumns
-            //so we use a 'blank' widget to fill holes in our 'table'
-          ],
-        ),
-
-        new Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-            child: new Container(
-              key: key,
-              child: new Text(mon.description, style: descriptionStyle),//our description
-            )
-        ),
-        new Table(  //this table was to be used to hold the stats of the monster
-            columnWidths: const <int, TableColumnWidth>{
-              0: const FlexColumnWidth(1.0) //this means to resize children to fit all (1.0/1.0) available space
-            },
-            children: <TableRow>[ //a collection of rows in out stats table
-              new TableRow( //only one for now - didnt add stats examples
-                  children: <Widget>[
-                    new Padding(
-                        padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                        //our stats text - styled to be blue and bold
-                        child: new Text('Stats', style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0/15.0))
-                    ),
-                    const SizedBox(),//agian keep columns in each row the same
-                  ]
-              ),
-            ]
-        ),
-      ],
-    );
-
+    // Full description of monster
     FlatButton flatbtn = new FlatButton(
         child: const Text('View More'),//text for button
         textColor: Colors.deepOrange, //color of text
@@ -137,7 +83,61 @@ class MonsterItem extends StatelessWidget {
               appBar: new AppBar(
                 title: const Text('Monster Journal Entry'), //title of view
               ),
-              body: flatbtnCol
+              body: new ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(10.0),
+                children: <Widget>[
+                  new SizedBox( //holds our image
+                      height: 184.0,
+                      child: new Stack( //this stack is redundant - was originally to place text name over image
+                          children: <Widget>[
+                            new Positioned.fill(
+                                child: new Image.asset(
+                                  mon.assetName,
+                                  fit: BoxFit.cover,
+                                )
+                            )
+                          ]
+                      )
+                  ),
+                  new Row( //allows us to place items consecutively on the horizontal
+                    children: <Widget>[
+                      new Padding(  //padding on top and bottom to space from image box and description
+                        padding: new EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                        child: new Text(mon.title,  //text box with name
+                          style: titleStyle,
+                          textAlign: TextAlign.left,),//aligned left of row
+                      ),
+                      const SizedBox(), //all rows must contain the same amount of coloumns
+                      //so we use a 'blank' widget to fill holes in our 'table'
+                    ],
+                  ),
+                  new Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
+                      child: new Container(
+                        key: key,
+                        child: new Text(mon.description, style: descriptionStyle),//our description
+                      )
+                  ),
+                  new Table(  //this table was to be used to hold the stats of the monster
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: const FlexColumnWidth(1.0) //this means to resize children to fit all (1.0/1.0) available space
+                      },
+                      children: <TableRow>[ //a collection of rows in out stats table
+                        new TableRow( //only one for now - didnt add stats examples
+                            children: <Widget>[
+                              new Padding(
+                                  padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 4.0),
+                                  //our stats text - styled to be blue and bold
+                                  child: new Text('Stats', style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0/15.0))
+                              ),
+                              const SizedBox(),//agian keep columns in each row the same
+                            ]
+                        ),
+                      ]
+                  ),
+                ]
+              )
             );
           }
         ));}

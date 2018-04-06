@@ -13,7 +13,7 @@ Pull the latest version from the login branch
 
 Run the following command: keytool -exportcert -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
 
-Where %USERPROFILE% is your user directory. e.g.: C:\Users\John
+Where %USERPROFILE% is your user directory. e.g.: C:\Users\John\
 
 Look for the SHA1 code, it will have a format of: XX:XX:XX....:XX
 

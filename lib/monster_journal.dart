@@ -36,6 +36,11 @@ final List<Monster> monsters = <Monster>[
         'They are ruthless militaristic brutes whose mastery of metalwork is legendary.',
   ),
   const Monster(
+    assetName: 'monster_images/placeholder.jpg',
+    title: 'Placeholder',
+    description: 'Boss'
+  ),
+  const Monster(
     assetName: 'monster_images/dragon.png',
     title: 'Dragon',
     description: 'True dragons are known and feared for their predatory cunning and their magic, '
@@ -49,15 +54,14 @@ final List<Monster> monsters = <Monster>[
   )
 ];
 
-//This is the mosnter card class - aka the Card's
+//This is the monster card class - aka the Cards
 class MonsterItem extends StatelessWidget {
   MonsterItem({ Key key, @required this.mon })
-      : assert(mon != null && mon.isValid), //if it recieves a null monster object to populate the card, fatal error
+      : assert(mon != null && mon.isValid), //if it receives a null monster object to populate the card, fatal error
         super(key: key);
 
-  static const double height = 366.0; //just a value that fits nicely - consider calculating
+  static const double height = 187.0; // original value was 366.0
   final Monster mon;
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,87 +69,9 @@ class MonsterItem extends StatelessWidget {
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.white);//make our title text look nice
     final TextStyle descriptionStyle = theme.textTheme.subhead; //give our description a matching style
 
-    // Full description of monster
-    FlatButton flatbtn = new FlatButton(
-        child: const Text('View More'),//text for button
-        textColor: Colors.deepOrange, //color of text
-        //when our button is pushed perform the following:
-        //we are going to create a new widget (which is our new page) and push it to the top
-        // of our 'view' stack, thus forcing it to display without
-        //losing our current 'view'
-        //when we are done with our monster detail view
-        //it is 'popped' off the stack and we 'go back' to our
-        //previous screen - Navigator handles this stack
-        onPressed: () {Navigator.of(context).push(new MaterialPageRoute<Null>(
-          builder: (BuildContext context) {
-            //build a new widget
-            return new Scaffold( //new scaffold
-              appBar: new AppBar(
-                title: const Text('Monster Journal Entry'), //title of view
-              ),
-              body: new ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(10.0),
-                children: <Widget>[
-                  new SizedBox( //holds our image
-                      height: 184.0,
-                      child: new Stack( //this stack is redundant - was originally to place text name over image
-                          children: <Widget>[
-                            new Positioned.fill(
-                                child: new Image.asset(
-                                  mon.assetName,
-                                  fit: BoxFit.cover,
-                                )
-                            )
-                          ]
-                      )
-                  ),
-                  new Row( //allows us to place items consecutively on the horizontal
-                    children: <Widget>[
-                      new Padding(  //padding on top and bottom to space from image box and description
-                        padding: new EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                        child: new Text(mon.title,  //text box with name
-                          style: titleStyle,
-                          textAlign: TextAlign.left,),//aligned left of row
-                      ),
-                      const SizedBox(), //all rows must contain the same amount of coloumns
-                      //so we use a 'blank' widget to fill holes in our 'table'
-                    ],
-                  ),
-                  new Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
-                      child: new Container(
-                        key: key,
-                        child: new Text(mon.description, style: descriptionStyle),//our description
-                      )
-                  ),
-                  new Table(  //this table was to be used to hold the stats of the monster
-                      columnWidths: const <int, TableColumnWidth>{
-                        0: const FlexColumnWidth(1.0) //this means to resize children to fit all (1.0/1.0) available space
-                      },
-                      children: <TableRow>[ //a collection of rows in out stats table
-                        new TableRow( //only one for now - didnt add stats examples
-                            children: <Widget>[
-                              new Padding(
-                                  padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 4.0),
-                                  //our stats text - styled to be blue and bold
-                                  child: new Text('Stats', style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0/15.0))
-                              ),
-                              const SizedBox(),//agian keep columns in each row the same
-                            ]
-                        ),
-                      ]
-                  ),
-                ]
-              )
-            );
-          }
-        ));}
-    );
-
     //a box that is of explicit size
-    SizedBox sizedBox = new SizedBox(
-      height: 184.0,
+    SizedBox photoAndTitle = new SizedBox(
+      height: 92.0, // 184.0 is original height
       child: new Stack(//stacks allow us to place widgets on top of each other
         children: <Widget>[
           new Positioned.fill(//add image to bottom of stack
@@ -154,7 +80,7 @@ class MonsterItem extends StatelessWidget {
               fit: BoxFit.cover,//fit image to box
             ),
           ),
-          new Positioned(//posititoned widgets can be moved within their parent (aka stack)
+          new Positioned(//positioned widgets can be moved within their parent (aka stack)
             bottom: 16.0,
             left: 16.0,
             right: 16.0,
@@ -170,18 +96,18 @@ class MonsterItem extends StatelessWidget {
       ),
     );
 
-    // description and view more button
-    Expanded expanded = new Expanded(
+    // description
+    Expanded description = new Expanded(
       child: new Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0), //padding from Left Top Right Bottom
+        padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0), //padding from Left Top Right Bottom
         child: new DefaultTextStyle( //text widget to pass a text styling down
           softWrap: false,
           overflow: TextOverflow.ellipsis,//when text is too much for a container it should elipse (...)
           style: descriptionStyle,
-          child: new Column(  //add a coloumn to allow our text to aign on x(horizontal) axis
+          child: new Column(  //add a column to allow our text to aign on x(horizontal) axis
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Text(mon.description, //our text widget with our descripion
+              new Text(mon.description, //our text widget with our description
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis //overflow
               )
@@ -195,25 +121,89 @@ class MonsterItem extends StatelessWidget {
       //move to crossaxis (aka horizontal as we are vertical)'s start (left)
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget> [
-        // photo and title
-        sizedBox,
-        expanded,
-        // share, explore buttons
-        //this is the bar below our description that allows for 'button' widgets
-        new ButtonTheme.bar(child: new ButtonBar(
-            alignment: MainAxisAlignment.start,
-            children: <Widget> [flatbtn]
-        ))
+        photoAndTitle,
+        description
       ]
     ));
+
+    // A detailed view of the monster that is called when a monster card is tapped
+    ListView detailedView = new ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(10.0),
+        children: <Widget>[
+          new SizedBox( //holds our image
+              height: 184.0,
+              child: new Stack( //this stack is redundant - was originally to place text name over image
+                  children: <Widget>[
+                    new Positioned.fill(
+                        child: new Image.asset(
+                          mon.assetName,
+                          fit: BoxFit.cover,
+                        )
+                    )
+                  ]
+              )
+          ),
+          new Row( //allows us to place items consecutively on the horizontal
+            children: <Widget>[
+              new Padding(  //padding on top and bottom to space from image box and description
+                padding: new EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                child: new Text(mon.title,  //text box with name
+                  style: titleStyle,
+                  textAlign: TextAlign.left,),//aligned left of row
+              ),
+              const SizedBox(), //all rows must contain the same amount of columns
+              //so we use a 'blank' widget to fill holes in our 'table'
+            ],
+          ),
+          new Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
+              child: new Container(
+                key: key,
+                child: new Text(mon.description, style: descriptionStyle),//our description
+              )
+          ),
+          new Table(  //this table was to be used to hold the stats of the monster
+              columnWidths: const <int, TableColumnWidth>{
+                0: const FlexColumnWidth(1.0) //this means to resize children to fit all (1.0/1.0) available space
+              },
+              children: <TableRow>[ //a collection of rows in out stats table
+                new TableRow( //only one for now - didnt add stats examples
+                    children: <Widget>[
+                      new Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 4.0),
+                          //our stats text - styled to be blue and bold
+                          child: new Text('Stats', style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0/15.0))
+                      ),
+                      const SizedBox(),//agian keep columns in each row the same
+                    ]
+                ),
+              ]
+          ),
+        ]
+    );
 
     return new SafeArea(
         top: false,
         bottom: false,
-        child: new Container(
-            padding: const EdgeInsets.all(8.0),
-            height: height,
-            child: card
+        // Allow user to tap card
+        child: new GestureDetector(
+            onTap: () {Navigator.of(context).push(new MaterialPageRoute<Null>(
+                builder: (BuildContext context) {
+                  //build a new widget
+                  return new Scaffold( //new scaffold
+                      appBar: new AppBar(
+                        title: const Text('Monster Journal Entry'), //title of view
+                      ),
+                      body: detailedView
+                  );
+                }
+            ));},
+            child: new Container(
+                padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                height: height,
+                child: card
+            )
         )
     );
   }
@@ -223,7 +213,7 @@ class MonsterItem extends StatelessWidget {
 //all 'build' functions are called when fast reload is used
 //responisble for populating our page with Cards
 class MonsterJournal extends StatelessWidget {
-  static const String routeName = '/material/cards';//honestly i've removed this and it didnt do anyhting - lit no idea what it does
+  static const String routeName = '/material/cards';//honestly i've removed this and it didn't do anything - lit no idea what it does
   //used to identify our 'scaffold' from anywhere - not used but a concept worth looking at
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 

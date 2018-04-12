@@ -1,9 +1,22 @@
-# Our first demo Use Case
+# dnd_301_final
 
-Make sure you have Flutter SDK installed on your computer and setup in your environment.
-I recommend using the developer options on your android phone if you have one.
-Otherwise install an emulator.
+Flutter application containing Google Login functionality.
 
+## Getting Started
 
-## What you need 
-https://flutter.io/get-started/install/
+For help getting started with Flutter, view our online
+[documentation](https://flutter.io/).
+
+## For compling onto android device:
+
+Pull the latest version from the login branch
+
+Run the following command: keytool -exportcert -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+
+Where %USERPROFILE% is your user directory. e.g.: C:\Users\John\
+
+Look for the SHA1 code, it will have a format of: XX:XX:XX....:XX
+
+Go to the group Firebase Console, and add your personal SHA1 key in Settings->SHA certificate fingerprints
+
+After that, you should be able to compile and sign-in with a google account with no issues

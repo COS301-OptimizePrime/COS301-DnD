@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:dnd_301_final/login_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class Monster {
@@ -208,13 +213,15 @@ class MonsterItem extends StatelessWidget {
 //all 'build' functions are called when fast reload is used
 //responisble for populating our page with Cards
 class MonsterJournal extends StatelessWidget {
-  static const String routeName = '/material/cards';//honestly i've removed this and it didn't do anything - lit no idea what it does
+  static const String routeName = '/material/cards';//honestly i've removed this and it didnt do anyhting - lit no idea what it does
   //used to identify our 'scaffold' from anywhere - not used but a concept worth looking at
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  static String tag = 'monster-journal';
+
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp( //return this whole monter journal as a widget to be displayed
+    return new MaterialApp( //return this whole monster journal as a widget to be displayed
       title: 'DnD 301 Use Case Demo',
       theme: new ThemeData(
           brightness: Brightness.dark,
@@ -226,6 +233,27 @@ class MonsterJournal extends StatelessWidget {
           key: scaffoldKey,
           appBar: new AppBar( //AppBars are the bars on top of the view
             title: const Text('Monster Journal'),
+            actions: <Widget>[
+          new Padding(
+          padding: new EdgeInsets.symmetric(vertical: 16.0),
+        child: new Material(
+          borderRadius: new BorderRadius.circular(30.0),
+          elevation: 5.0,
+          child: new MaterialButton(
+            minWidth: 200.0,
+            height: 42.0,
+            onPressed: () async {
+              GoogleSignIn _googleSignIn = new GoogleSignIn();
+              FirebaseAuth.instance.signOut();
+              await _googleSignIn.signOut();
+              Navigator.pop(context);
+            },
+            color: Colors.deepOrange,
+            child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+          ),
+        ),
+      ),
+            ],
           ),
           //this holds our 'Card's
           //it's a listview widget that 'lists'

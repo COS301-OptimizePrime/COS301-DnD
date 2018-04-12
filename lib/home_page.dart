@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:dnd_301_final/menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
@@ -47,8 +50,41 @@ class HomePage extends StatelessWidget {
       ),
     );
 
-    return new Scaffold(
-      body: body,
+    return new MaterialApp(
+        title: 'DnD 301 Use Case Demo',
+        theme: new ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: Colors.grey,
+            accentColor: Colors.deepOrange
+        ),
+        home: new Scaffold(
+          body: body,
+          drawer: new Menu(),
+          appBar: new AppBar( //AppBars are the bars on top of the view
+              title: const Text('Hoome Page'),
+              actions: <Widget>[
+                new Padding(
+                  padding: new EdgeInsets.symmetric(vertical: 16.0),
+                  child: new Material(
+                    borderRadius: new BorderRadius.circular(30.0),
+                    elevation: 5.0,
+                    child: new MaterialButton(
+                      minWidth: 200.0,
+                      height: 42.0,
+                      onPressed: () async {
+                        GoogleSignIn _googleSignIn = new GoogleSignIn();
+                        FirebaseAuth.instance.signOut();
+                        await _googleSignIn.signOut();
+                        Navigator.pop(context);
+                      },
+                      color: Colors.deepOrange,
+                      child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ]
+          )
+        )
     );
   }
 }

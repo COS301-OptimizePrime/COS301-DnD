@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
     Navigator.pop(context); //pop dialog
-    Navigator.of(context).pushNamed(MonsterJournal.tag);
+    Navigator.of(context).pushNamed(HomePage.tag);
 
     googleSignedIn = true;
     print("This user is signed in: $user");
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
           if(await signInWithEmailAndPass())
           {
             Navigator.pop(context); //pop dialog
-            Navigator.of(context).pushNamed(MonsterJournal.tag);
+            Navigator.of(context).pushNamed(HomePage.tag);
           }
           else
           {
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
           print(newUser.toString());
 
           Navigator.pop(context); //pop dialog
-          Navigator.of(context).pushNamed(MonsterJournal.tag);
+          Navigator.of(context).pushNamed(HomePage.tag);
         }
         else
         {

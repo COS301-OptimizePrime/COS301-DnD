@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dnd_301_final/menu.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 // Copyright 2016 The Chromium Authors. All rights reserved.
@@ -231,6 +232,7 @@ class MonsterJournal extends StatelessWidget {
       //Scaffolds are like vertical stacks - they hold widgets like a ladder from top to bottom
       home: new Scaffold(
           key: scaffoldKey,
+          drawer: new Menu(),
           appBar: new AppBar( //AppBars are the bars on top of the view
             title: const Text('Monster Journal'),
             actions: <Widget>[

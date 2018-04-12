@@ -36,11 +36,6 @@ final List<Monster> monsters = <Monster>[
         'They are ruthless militaristic brutes whose mastery of metalwork is legendary.',
   ),
   const Monster(
-    assetName: 'monster_images/placeholder.jpg',
-    title: 'Placeholder',
-    description: 'Boss'
-  ),
-  const Monster(
     assetName: 'monster_images/dragon.png',
     title: 'Dragon',
     description: 'True dragons are known and feared for their predatory cunning and their magic, '

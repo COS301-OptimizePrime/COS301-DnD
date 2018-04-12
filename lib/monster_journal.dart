@@ -139,7 +139,7 @@ class MonsterItem extends StatelessWidget {
                     new Positioned.fill(
                         child: new Image.asset(
                           mon.assetName,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         )
                     )
                   ]

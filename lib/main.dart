@@ -2,18 +2,23 @@ import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:flutter/material.dart';
-
+import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/character_selection.dart';
 
 
 void main() => runApp(new MyApp());
 
 
 class MyApp extends StatelessWidget {
+
+  AppData appData = AppData.instance();
+
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
-    MonsterJournal.tag: (context) => new MonsterJournal()
-//    SignUpPage.tsg: (context) => new SignUpPage();
+    MonsterJournal.tag: (context) => new MonsterJournal(),
+    CharacterSelection.tag: (context) => new CharacterSelection()
+//    HomePage.tsg: (context) => new HomePage();
   };
 
   @override
@@ -24,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.grey,
-        primaryColor: Colors.black,
+//        primaryColor: Colors.black,
         accentColor: Colors.deepOrange,
         textSelectionHandleColor: Colors.white,
         fontFamily: 'Nunito',

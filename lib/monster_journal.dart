@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:dnd_301_final/menu.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_301_final/login_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
@@ -28,27 +26,27 @@ class Monster {
 
 final List<Monster> monsters = <Monster>[
   const Monster(
-    assetName: 'monster_images/beholder.jpg',
+    assetName: 'assets/monster_images/beholder.jpg',
     title: 'Beholder',
     description: 'One glance at a beholder is enough to assess its foul and otherworldly nature.'
       ' A beholder’s spheroid body is covered in chitinous plates,'
       'scales, or leathery flesh.',
   ),
   const Monster(
-    assetName: 'monster_images/fire_giant.jpg',
+    assetName: 'assets/monster_images/fire_giant.jpg',
     title: 'Fire Giant',
     description: 'Master crafters and organized warriors, '
         'fire giants dwell among volcanoes, lava floes, and rocky mountains. '
         'They are ruthless militaristic brutes whose mastery of metalwork is legendary.',
   ),
   const Monster(
-    assetName: 'monster_images/dragon.png',
+    assetName: 'assets/monster_images/dragon.png',
     title: 'Dragon',
     description: 'True dragons are known and feared for their predatory cunning and their magic, '
         'with the oldest dragons accounted as some of the most powerful creatures in the world. ',
   ),
   const Monster(
-    assetName: 'monster_images/yuan-ti.jpg',
+    assetName: 'assets/monster_images/yuan-ti.jpg',
     title: 'Yuan Ti',
     description: 'Devious serpent folk devoid of compassion, yuan-ti manipulate other creatures '
         'by arousing their doubts, evoking their fears, and elevating and crushing their hopes. ',
@@ -79,6 +77,7 @@ class MonsterItem extends StatelessWidget {
             child: new Image.asset(
               mon.assetName,
               fit: BoxFit.cover,//fit image to box
+              alignment: Alignment.topCenter,
             ),
           ),
           new Positioned(//positioned widgets can be moved within their parent (aka stack)
@@ -105,14 +104,11 @@ class MonsterItem extends StatelessWidget {
           softWrap: false,
           overflow: TextOverflow.ellipsis,//when text is too much for a container it should elipse (...)
           style: descriptionStyle,
-          child: new Column(  //add a column to allow our text to aign on x(horizontal) axis
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Text(mon.description, //our text widget with our description
+          child: new SizedBox.expand(  //add a column to allow our text to aign on x(horizontal) axis
+              child: new Text(mon.description, //our text widget with our description
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis //overflow
-              )
-            ],
+              ),
           ),
         ),
       ),
@@ -139,7 +135,8 @@ class MonsterItem extends StatelessWidget {
                     new Positioned.fill(
                         child: new Image.asset(
                           mon.assetName,
-                          fit: BoxFit.fitHeight,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
                         )
                     )
                   ]
@@ -151,7 +148,7 @@ class MonsterItem extends StatelessWidget {
                 padding: new EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
                 child: new Text(mon.title,  //text box with name
                   style: titleStyle,
-                  textAlign: TextAlign.left,),//aligned left of row
+                  textAlign: TextAlign.center,),//aligned left of row
               ),
               const SizedBox(), //all rows must contain the same amount of columns
               //so we use a 'blank' widget to fill holes in our 'table'
@@ -215,46 +212,35 @@ class MonsterItem extends StatelessWidget {
 //responisble for populating our page with Cards
 class MonsterJournal extends StatelessWidget {
   static const String routeName = '/material/cards';//honestly i've removed this and it didnt do anyhting - lit no idea what it does
-  //used to identify our 'scaffold' from anywhere - not used but a concept worth looking at
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   static String tag = 'monster-journal';
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp( //return this whole monster journal as a widget to be displayed
-      title: 'DnD 301 Use Case Demo',
-      theme: new ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.grey,
-          accentColor: Colors.deepOrange
-      ),
-      //Scaffolds are like vertical stacks - they hold widgets like a ladder from top to bottom
-      home: new Scaffold(
-          key: scaffoldKey,
+    return  new Scaffold(
           drawer: new Menu(),
           appBar: new AppBar( //AppBars are the bars on top of the view
             title: const Text('Monster Journal'),
             actions: <Widget>[
-              new Padding(
-                padding: new EdgeInsets.symmetric(vertical: 16.0),
-                child: new Material(
-                  borderRadius: new BorderRadius.circular(30.0),
-                  elevation: 5.0,
-                  child: new MaterialButton(
-                    minWidth: 100.0,
-                    height: 42.0,
-                    onPressed: () async {
-                      GoogleSignIn _googleSignIn = new GoogleSignIn();
-                      FirebaseAuth.instance.signOut();
-                      await _googleSignIn.signOut();
-                      Navigator.pop(context);
-                    },
-                    color: Colors.deepOrange,
-                    child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-                  ),
-                ),
-              )
+          new Padding(
+          padding: new EdgeInsets.symmetric(vertical: 16.0),
+        child: new Material(
+          borderRadius: new BorderRadius.circular(30.0),
+          elevation: 5.0,
+          child: new MaterialButton(
+            minWidth: 100.0,
+            height: 42.0,
+            onPressed: () async {
+              GoogleSignIn _googleSignIn = new GoogleSignIn();
+              FirebaseAuth.instance.signOut();
+              await _googleSignIn.signOut();
+              Navigator.popUntil(context,ModalRoute.withName('/'));
+            },
+            color: Colors.deepOrange,
+            child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+          ),
+        ),
+      ),
             ],
           ),
           //this holds our 'Card's
@@ -270,7 +256,6 @@ class MonsterJournal extends StatelessWidget {
                 );
               }).toList()
           ),
-      ),
     );
   }
 }

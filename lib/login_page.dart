@@ -3,31 +3,8 @@ import 'package:dnd_301_final/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:dnd_301_final/app_data.dart';
 
-class SignOut extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
-      padding: new EdgeInsets.symmetric(vertical: 16.0),
-      child: new Material(
-        borderRadius: new BorderRadius.circular(30.0),
-        elevation: 5.0,
-        child: new MaterialButton(
-          minWidth: 100.0,
-          height: 42.0,
-          onPressed: () async {
-            GoogleSignIn _googleSignIn = new GoogleSignIn();
-            FirebaseAuth.instance.signOut();
-            await _googleSignIn.signOut();
-            Navigator.pop(context);
-          },
-          color: Colors.deepOrange,
-          child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-        ),
-      ),
-    );
-  }
-}
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -37,9 +14,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  AppData appData = AppData.instance();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = new GoogleSignIn();
+//  final FirebaseAuth _auth = FirebaseAuth.instance;
+//  final GoogleSignIn _googleSignIn = new GoogleSignIn();
   bool signedIn = false, googleSignedIn = false;
   String signin_login_message, enter_register_message;
   final formKey = new GlobalKey<FormState>();
@@ -49,16 +27,12 @@ class _LoginPageState extends State<LoginPage> {
   String _confirmPass = '';
   bool signup = false, incorrectCredentials = false;
 
-//  _LoginPageState()
-//  {
-//    if(_auth.currentUser()!=null)
-//      _auth.signOut();
-//  }
 
-  Future<String> _testSignInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =   await googleUser.authentication;
-    final FirebaseUser user = await _auth.signInWithGoogle(
+  Future<String> _SignInWithGoogle() async {
+//    final GoogleSignInAccount googleUser = await appData.googleSignIn.signIn();
+    appData.googleUser = await appData.googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =   await appData.googleUser.authentication;
+    final FirebaseUser user = await appData.auth.signInWithGoogle(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -67,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final FirebaseUser currentUser = await appData.auth.currentUser();
     assert(user.uid == currentUser.uid);
 
 
@@ -79,11 +53,11 @@ class _LoginPageState extends State<LoginPage> {
     return 'signInWithGoogle succeeded: $user';
   }
 
-  Future <LoginPage> _signOut()  async{
-    await FirebaseAuth.instance.signOut();
-    _googleSignIn.signOut();
-    return new LoginPage();
-  }
+//  Future <LoginPage> _signOut()  async{
+//    await FirebaseAuth.instance.signOut();
+//    appData.googleSignIn.signOut();
+//    return new LoginPage();
+//  }
 
   final loginDialog = new Dialog(child: new SizedBox(
       width: 100.0,
@@ -145,12 +119,12 @@ class _LoginPageState extends State<LoginPage> {
           barrierDismissible: false,
           child: loginDialog,
         );
-        print(_auth.currentUser().toString());
+        print(appData.auth.currentUser().toString());
 //        assert(_auth.currentUser()==null);
         if(validatePasswords()){
           print(_email + ' - ' + _pass);
 
-          final FirebaseUser newUser = await _auth.createUserWithEmailAndPassword(email: _email, password: _pass);
+          final FirebaseUser newUser = await appData.auth.createUserWithEmailAndPassword(email: _email, password: _pass);
           assert(newUser!=null);
           print(newUser.toString());
 
@@ -170,16 +144,7 @@ class _LoginPageState extends State<LoginPage> {
   {
     return (_pass.compareTo(_confirmPass)==0);
   }
-//  void registerNewAccount()
-//  {
-//    assert(_auth.currentUser()==null);
-//    if(validatePasswords())
-//      _auth.createUserWithEmailAndPassword(email: _email, password: _pass);
-//    else
-//    {
-//      print('passwords do not match');
-//    }
-//  }
+
   void _signup()
   {
     setState(() {signup = !signup;});
@@ -189,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> signInWithEmailAndPass() async{
     bool status = true;
     try{
-        await (_auth.signInWithEmailAndPassword(email: _email, password: _pass)
+        await (appData.auth.signInWithEmailAndPassword(email: _email, password: _pass)
           .catchError((){
         status = false;
       }));
@@ -213,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
       enter_register_message = 'Register New Account';
     }
     final logo = new Hero(
-      tag: 'hero',
+      tag: 'loginLogo',
       child: new CircleAvatar(
         backgroundColor: Colors.transparent,
         radius: 60.0,
@@ -237,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = new TextFormField(
       autofocus: false,
-      initialValue: 'spongebob1213',
+      initialValue: 'qwerty',
       validator: (val) => val.length < 6 ? 'Password too short.' : null,
       onSaved: (val) => _pass = val,
       obscureText: true,
@@ -313,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
               child: loginDialog,
             );
 
-            _testSignInWithGoogle();
+            _SignInWithGoogle();
 
           },
           color: Colors.deepOrange,
@@ -384,10 +349,10 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
 
     if(signedIn)
-      _auth.signOut().then((val){print('Singed out successfully!');}).catchError((){print('error: could not sign out');});
+      appData.auth.signOut().then((val){print('Singed out successfully!');}).catchError((){print('error: could not sign out');});
 
     if(googleSignedIn)
-      _googleSignIn.signOut();
+      appData.googleSignIn.signOut();
 
   }
 }

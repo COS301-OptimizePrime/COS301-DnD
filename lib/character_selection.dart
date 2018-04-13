@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:dnd_301_final/login_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
@@ -21,17 +20,17 @@ class FullScreenDialog extends StatefulWidget {
 
 class FullScreenDialogState extends State<FullScreenDialog> {
   bool _saveNeeded = false;
+  final formKey = new GlobalKey<FormState>();
 
   File _image;
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _image = image;
+      newCharAssetName = _image.path;
     });
   }
-
   Future<bool> _onWillPop() async {
     if (!_saveNeeded)
       return true;
@@ -64,9 +63,25 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     ) ?? false;
   }
 
+  void addNewChar()
+  {
+    Character temp = new Character(
+      assetName: newCharAssetName,
+      title: 'James',
+      charClass: 'Knight',
+      charRace: 'Human',
+    );
+    temp.imageIsFile=true;
+    characters.add(temp);
+
+    setState((){});
+  }
+
+
   final TextEditingController char_name = new TextEditingController();
   final TextEditingController char_class = new TextEditingController();
   final TextEditingController char_race = new TextEditingController();
+  String newCharName, newCharclass,newCharRace, newCharAssetName;
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +94,14 @@ class FullScreenDialogState extends State<FullScreenDialog> {
             new FlatButton(
                 child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
                 onPressed: () {
+                  addNewChar();
                   Navigator.pop(context, DismissDialogAction.save);
                 }
             )
           ]
       ),
       body: new Form(
+        key: formKey,
           onWillPop: _onWillPop,
           child: new ListView(
               shrinkWrap: true,
@@ -99,8 +116,10 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                     new TextFormField(
                         controller: char_name,
+                        onSaved: (val) => newCharName = val,
                         decoration: new InputDecoration(
                           hintText: 'Type name here',
+
                         )
                     ),
                   ],
@@ -114,6 +133,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                     new TextFormField(
                         controller:char_class,
+                        onSaved: (val) => newCharclass = val,
                         decoration: new InputDecoration(
                           hintText: 'Type class here',
                         )
@@ -129,6 +149,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                     new TextFormField(
                         controller: char_race,
+                        onSaved: (val) => newCharRace = val,
                         decoration: new InputDecoration(
                           hintText: 'Type race here',
                         )
@@ -143,7 +164,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                   .map((Widget child) {
                 return new Container(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    height: 96.0,
+                    height: 97.0,
                     child: child
                 );
               })
@@ -155,36 +176,49 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 }
 
 class Character {
-  const Character({
+
+  Character({
     this.assetName,
     this.title,
     this.charClass,
     this.charRace,
+
   });
+
+  Character.image({
+    this.assetName,
+    this.title,
+    this.charClass,
+    this.charRace,
+    imageisFile = true,
+});
 
   final String assetName;
   final String title;
   final String charClass;
   final String charRace;
+  bool imageIsFile = false;
 
-  bool get isValid => assetName != null && title != null && charClass != null && charRace != null;
+  bool isValid(){
+    return (assetName != null && title != null && charClass != null && charRace != null);
+  }
 }
 
 final List<Character> characters = <Character>[
-  const Character(
-    assetName: 'character_images/knight.jpg',
-    title: 'Sir',
+  new Character(
+    assetName: 'assets/character_images/knight.jpg',
+    title: 'James',
     charClass: 'Knight',
     charRace: 'Human',
   ),
-  const Character(
-    assetName: 'character_images/mage.jpg',
+  new Character(
+    assetName: 'assets/character_images/mage.jpg',
     title: 'Dorian',
     charClass: 'Mage',
     charRace: 'Human',
   ),
-  const Character(
-    assetName: 'character_images/archer.jpg',
+  new Character(
+    assetName: 'assets/character_images/archer.jpg',
     title: 'Elana',
     charClass: 'Archer',
     charRace: 'Elf',
@@ -193,7 +227,7 @@ final List<Character> characters = <Character>[
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
-      : assert(char != null && char.isValid), //if it receives a null character object to populate the card, fatal error
+      : assert(true), //if it receives a null character object to populate the card, fatal error
         super(key: key);
 
   static const double height = 187.0; // original value was 366.0
@@ -205,33 +239,69 @@ class CharacterItem extends StatelessWidget {
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(color: Colors.white);//make our title text look nice
     final TextStyle descriptionStyle = theme.textTheme.subhead; //give our description a matching style
 
-    //a box that is of explicit size
-    SizedBox photoAndTitle = new SizedBox(
-      height: 136.0, // 184.0 is original height
-      child: new Stack(//stacks allow us to place widgets on top of each other
-        children: <Widget>[
-          new Positioned.fill(//add image to bottom of stack
-            child: new Image.asset(
-              char.assetName,
-              fit: BoxFit.cover,//fit image to box
-              alignment: Alignment.topCenter,
-            ),
-          ),
-          new Positioned(//positioned widgets can be moved within their parent (aka stack)
-            bottom: 16.0,
-            left: 16.0,
-            right: 16.0,
-            child: new FittedBox(//new box, fitted to remaining space
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,//place box left
-              child: new Text(char.title,  //place a Text widget inside - aka our title - which is above our image on the stack
-                style: titleStyle,
+    SizedBox photoAndTitle;
+
+    if(char.imageIsFile)
+    {
+      photoAndTitle = new SizedBox(
+        height: 133.0, // 184.0 is original height
+        child: new Stack(//stacks allow us to place widgets on top of each other
+          children: <Widget>[
+            new Positioned.fill(//add image to bottom of stack
+              child: new Image.file(
+                new File(char.assetName),
+                fit: BoxFit.cover,//fit image to box
+                alignment: Alignment.topCenter,
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            new Positioned(//positioned widgets can be moved within their parent (aka stack)
+              bottom: 16.0,
+              left: 16.0,
+              right: 16.0,
+              child: new FittedBox(//new box, fitted to remaining space
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,//place box left
+                child: new Text(char.title,  //place a Text widget inside - aka our title - which is above our image on the stack
+                  style: titleStyle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    else
+    {
+      photoAndTitle = new SizedBox(
+        height: 133.0, // 184.0 is original height
+        child: new Stack(//stacks allow us to place widgets on top of each other
+          children: <Widget>[
+            new Positioned.fill(//add image to bottom of stack
+              child: new Image.asset(
+                char.assetName,
+                fit: BoxFit.cover,//fit image to box
+                alignment: Alignment.topCenter,
+              ),
+            ),
+            new Positioned(//positioned widgets can be moved within their parent (aka stack)
+              bottom: 16.0,
+              left: 16.0,
+              right: 16.0,
+              child: new FittedBox(//new box, fitted to remaining space
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,//place box left
+                child: new Text(char.title,  //place a Text widget inside - aka our title - which is above our image on the stack
+                  style: titleStyle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    //a box that is of explicit size
+
 
 
     // description
@@ -359,19 +429,18 @@ class CharacterItem extends StatelessWidget {
   }
 }
 
-class CharacterSelection extends StatelessWidget {
+class CharacterSelection extends StatefulWidget {
   static String tag = 'character-selection';
 
   @override
+  CharacterSelectionState createState() => new CharacterSelectionState();
+}
+
+class CharacterSelectionState extends State<CharacterSelection>
+{
+  @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        title: 'DnD 301 Use Case Demo',
-        theme: new ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: Colors.grey,
-            accentColor: Colors.deepOrange
-        ),
-        home: new Scaffold(
+    return new Scaffold(
             body: new ListView(
                 itemExtent: CharacterItem.height,
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
@@ -418,7 +487,8 @@ class CharacterSelection extends StatelessWidget {
                   ));
                 }
             )
-        )
     );
   }
+
+
 }

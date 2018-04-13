@@ -214,6 +214,7 @@ class CharacterItem extends StatelessWidget {
             child: new Image.asset(
               char.assetName,
               fit: BoxFit.cover,//fit image to box
+              alignment: Alignment.topCenter,
             ),
           ),
           new Positioned(//positioned widgets can be moved within their parent (aka stack)

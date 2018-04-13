@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -69,7 +70,7 @@ class HomePage extends StatelessWidget {
                     borderRadius: new BorderRadius.circular(30.0),
                     elevation: 5.0,
                     child: new MaterialButton(
-                      minWidth: 200.0,
+                      minWidth: 100.0,
                       height: 42.0,
                       onPressed: () async {
                         GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -81,7 +82,7 @@ class HomePage extends StatelessWidget {
                       child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
                     ),
                   ),
-                ),
+                )
               ]
           )
         )

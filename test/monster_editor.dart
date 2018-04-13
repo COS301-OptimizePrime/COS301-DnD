@@ -1,4 +1,4 @@
-import 'package:cos301_demo/monster_journal.dart';
+import 'package:dnd_301_final/monster_journal.dart';
 import 'package:flutter/material.dart';
 
 class MonsterEditor extends StatelessWidget

@@ -1,9 +1,12 @@
-name: cos301_demo
+name: dnd_301_final
 description: A new Flutter application.
 
 dependencies:
   flutter:
     sdk: flutter
+  google_sign_in: "^3.0.0"
+  firebase_auth: "^0.5.3"
+  image_picker:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -24,13 +27,23 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-    - monster_images/beholder.jpg
-    - monster_images/fire_giant.jpg
-    - monster_images/dragon.png
-    - monster_images/yuan-ti.jpg
-    - monster_images/placeholder.jpg
 
+  assets:
+    - assets/alucard.jpg
+    - assets/dadlogo2.png
+    - assets/monster_images/beholder.jpg
+    - assets/monster_images/dragon.png
+    - assets/monster_images/fire_giant.jpg
+    - assets/placeholder.jpg
+    - assets/monster_images/yuan-ti.jpg
+    - assets/character_images/archer.jpg
+    - assets/character_images/knight.jpg
+    - assets/character_images/mage.jpg
+
+  fonts:
+        - family: Nunito
+          fonts:
+            - asset: assets/Nunito.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
@@ -61,4 +74,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies, 
   # see https://flutter.io/custom-fonts/#from-packages
-

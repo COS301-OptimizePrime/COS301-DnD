@@ -3,6 +3,7 @@ import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/character_selection.dart';
 
 
 void main() => runApp(new MyApp());
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
-    MonsterJournal.tag: (context) => new MonsterJournal()
+    MonsterJournal.tag: (context) => new MonsterJournal(),
+    CharacterSelection.tag: (context) => new CharacterSelection()
 //    HomePage.tsg: (context) => new HomePage();
   };
 

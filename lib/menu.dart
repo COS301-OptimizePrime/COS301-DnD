@@ -1,3 +1,4 @@
+import 'package:dnd_301_final/character_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:dnd_301_final/home_page.dart';
@@ -63,6 +64,15 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  title: new Text('Character Selection'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, CharacterSelection.tag);
+                  },
+                ),
+                new ListTile(
                   title: new Text('Monster Journal'),
                   onTap: () {
                     // Update the state of the app
@@ -108,6 +118,15 @@ class Menu extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).pushNamed(HomePage.tag);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Character Selection'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, CharacterSelection.tag);
                   },
                 ),
                 new ListTile(

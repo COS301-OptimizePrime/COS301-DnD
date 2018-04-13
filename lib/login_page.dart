@@ -4,7 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
+class SignOut extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Padding(
+      padding: new EdgeInsets.symmetric(vertical: 16.0),
+      child: new Material(
+        borderRadius: new BorderRadius.circular(30.0),
+        elevation: 5.0,
+        child: new MaterialButton(
+          minWidth: 100.0,
+          height: 42.0,
+          onPressed: () async {
+            GoogleSignIn _googleSignIn = new GoogleSignIn();
+            FirebaseAuth.instance.signOut();
+            await _googleSignIn.signOut();
+            Navigator.pop(context);
+          },
+          color: Colors.deepOrange,
+          child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
+  }
+}
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';

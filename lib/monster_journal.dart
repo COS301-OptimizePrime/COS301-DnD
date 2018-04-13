@@ -139,7 +139,7 @@ class MonsterItem extends StatelessWidget {
                     new Positioned.fill(
                         child: new Image.asset(
                           mon.assetName,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitHeight,
                         )
                     )
                   ]
@@ -236,25 +236,25 @@ class MonsterJournal extends StatelessWidget {
           appBar: new AppBar( //AppBars are the bars on top of the view
             title: const Text('Monster Journal'),
             actions: <Widget>[
-          new Padding(
-          padding: new EdgeInsets.symmetric(vertical: 16.0),
-        child: new Material(
-          borderRadius: new BorderRadius.circular(30.0),
-          elevation: 5.0,
-          child: new MaterialButton(
-            minWidth: 200.0,
-            height: 42.0,
-            onPressed: () async {
-              GoogleSignIn _googleSignIn = new GoogleSignIn();
-              FirebaseAuth.instance.signOut();
-              await _googleSignIn.signOut();
-              Navigator.pop(context);
-            },
-            color: Colors.deepOrange,
-            child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-          ),
-        ),
-      ),
+              new Padding(
+                padding: new EdgeInsets.symmetric(vertical: 16.0),
+                child: new Material(
+                  borderRadius: new BorderRadius.circular(30.0),
+                  elevation: 5.0,
+                  child: new MaterialButton(
+                    minWidth: 100.0,
+                    height: 42.0,
+                    onPressed: () async {
+                      GoogleSignIn _googleSignIn = new GoogleSignIn();
+                      FirebaseAuth.instance.signOut();
+                      await _googleSignIn.signOut();
+                      Navigator.pop(context);
+                    },
+                    color: Colors.deepOrange,
+                    child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+                  ),
+                ),
+              )
             ],
           ),
           //this holds our 'Card's

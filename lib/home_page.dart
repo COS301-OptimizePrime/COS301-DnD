@@ -5,86 +5,101 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
+  final String flava_text = 'The many worlds of Dungeons & Dragons are places of magic and monsters, of brave warriors and spectacular adventures. '
+      'They begin with a foundation of medieval fantasy and '
+      'then add the creatures, places, and magic that make these worlds unique.';
 
   @override
   Widget build(BuildContext context) {
-    final alucard = new Hero(
-      tag: 'hero',
-      child: new Padding(
-        padding: new EdgeInsets.all(16.0),
-        child: new CircleAvatar(
-          radius: 72.0,
-          backgroundColor: Colors.transparent,
-          backgroundImage: new AssetImage('assets/alucard.jpg'),
+
+    final create_button = new Padding(
+      padding: new EdgeInsets.symmetric(vertical: 16.0),
+      child: new Material(
+        borderRadius: new BorderRadius.circular(30.0),
+        elevation: 5.0,
+        child: new MaterialButton(
+          minWidth: 200.0,
+          height: 42.0,
+          onPressed: () {
+            //@todo implement create game action
+          },
+          color: Colors.deepOrange,
+          child: new Text('Create Game Session', style: new TextStyle(color: Colors.white)),
         ),
       ),
     );
 
-    final welcome = new Padding(
-      padding: new EdgeInsets.all(8.0),
-      child: new Text(
-        'Welcome Alucard',
-        style: new TextStyle(fontSize: 28.0, color: Colors.white),
-      ),
-    );
-
-    final lorem = new Padding(
-      padding: new EdgeInsets.all(8.0),
-      child: new Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit condimentum mauris id tempor. Praesent eu commodo lacus. Praesent eget mi sed libero eleifend tempor. Sed at fringilla ipsum. Duis malesuada feugiat urna vitae convallis. Aliquam eu libero arcu.',
-        style: new TextStyle(fontSize: 16.0, color: Colors.white),
-      ),
-    );
-
-    final body = new Container(
-      width: MediaQuery.of(context).size.width,
-      padding: new EdgeInsets.all(28.0),
-      decoration: new BoxDecoration(
-        gradient: new LinearGradient(colors: [
-          Colors.blue,
-          Colors.lightBlueAccent,
-        ]),
-      ),
-      child: new Column(
-        children: <Widget>[alucard, welcome, lorem],
-      ),
-    );
-
-    return new MaterialApp(
-        title: 'DnD 301 Use Case Demo',
-        theme: new ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: Colors.grey,
-            accentColor: Colors.deepOrange
+    final join_button = new Padding(
+      padding: new EdgeInsets.symmetric(vertical: 16.0),
+      child: new Material(
+        borderRadius: new BorderRadius.circular(30.0),
+        elevation: 5.0,
+        child: new MaterialButton(
+          minWidth: 200.0,
+          height: 42.0,
+          onPressed: () {
+            //@todo implement join game action
+          },
+          color: Colors.deepOrange,
+          child: new Text('Join Game Session', style: new TextStyle(color: Colors.white)),
         ),
-        home: new Scaffold(
-          body: body,
-          drawer: new Menu(),
-          appBar: new AppBar( //AppBars are the bars on top of the view
-              title: const Text('Hoome Page'),
-              actions: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.symmetric(vertical: 16.0),
-                  child: new Material(
-                    borderRadius: new BorderRadius.circular(30.0),
-                    elevation: 5.0,
-                    child: new MaterialButton(
-                      minWidth: 200.0,
-                      height: 42.0,
-                      onPressed: () async {
-                        GoogleSignIn _googleSignIn = new GoogleSignIn();
-                        FirebaseAuth.instance.signOut();
-                        await _googleSignIn.signOut();
-                        Navigator.pop(context);
-                      },
-                      color: Colors.deepOrange,
-                      child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                ),
-              ]
-          )
-        )
+      ),
     );
+
+    final logo = new Hero(
+      tag: 'loginLogo',
+      child: new CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 60.0,
+        child: new Image.asset('assets/dadlogo2.png'),
+      ),
+    );
+
+    final main_page = new Scaffold(
+      drawer: new Menu(),
+      appBar: new AppBar( //AppBars are the bars on top of the view
+        title: const Text('Home Page'),
+        actions: <Widget>[
+          new Padding(
+            padding: new EdgeInsets.symmetric(vertical: 16.0),
+            child: new Material(
+              borderRadius: new BorderRadius.circular(30.0),
+              elevation: 5.0,
+              child: new MaterialButton(
+                minWidth: 100.0,
+                height: 42.0,
+                onPressed: () async {
+                  GoogleSignIn _googleSignIn = new GoogleSignIn();
+                  FirebaseAuth.instance.signOut();
+                  await _googleSignIn.signOut();
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                },
+                color: Colors.deepOrange,
+                child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: new Center(
+        child: new ListView(
+            controller: new ScrollController(),
+            shrinkWrap: true,
+            padding: new EdgeInsets.only(left: 24.0, right: 24.0,top: 50.0),
+            children: <Widget>[
+              logo,
+              new SizedBox(height: 48.0),
+              new Container(child : new Text(flava_text,overflow: TextOverflow.ellipsis,maxLines: 7,textAlign: TextAlign.center,)),
+              new SizedBox(height: 70.0),
+              join_button,
+              new SizedBox(height: 8.0),
+              create_button,
+              new SizedBox(height: 24.0),
+            ],
+          ),
+      ),
+    );
+
+    return main_page;
   }
 }

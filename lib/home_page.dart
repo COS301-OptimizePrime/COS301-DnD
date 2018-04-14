@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
@@ -59,27 +57,6 @@ class HomePage extends StatelessWidget {
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
         title: const Text('Home Page'),
-        actions: <Widget>[
-          new Padding(
-            padding: new EdgeInsets.symmetric(vertical: 16.0),
-            child: new Material(
-              borderRadius: new BorderRadius.circular(30.0),
-              elevation: 5.0,
-              child: new MaterialButton(
-                minWidth: 100.0,
-                height: 42.0,
-                onPressed: () async {
-                  GoogleSignIn _googleSignIn = new GoogleSignIn();
-                  FirebaseAuth.instance.signOut();
-                  await _googleSignIn.signOut();
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                },
-                color: Colors.deepOrange,
-                child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-              ),
-            ),
-          ),
-        ],
       ),
       body: new Center(
         child: new ListView(

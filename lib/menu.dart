@@ -12,33 +12,13 @@ class Menu extends StatelessWidget {
 
     if(appData.googleUser!=null)
       {
-
         final Hero google_image = new Hero(
             tag: 'profile_pic',
             child: new CircleAvatar(
                 radius: 58.0,
-                backgroundImage: new NetworkImage(appData.googleSignIn.currentUser.photoUrl,scale: 1.0),
+                backgroundImage: new NetworkImage(appData.googleUser.photoUrl,scale: 1.0),
             )
         );
-
-//      final Image temp_image = new Image.network(appData.googleUser.photoUrl,width: 100.0,);
-//      final Image gimage = temp_image;
-
-//      final Container google_image = new Container(
-//        height: 110.0,
-//        child: gimage,
-//      );
-
-//      final google_image = new Container(
-//        decoration: new BoxDecoration(
-//          image: new DecorationImage(
-//            image: gimage,
-//            fit: BoxFit.cover,
-//          ),
-//        ),
-//        child: null /* add child content content here */,
-//      );
-
         return new Drawer(
             child: new ListView(
               padding: EdgeInsets.zero,
@@ -81,6 +61,17 @@ class Menu extends StatelessWidget {
                     Navigator.pushNamed(context, MonsterJournal.tag);
                   },
                 ),
+                const Divider(),
+                new ListTile(
+                  title: new Text('Sign Out'),
+                  onTap: () async {
+                    // Update the state of the app
+                    // ...
+                    Navigator.pop(context);
+                    await appData.signout();
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  },
+                )
               ],
             )
         );
@@ -138,6 +129,17 @@ class Menu extends StatelessWidget {
                     Navigator.pushNamed(context, MonsterJournal.tag);
                   },
                 ),
+                const Divider(),
+                new ListTile(
+                  title: new Text('Sign Out'),
+                  onTap: () async {
+                    // Update the state of the app
+                    // ...
+                    await appData.signout();
+                    Navigator.pop(context);
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  },
+                )
               ],
             )
         );

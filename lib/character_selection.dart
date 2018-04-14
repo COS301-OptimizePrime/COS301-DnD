@@ -63,11 +63,13 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
   void addNewChar()
   {
+
+    formKey.currentState.save();
     Character temp = new Character(
       assetName: newCharAssetName,
-      title: 'James',
-      charClass: 'Knight',
-      charRace: 'Human',
+      title: newCharName,
+      charClass: newCharclass,
+      charRace: newCharRace,
     );
     temp.imageIsFile=true;
     characters.add(temp);
@@ -225,7 +227,7 @@ final List<Character> characters = <Character>[
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
-      : assert(true), //if it receives a null character object to populate the card, fatal error
+      : assert(char !=null), //if it receives a null character object to populate the card, fatal error
         super(key: key);
 
   static const double height = 187.0; // original value was 366.0
@@ -332,24 +334,49 @@ class CharacterItem extends StatelessWidget {
         ]
     ));
 
+    SizedBox imageDisplay;
+
+    if(char.imageIsFile)
+    {
+      imageDisplay  = new SizedBox( //holds our image
+          height: 184.0,
+          child: new Stack( //this stack is redundant - was originally to place text name over image
+              children: <Widget>[
+                new Positioned.fill(
+                child: new Image.file(
+                    new File(char.assetName),
+                    fit: BoxFit.fitWidth,//fit image to box
+                    alignment: Alignment.topCenter,
+                  ),
+                )
+            ]
+          )
+      );
+    }
+    else
+    {
+     imageDisplay = new SizedBox( //holds our image
+          height: 184.0,
+          child: new Stack( //this stack is redundant - was originally to place text name over image
+              children: <Widget>[
+                new Positioned.fill(
+                    child: new Image.asset(
+                      char.assetName,
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.topCenter,
+                    )
+                )
+              ]
+          )
+      );
+    }
+
     // A detailed view of the character that is called when a character card is tapped
     ListView detailedView = new ListView(
         shrinkWrap: true,
         padding: const EdgeInsets.all(10.0),
         children: <Widget>[
-          new SizedBox( //holds our image
-              height: 184.0,
-              child: new Stack( //this stack is redundant - was originally to place text name over image
-                  children: <Widget>[
-                    new Positioned.fill(
-                        child: new Image.asset(
-                          char.assetName,
-                          fit: BoxFit.fitHeight,
-                        )
-                    )
-                  ]
-              )
-          ),
+          imageDisplay,
           new Row( //allows us to place items consecutively on the horizontal
             children: <Widget>[
               new Padding(  //padding on top and bottom to space from image box and description

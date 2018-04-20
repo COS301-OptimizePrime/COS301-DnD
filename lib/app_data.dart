@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/material.dart';
 
 class AppData{
 
@@ -10,7 +9,7 @@ class AppData{
   final GoogleSignIn googleSignIn = new GoogleSignIn();
   FirebaseUser user = null;
   GoogleSignInAccount googleUser = null;
-  Image user_google_image;
+  GoogleUserCircleAvatar user_google_image = null;
 
 
   static AppData _singleton;
@@ -44,6 +43,8 @@ class AppData{
 
     final FirebaseUser currentUser = await auth.currentUser();
     assert(user.uid == currentUser.uid);
+
+    user_google_image = new GoogleUserCircleAvatar(identity: googleUser,placeholderPhotoUrl: googleUser.photoUrl);
   }
 
   Future<bool> signInWithEmailAndPass(String email, String pass) async{
@@ -75,6 +76,7 @@ class AppData{
       {
         googleSignIn.signOut();
         googleUser = null;
+        user_google_image=null;
       }
     user = null;
   }

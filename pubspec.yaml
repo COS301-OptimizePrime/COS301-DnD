@@ -4,8 +4,8 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  google_sign_in: "^3.0.0"
-  firebase_auth: "^0.5.3"
+  firebase_auth:
+  google_sign_in:
   image_picker:
 
   # The following adds the Cupertino Icons font to your application.

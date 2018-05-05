@@ -1,0 +1,6 @@
+language: generic
+before_script:
+  - git clone --depth 1 https://github.com/flutter/flutter.git ../flutter
+  - export PATH="$PATH":`pwd`/../flutter/bin:`pwd`/../flutter/bin/cache/dart-sdk/bin
+  - flutter doctor
+script: flutter test

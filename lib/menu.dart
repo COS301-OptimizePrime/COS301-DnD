@@ -29,15 +29,15 @@ class Menu extends StatelessWidget {
 
     if(appData.user_google_image!=null)
       displayImage = new SizedBox(
-        height: 108.0,
-        width: 108.0,
+        height: 118.0,
+        width: 118.0,
         child: appData.user_google_image,
       );
     else
       displayImage = new Hero(
             tag: 'profile_pic',
             child: new CircleAvatar(
-                radius: 54.0,
+                radius: 58.0,
                 backgroundImage: new AssetImage('assets/placeholder.jpg'),
             )
         );

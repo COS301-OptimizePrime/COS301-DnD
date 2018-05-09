@@ -47,6 +47,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                 'Discard new event?',
                 style: dialogTextStyle
             ),
+
             actions: <Widget>[
               new FlatButton(
                   child: const Text('CANCEL'),
@@ -72,7 +73,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     Character temp = new Character(
       assetName: newCharAssetName,
       title: newCharName,
-      charClass: newCharclass,
+      charClass: newCharClass,
       charRace: newCharRace,
     );
     temp.imageIsFile=true;
@@ -81,11 +82,17 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     setState((){});
   }
 
+  final List<DropdownMenuItem<String>> raceList = [
+    new DropdownMenuItem<String>(child: new Text("Human"), value: "Human",),
+    new DropdownMenuItem<String>(child: new Text("Orc"), value: "Orc",),
+    new DropdownMenuItem<String>(child: new Text("Gnome"), value: "Gnome",),
+    new DropdownMenuItem<String>(child: new Text("Halfling"), value: "Halfling",),
+  ];
 
   final TextEditingController char_name = new TextEditingController();
-  final TextEditingController char_class = new TextEditingController();
-  final TextEditingController char_race = new TextEditingController();
-  String newCharName, newCharclass,newCharRace, newCharAssetName;
+//  final TextEditingController char_class = new TextEditingController();
+//  final TextEditingController char_race = new TextEditingController();
+  String newCharName, newCharClass = "Knight",newCharRace = "Human", newCharAssetName, newCharGender = "Male";
 
   @override
   Widget build(BuildContext context) {
@@ -128,35 +135,68 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                   ],
                 ),
-                new Column(
-                  children: <Widget>[
-                    new Padding(  //padding on top and bottom to space from image box and description
-                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                      child: new Text('Character Class',
-                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
-                    ),
-                    new TextFormField(
-                        controller:char_class,
-                        onSaved: (val) => newCharclass = val,
-                        decoration: new InputDecoration(
-                          hintText: 'Type class here',
-                        )
-                    ),
-                  ],
-                ),
-                new Column(
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     new Padding(  //padding on top and bottom to space from image box and description
                       padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                       child: new Text('Race',
                           style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
                     ),
-                    new TextFormField(
-                        controller: char_race,
-                        onSaved: (val) => newCharRace = val,
-                        decoration: new InputDecoration(
-                          hintText: 'Type race here',
-                        )
+
+                new Row(
+                  children: <Widget>[
+                    new DropdownButton(items: [
+                      new DropdownMenuItem<String>(child: new Text("Human"), value: "Human",),
+                      new DropdownMenuItem<String>(child: new Text("Orc"), value: "Orc",),
+                      new DropdownMenuItem<String>(child: new Text("Gnome"), value: "Gnome",),
+                      new DropdownMenuItem<String>(child: new Text("Halfling"), value: "Halfling",),
+                    ], onChanged: (val){newCharRace = val; setState(() {});},
+                      value: newCharRace,),
+
+                    new IconButton(icon: new Icon(Icons.info), onPressed: null),
+                  ],
+                )
+
+                  ],
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Gender',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new Row(
+                      children: <Widget>[
+                        new DropdownButton(items: [
+                          new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
+                          new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
+                        ], onChanged: (val){newCharGender = val; setState(() {});},
+                          value: newCharGender,),
+
+                        new IconButton(icon: new Icon(Icons.info), onPressed: null),
+                      ],
+                    )
+                  ],
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Class',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new DropdownButton<String>(
+                      items: <String>['Warlock', 'Druid', 'Knight', 'Paladin'].map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value)
+                        );}).toList(),
+                      onChanged: (val){newCharClass = val; setState(() {});},
+                      value: newCharClass,
                     ),
                   ],
                 ),
@@ -186,7 +226,7 @@ class Character {
     this.title,
     this.charClass,
     this.charRace,
-
+    this.charGender,
   });
 
   Character.image({
@@ -194,6 +234,7 @@ class Character {
     this.title,
     this.charClass,
     this.charRace,
+    this.charGender,
     imageisFile = true,
 });
 
@@ -201,10 +242,11 @@ class Character {
   final String title;
   final String charClass;
   final String charRace;
+  final String charGender;
   bool imageIsFile = false;
 
   bool isValid(){
-    return (assetName != null && title != null && charClass != null && charRace != null);
+    return (assetName != null && title != null && charClass != null && charRace != null && charGender != null);
   }
 }
 
@@ -214,18 +256,21 @@ final List<Character> characters = <Character>[
     title: 'James',
     charClass: 'Knight',
     charRace: 'Human',
+    charGender: 'Female',
   ),
   new Character(
     assetName: 'assets/character_images/mage.jpg',
     title: 'Dorian',
     charClass: 'Mage',
     charRace: 'Human',
+    charGender: 'Male',
   ),
   new Character(
     assetName: 'assets/character_images/archer.jpg',
     title: 'Elana',
     charClass: 'Archer',
     charRace: 'Elf',
+    charGender: 'Trap',
   ),
 ];
 
@@ -316,13 +361,13 @@ class CharacterItem extends StatelessWidget {
           softWrap: false,
           overflow: TextOverflow.ellipsis,//when text is too much for a container it should elipse (...)
           style: descriptionStyle,
-          child: new Column(  //add a column to allow our text to aign on x(horizontal) axis
+          child: new Row(  //add a column to allow our text to aign on x(horizontal) axis
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              new Text(char.charClass, //our text widget with our description
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis //overflow
-              )
+              new Text(char.charRace), //our text widget with our description
+              new Text(char.charClass), //our text widget with our description
+              new Text(char.charGender), //our text widget with our description
             ],
           ),
         ),
@@ -430,6 +475,24 @@ class CharacterItem extends StatelessWidget {
                 )
               ),
             ]
+          ),
+          new Row( //allows us to place items consecutively on the horizontal
+              children: <Widget>[
+                new Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 4.0),
+                    child: new Container(
+                      key: key,
+                      child: new Text('Gender:', style: descriptionStyle),//our description
+                    )
+                ),
+                new Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
+                    child: new Container(
+                      key: key,
+                      child: new Text(char.charGender, style: descriptionStyle),//our description
+                    )
+                ),
+              ]
           )
         ]
     );

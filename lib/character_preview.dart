@@ -45,6 +45,7 @@ class CharacterSwipePreview extends AnimatedWidget
             height: double.infinity,
             child: const FlutterLogo(),
             color: Colors.red,
+
           ),
         ),
       ),

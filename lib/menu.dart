@@ -46,6 +46,7 @@ class Menu extends StatelessWidget {
                   ),
                 ),
                 new ListTile(
+                  key: new Key("menu_home_page_tile"),
                   title: new Text('Home Page'),
                   onTap: () {
                     Navigator.pop(context);
@@ -53,6 +54,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("character_selection_page_tile"),
                   title: new Text('Character Selection'),
                   onTap: () {
                     // Update the state of the app
@@ -62,6 +64,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("monster_journal_page_tile"),
                   title: new Text('Monster Journal'),
                   onTap: () {
                     // Update the state of the app

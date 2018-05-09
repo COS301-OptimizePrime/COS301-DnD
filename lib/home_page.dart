@@ -1,3 +1,4 @@
+import 'package:dnd_301_final/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
 
@@ -9,6 +10,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    AppData.screenWidth = MediaQuery.of(context).size.width;
+    AppData.screenHeight = MediaQuery.of(context).size.height;
 
     final create_button = new Padding(
       padding: new EdgeInsets.symmetric(vertical: 16.0),

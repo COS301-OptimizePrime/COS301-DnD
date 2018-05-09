@@ -1,6 +1,9 @@
 import 'package:dnd_301_final/app_data.dart';
-import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/qr_handler.dart';
+import 'package:dnd_301_final/session_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:qr_reader/qr_reader.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
@@ -23,7 +26,14 @@ class HomePage extends StatelessWidget {
           minWidth: 200.0,
           height: 42.0,
           onPressed: () {
-            //@todo implement create game action
+
+            AppData.createSession();
+
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+               child:  new QrMakerWidget(),
+            );
           },
           color: Colors.deepOrange,
           child: new Text('Create Game Session', style: new TextStyle(color: Colors.white)),
@@ -39,8 +49,18 @@ class HomePage extends StatelessWidget {
         child: new MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: () {
-            //@todo implement join game action
+          onPressed: () async{
+              String sid = await new QRCodeReader()
+                  .setAutoFocusIntervalInMs(200) // default 5000
+                  .setForceAutoFocus(true) // default false
+                  .setTorchEnabled(true) // default false
+                  .setHandlePermissions(true) // default true
+                  .setExecuteAfterPermissionGranted(true) // default true
+                  .scan();
+
+              await AppData.joinSession(sid);
+
+              Navigator.of(context).pushNamed(GameSessionDemo.tag);
           },
           color: Colors.deepOrange,
           child: new Text('Join Game Session', style: new TextStyle(color: Colors.white)),

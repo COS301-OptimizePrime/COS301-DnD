@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import "package:grpc/grpc.dart";
+
+import 'backend/server.pb.dart';
+import 'backend/server.pbgrpc.dart';
 
 class AppData{
 
@@ -10,6 +14,11 @@ class AppData{
   FirebaseUser user = null;
   GoogleSignInAccount googleUser = null;
   GoogleUserCircleAvatar user_google_image = null;
+
+  static String token = "anon";
+  static String sessionId;
+  static ClientChannel channel;
+  static SessionsManagerClient stub;
 
   static double screenWidth;
   static double screenHeight;
@@ -41,7 +50,9 @@ class AppData{
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    token = await user.getIdToken();
+    assert(token != null);
+
 
     final FirebaseUser currentUser = await auth.currentUser();
     assert(user.uid == currentUser.uid);
@@ -56,6 +67,9 @@ class AppData{
           .catchError((){
         status = false;
       }));
+
+      token = await user.getIdToken();
+
     }catch(PlatformException)
     {
       status = false;
@@ -82,4 +96,43 @@ class AppData{
       }
     user = null;
   }
+
+  static void connectToServer()
+  {
+    channel = new ClientChannel('163.172.171.84',
+        port: 50051,
+        options: const ChannelOptions(
+            credentials: const ChannelCredentials.insecure()));
+    stub = new SessionsManagerClient(channel);
+  }
+
+  static Future<String> createSession()
+  async {
+
+    if(channel==null)
+      connectToServer();
+
+    NewSessionRequest nsr = new NewSessionRequest();
+    nsr.name = "mySession";
+    nsr.authIdToken = token;
+    final response = await stub.create(nsr);
+    print('Client received: ${response.status}');
+
+    sessionId = response.sessionId;
+    return sessionId;
+  }
+
+  static joinSession(String sid) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    JoinRequest jr = new JoinRequest();
+    jr.sessionId = sid;
+    jr.authIdToken = token;
+
+    final response = await stub.join(jr);
+    print('Joined: ${response.sessionId})');
+  }
+
 }

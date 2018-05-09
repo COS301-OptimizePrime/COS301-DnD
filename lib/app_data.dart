@@ -110,7 +110,7 @@ class AppData{
   async {
 
     if(channel==null)
-      await connectToServer();
+      connectToServer();
 
     NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = "mySession";
@@ -125,7 +125,7 @@ class AppData{
   static joinSession(String sid) async
   {
     if(channel==null)
-      await connectToServer();
+      connectToServer();
 
     JoinRequest jr = new JoinRequest();
     jr.sessionId = sid;

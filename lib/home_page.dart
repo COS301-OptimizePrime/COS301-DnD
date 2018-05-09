@@ -1,6 +1,7 @@
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/qr_handler.dart';
+import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
 
@@ -57,7 +58,9 @@ class HomePage extends StatelessWidget {
                   .setExecuteAfterPermissionGranted(true) // default true
                   .scan();
 
-              AppData.joinSession(sid);
+              await AppData.joinSession(sid);
+
+              Navigator.of(context).pushNamed(GameSessionDemo.tag);
           },
           color: Colors.deepOrange,
           child: new Text('Join Game Session', style: new TextStyle(color: Colors.white)),

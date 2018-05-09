@@ -44,7 +44,8 @@ class CharacterSwipePreview extends AnimatedWidget
             width: MediaQuery.of(context).size.width*(0.75),//3/4 screen width
             height: double.infinity,
             child: const FlutterLogo(),
-            color: Colors.deepOrange,
+            color: Colors.red,
+
           ),
         ),
       ),

@@ -14,30 +14,15 @@ class Menu extends StatelessWidget {
 
     if(appData.user_google_image!=null)
       displayImage = new SizedBox(
-        height: 118.0,
-        width: 118.0,
+        height: 108.0,
+        width: 108.0,
         child: appData.user_google_image,
       );
     else
       displayImage = new Hero(
             tag: 'profile_pic',
             child: new CircleAvatar(
-                radius: 58.0,
-                backgroundImage: new AssetImage('assets/placeholder.jpg'),
-            )
-        );
-
-    if(appData.user_google_image!=null)
-      displayImage = new SizedBox(
-        height: 118.0,
-        width: 118.0,
-        child: appData.user_google_image,
-      );
-    else
-      displayImage = new Hero(
-            tag: 'profile_pic',
-            child: new CircleAvatar(
-                radius: 58.0,
+                radius: 54.0,
                 backgroundImage: new AssetImage('assets/placeholder.jpg'),
             )
         );
@@ -61,6 +46,7 @@ class Menu extends StatelessWidget {
                   ),
                 ),
                 new ListTile(
+                  key: new Key("menu_home_page_tile"),
                   title: new Text('Home Page'),
                   onTap: () {
                     Navigator.pop(context);
@@ -68,6 +54,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("character_selection_page_tile"),
                   title: new Text('Character Selection'),
                   onTap: () {
                     // Update the state of the app
@@ -77,6 +64,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("monster_journal_page_tile"),
                   title: new Text('Monster Journal'),
                   onTap: () {
                     // Update the state of the app

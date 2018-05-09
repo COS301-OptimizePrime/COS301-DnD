@@ -1,12 +1,19 @@
 name: dnd_301_final
-description: A new Flutter application.
+description: A DnD Game State Manager
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth:
+  firebase_auth: '0.5.5'
   google_sign_in:
   image_picker:
+  async: '>=1.13.3 <3.0.0'
+  protobuf: ^0.7.2
+  http: ^0.11.3+16
+  http2: ^0.1.7
+  grpc: "^0.4.1"
+  qr_flutter: '^1.1.1'
+  qr_reader: "^0.1.0"
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -97,7 +97,7 @@ class AppData{
     user = null;
   }
 
-  static Future connectToServer()
+  static void connectToServer()
   {
     channel = new ClientChannel('163.172.171.84',
         port: 50051,

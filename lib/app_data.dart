@@ -11,6 +11,8 @@ class AppData{
   GoogleSignInAccount googleUser = null;
   GoogleUserCircleAvatar user_google_image = null;
 
+  static double screenWidth;
+  static double screenHeight;
 
   static AppData _singleton;
 

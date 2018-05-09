@@ -1,9 +1,13 @@
+import 'package:dnd_301_final/app_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/animation.dart';
+import 'package:dnd_301_final/character_preview.dart';
 
 enum DismissDialogAction {
   cancel,
@@ -325,14 +329,16 @@ class CharacterItem extends StatelessWidget {
       ),
     );
 
-    Card card = new Card(child: new Column(
-      //move to crossaxis (aka horizontal as we are vertical)'s start (left)
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget> [
-          photoAndTitle,
-          description
-        ]
-    ));
+    GestureDetector card = new GestureDetector(
+      child: new Card(child: new Column(
+        //move to crossaxis (aka horizontal as we are vertical)'s start (left)
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [
+            photoAndTitle,
+            description
+          ]
+      )),
+    );
 
     SizedBox imageDisplay;
 
@@ -433,7 +439,9 @@ class CharacterItem extends StatelessWidget {
         bottom: false,
         // Allow user to tap card
         child: new GestureDetector(
-            onTap: () {Navigator.of(context).push(new MaterialPageRoute<Null>(
+            onTap: () {
+              if(!CharacterSelection.inPreviewState)
+                Navigator.of(context).push(new MaterialPageRoute<Null>(
                 builder: (BuildContext context) {
                   //build a new widget
                   return new Scaffold( //new scaffold
@@ -456,25 +464,69 @@ class CharacterItem extends StatelessWidget {
 
 class CharacterSelection extends StatefulWidget {
   static String tag = 'character-selection';
+  static bool inPreviewState = false;
 
   @override
   CharacterSelectionState createState() => new CharacterSelectionState();
 }
 
-class CharacterSelectionState extends State<CharacterSelection>
+class CharacterSelectionState extends State<CharacterSelection> with SingleTickerProviderStateMixin
 {
+
+  AnimationController controller;
+  Animation<double> animation;
+  double screenWidthOffset = AppData.screenWidth*0.75;
+
+  @override
+  initState() {
+    super.initState();
+    controller = new AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    animation = new Tween(begin: 0.0, end: screenWidthOffset).animate(controller);
+//    controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    //setup for animation
+//    CharacterSwipePreview.screenOffset = MediaQuery.of(context).size.width*-0.75;
+//    controller = new AnimationController(
+//        duration: const Duration(milliseconds: 200), vsync: this);
+//    animation = new Tween(begin: 0.0, end: MediaQuery.of(context).size.width*0.75).animate(controller);
+////    controller.forward();
+
+
+    double swipeStart;
+    double swipeEnd;
+
+
     return new Scaffold(
-            body: new ListView(
-                itemExtent: CharacterItem.height,
-                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                children: characters.map((Character char) {  //this goes through all our characters and makes a card for each
-                  return new Container(       //this is our 'card'
-                      margin: const EdgeInsets.only(bottom: 8.0),
-                      child: new CharacterItem(char: char)  //give our card a character to use
-                  );
-                }).toList()
+            body: new Stack(
+              children: <Widget>[
+                new ListView(
+                    itemExtent: CharacterItem.height,
+                    padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+                    children: characters.map((Character char) {  //this goes through all our characters and makes a card for each
+                      return new Container(       //this is our 'card'
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                          child: new GestureDetector(
+                              onHorizontalDragStart: (start){swipeStart=start.globalPosition.dx;},
+                              onHorizontalDragUpdate: (update){swipeEnd=update.globalPosition.dx;},//open preview
+                              onHorizontalDragEnd: (end){
+                                                            print('Start: $swipeStart \nEnd: $swipeEnd');
+                                                            if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
+                                                              controller.forward();
+                                                              CharacterSelection.inPreviewState=true;
+                                                            }
+                                                            swipeStart = swipeEnd = 0.0;
+                              },
+                              child: new CharacterItem(char: char))  //give our card a character to use
+                      );
+                    }).toList()
+                ),
+                new CharacterSwipePreview(animation: animation,controller: controller, screenOffset: screenWidthOffset,),
+              ],
             ),
             drawer: new Menu(),
             appBar: new AppBar( //AppBars are the bars on top of the view
@@ -494,5 +546,9 @@ class CharacterSelectionState extends State<CharacterSelection>
     );
   }
 
+  dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
 }

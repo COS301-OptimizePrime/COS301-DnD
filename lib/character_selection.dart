@@ -1,13 +1,14 @@
-import 'package:dnd_301_final/app_data.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:dnd_301_final/menu.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/animation.dart';
+
+import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/character_preview.dart';
+import 'package:dnd_301_final/menu.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 enum DismissDialogAction {
   cancel,
@@ -518,6 +519,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
                                                             if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
                                                               controller.forward();
                                                               CharacterSelection.inPreviewState=true;
+                                                              CharacterSwipePreview.char = char;
                                                             }
                                                             swipeStart = swipeEnd = 0.0;
                               },

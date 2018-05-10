@@ -122,7 +122,7 @@ class AppData{
     return sessionId;
   }
 
-  static joinSession(String sid) async
+  static Future<Session> joinSession(String sid) async
   {
     if(channel==null)
       connectToServer();
@@ -132,7 +132,10 @@ class AppData{
     jr.authIdToken = token;
 
     final response = await stub.join(jr);
-    print('Joined: ${response.sessionId})');
+    print('Status: ${response.status}');
+    print('Status Message: ${response.statusMessage}');
+
+    return response;
   }
 
 }

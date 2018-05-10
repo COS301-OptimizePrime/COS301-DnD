@@ -5,6 +5,9 @@ import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
 
+import 'backend/server.pb.dart';
+import 'backend/server.pbgrpc.dart';
+
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
   final String flava_text = 'The many worlds of Dungeons & Dragons are places of magic and monsters, of brave warriors and spectacular adventures. '
@@ -41,15 +44,22 @@ class HomePage extends StatelessWidget {
       ),
     );
 
+    final snackBar = new SnackBar(content: new Text('test'));
+
     final join_button = new Padding(
       padding: new EdgeInsets.symmetric(vertical: 16.0),
-      child: new Material(
-        borderRadius: new BorderRadius.circular(30.0),
-        elevation: 5.0,
-        child: new MaterialButton(
-          minWidth: 200.0,
-          height: 42.0,
-          onPressed: () async{
+      child:  new Builder(
+        // Create an inner BuildContext so that the onPressed methods
+        // can refer to the Scaffold with Scaffold.of().
+        builder: (BuildContext context)
+      {
+        return new Material(
+          borderRadius: new BorderRadius.circular(30.0),
+          elevation: 5.0,
+          child: new MaterialButton(
+            minWidth: 200.0,
+            height: 42.0,
+            onPressed: () async {
               String sid = await new QRCodeReader()
                   .setAutoFocusIntervalInMs(200) // default 5000
                   .setForceAutoFocus(true) // default false
@@ -58,14 +68,22 @@ class HomePage extends StatelessWidget {
                   .setExecuteAfterPermissionGranted(true) // default true
                   .scan();
 
-              await AppData.joinSession(sid);
+              Session s = await AppData.joinSession(sid);
 
-              Navigator.of(context).pushNamed(GameSessionDemo.tag);
-          },
-          color: Colors.deepOrange,
-          child: new Text('Join Game Session', style: new TextStyle(color: Colors.white)),
-        ),
-      ),
+              if (s.status == "FAILED") {
+                //snackBar.content = new Text(s.statusMessage);
+                Scaffold.of(context).showSnackBar(
+                    new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
+              } else {
+                Navigator.of(context).pushNamed(GameSessionDemo.tag);
+              }
+            },
+            color: Colors.deepOrange,
+            child: new Text(
+                'Join Game Session', style: new TextStyle(color: Colors.white)),
+          ),
+        );
+      })
     );
 
     final logo = new Hero(
@@ -96,9 +114,11 @@ class HomePage extends StatelessWidget {
               new SizedBox(height: 8.0),
               create_button,
               new SizedBox(height: 24.0),
+              snackBar,
             ],
           ),
       ),
+
     );
 
     return main_page;

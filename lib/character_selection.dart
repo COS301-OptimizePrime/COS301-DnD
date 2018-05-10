@@ -76,7 +76,16 @@ class FullScreenDialogState extends State<FullScreenDialog> {
       title: newCharName,
       charClass: newCharClass,
       charRace: newCharRace,
+      charGender: newCharGender,
+      strength: 1,
+      dexterity: 1,
+      constitution: 1,
+      intelligence: 1,
+      wisdom: 1,
+      charisma: 1
     );
+
+    print("New Character " + newCharName + " created.");
     temp.imageIsFile=true;
     characters.add(temp);
 
@@ -201,10 +210,35 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                   ],
                 ),
-                new RaisedButton(
-                  onPressed: getImage,
-                  child: new Text('Pick Image'),
-                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Add Picture',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new FloatingActionButton(
+                        onPressed: getImage,
+                        child: new Icon(Icons.add)
+                    )
+                  ],
+                )
+                /*new Padding(
+                    padding: const EdgeInsets.fromLTRB(7.0,15.0,7.0,16.0),
+                    child:
+                      new Material(
+                        borderRadius: new BorderRadius.circular(30.0),
+                        elevation: 5.0,
+                        child: new MaterialButton(
+                          minWidth: 200.0,
+                          height: 22.0,
+                          onPressed: getImage,
+                          color: Colors.deepOrange,
+                            child: new Text('Pick Image', style: new TextStyle(color: Colors.white)),
+                        ),
+                      )
+                ),*/
               ]
                   .map((Widget child) {
                 return new Container(
@@ -228,6 +262,12 @@ class Character {
     this.charClass,
     this.charRace,
     this.charGender,
+    this.strength,
+    this.dexterity,
+    this.constitution,
+    this.intelligence,
+    this.wisdom,
+    this.charisma,
   });
 
   Character.image({
@@ -236,14 +276,26 @@ class Character {
     this.charClass,
     this.charRace,
     this.charGender,
+    this.strength,
+    this.dexterity,
+    this.constitution,
+    this.intelligence,
+    this.wisdom,
+    this.charisma,
     imageisFile = true,
-});
+  });
 
   final String assetName;
   final String title;
   final String charClass;
   final String charRace;
   final String charGender;
+  final int strength;
+  final int dexterity;
+  final int constitution;
+  final int intelligence;
+  final int wisdom;
+  final int charisma;
   bool imageIsFile = false;
 
   bool isValid(){
@@ -258,6 +310,12 @@ final List<Character> characters = <Character>[
     charClass: 'Knight',
     charRace: 'Human',
     charGender: 'Female',
+    strength: 6,
+    dexterity: 2,
+    constitution: 6,
+    intelligence: 2,
+    wisdom: 2,
+    charisma: 2
   ),
   new Character(
     assetName: 'assets/character_images/mage.jpg',
@@ -265,6 +323,12 @@ final List<Character> characters = <Character>[
     charClass: 'Mage',
     charRace: 'Human',
     charGender: 'Male',
+    strength: 2,
+    dexterity: 2,
+    constitution: 2,
+    intelligence: 5,
+    wisdom: 5,
+    charisma: 5
   ),
   new Character(
     assetName: 'assets/character_images/archer.jpg',
@@ -272,6 +336,12 @@ final List<Character> characters = <Character>[
     charClass: 'Archer',
     charRace: 'Elf',
     charGender: 'Trap',
+    strength: 3,
+    dexterity: 5,
+    constitution: 2,
+    intelligence: 5,
+    wisdom: 4,
+    charisma: 1
   ),
 ];
 
@@ -510,7 +580,7 @@ class CharacterItem extends StatelessWidget {
                   //build a new widget
                   return new Scaffold( //new scaffold
                       appBar: new AppBar(
-                        title: const Text('Character Stats'), //title of view
+                        title: const Text('Character Details'), //title of view
                       ),
                       body: detailedView
                   );

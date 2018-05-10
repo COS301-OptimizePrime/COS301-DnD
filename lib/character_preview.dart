@@ -16,6 +16,8 @@ class CharacterSwipePreview extends AnimatedWidget
   double startPos;
   double endPos;
 
+  static Character char;//updated when a swipe is detected
+
   bool swipeLeft()
   {
     print('Start: $startPos \nEnd: $endPos');

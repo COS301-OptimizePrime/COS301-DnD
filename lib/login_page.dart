@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dnd_301_final/app_data.dart';
 
 
@@ -18,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
 
 //  final FirebaseAuth _auth = FirebaseAuth.instance;
 //  final GoogleSignIn _googleSignIn = new GoogleSignIn();
-  bool signedIn = false, googleSignedIn = false;
+//  bool signedIn = false, googleSignedIn = false;
   String signin_login_message, enter_register_message;
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -28,29 +26,28 @@ class _LoginPageState extends State<LoginPage> {
   bool signup = false, incorrectCredentials = false;
 
 
-  Future<String> _SignInWithGoogle() async {
-//    final GoogleSignInAccount googleUser = await appData.googleSignIn.signIn();
-    appData.googleUser = await appData.googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =   await appData.googleUser.authentication;
-    final FirebaseUser user = await appData.auth.signInWithGoogle(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+  Future _SignInWithGoogle() async {
+//    appData.googleUser = await appData.googleSignIn.signIn();
+//    final GoogleSignInAuthentication googleAuth =   await appData.googleUser.authentication;
+//    final FirebaseUser user = await appData.auth.signInWithGoogle(
+//      accessToken: googleAuth.accessToken,
+//      idToken: googleAuth.idToken,
+//    );
+//    assert(user.email != null);
+//    assert(user.displayName != null);
+//    assert(!user.isAnonymous);
+//    assert(await user.getIdToken() != null);
+//
+//    final FirebaseUser currentUser = await appData.auth.currentUser();
+//    assert(user.uid == currentUser.uid);
 
-    final FirebaseUser currentUser = await appData.auth.currentUser();
-    assert(user.uid == currentUser.uid);
-
+    await appData.signinWithGoogle();
 
     Navigator.pop(context); //pop dialog
     Navigator.of(context).pushNamed(HomePage.tag);
 
-    googleSignedIn = true;
-    print("This user is signed in: $user");
-    return 'signInWithGoogle succeeded: $user';
+//    googleSignedIn = true;
+    print('This user is signed in: '+ appData.user.toString());
   }
 
 //  Future <LoginPage> _signOut()  async{
@@ -89,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
         try{
           // Email & password matched our validation rules
           // and are saved to _email and _password fields.
-          if(await signInWithEmailAndPass())
+          if(await appData.signInWithEmailAndPass(_email,_pass))
           {
             Navigator.pop(context); //pop dialog
             Navigator.of(context).pushNamed(HomePage.tag);
@@ -120,13 +117,14 @@ class _LoginPageState extends State<LoginPage> {
           child: loginDialog,
         );
         print(appData.auth.currentUser().toString());
-//        assert(_auth.currentUser()==null);
         if(validatePasswords()){
-          print(_email + ' - ' + _pass);
+          print("New User with Email: $_email and Pass: $_pass");
 
-          final FirebaseUser newUser = await appData.auth.createUserWithEmailAndPassword(email: _email, password: _pass);
-          assert(newUser!=null);
-          print(newUser.toString());
+////          final FirebaseUser newUser = await appData.auth.createUserWithEmailAndPassword(email: _email, password: _pass);
+//          assert(newUser!=null);
+//          print(newUser.toString());
+
+          await appData.registerNewEmalAndPassUser(_email,_pass);
 
           Navigator.pop(context); //pop dialog
           Navigator.of(context).pushNamed(HomePage.tag);
@@ -151,20 +149,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Future<bool> signInWithEmailAndPass() async{
-    bool status = true;
-    try{
-        await (appData.auth.signInWithEmailAndPassword(email: _email, password: _pass)
-          .catchError((){
-        status = false;
-      }));
-    }catch(PlatformException)
-    {
-      status = false;
-    }
-
-    return status;
-  }
+//  Future<bool> signInWithEmailAndPass() async{
+//    bool status = true;
+//    try{
+//        await (appData.auth.signInWithEmailAndPassword(email: _email, password: _pass)
+//          .catchError((){
+//        status = false;
+//      }));
+//    }catch(PlatformException)
+//    {
+//      status = false;
+//    }
+//
+//    return status;
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -346,13 +344,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    appData.signout();
     super.dispose();
 
-    if(signedIn)
-      appData.auth.signOut().then((val){print('Singed out successfully!');}).catchError((){print('error: could not sign out');});
+//    if(signedIn)
+//      appData.auth.signOut().then((val){print('Singed out successfully!');}).catchError((){print('error: could not sign out');});
+//
+//    if(googleSignedIn)
+//      appData.googleSignIn.signOut();
 
-    if(googleSignedIn)
-      appData.googleSignIn.signOut();
 
   }
 }

@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:dnd_301_final/qr_handler.dart';
+import 'package:dnd_301_final/session_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:qr_reader/qr_reader.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = 'home-page';
@@ -12,6 +14,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    AppData.screenWidth = MediaQuery.of(context).size.width;
+    AppData.screenHeight = MediaQuery.of(context).size.height;
+
     final create_button = new Padding(
       padding: new EdgeInsets.symmetric(vertical: 16.0),
       child: new Material(
@@ -21,7 +26,14 @@ class HomePage extends StatelessWidget {
           minWidth: 200.0,
           height: 42.0,
           onPressed: () {
-            //@todo implement create game action
+
+            AppData.createSession();
+
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+               child:  new QrMakerWidget(),
+            );
           },
           color: Colors.deepOrange,
           child: new Text('Create Game Session', style: new TextStyle(color: Colors.white)),
@@ -37,8 +49,18 @@ class HomePage extends StatelessWidget {
         child: new MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: () {
-            //@todo implement join game action
+          onPressed: () async{
+              String sid = await new QRCodeReader()
+                  .setAutoFocusIntervalInMs(200) // default 5000
+                  .setForceAutoFocus(true) // default false
+                  .setTorchEnabled(true) // default false
+                  .setHandlePermissions(true) // default true
+                  .setExecuteAfterPermissionGranted(true) // default true
+                  .scan();
+
+              await AppData.joinSession(sid);
+
+              Navigator.of(context).pushNamed(GameSessionDemo.tag);
           },
           color: Colors.deepOrange,
           child: new Text('Join Game Session', style: new TextStyle(color: Colors.white)),
@@ -59,27 +81,6 @@ class HomePage extends StatelessWidget {
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
         title: const Text('Home Page'),
-        actions: <Widget>[
-          new Padding(
-            padding: new EdgeInsets.symmetric(vertical: 16.0),
-            child: new Material(
-              borderRadius: new BorderRadius.circular(30.0),
-              elevation: 5.0,
-              child: new MaterialButton(
-                minWidth: 100.0,
-                height: 42.0,
-                onPressed: () async {
-                  GoogleSignIn _googleSignIn = new GoogleSignIn();
-                  FirebaseAuth.instance.signOut();
-                  await _googleSignIn.signOut();
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                },
-                color: Colors.deepOrange,
-                child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-              ),
-            ),
-          ),
-        ],
       ),
       body: new Center(
         child: new ListView(

@@ -44,8 +44,6 @@ class HomePage extends StatelessWidget {
       ),
     );
 
-    final snackBar = new SnackBar(content: new Text('test'));
-
     final join_button = new Padding(
       padding: new EdgeInsets.symmetric(vertical: 16.0),
       child:  new Builder(
@@ -75,7 +73,10 @@ class HomePage extends StatelessWidget {
                 Scaffold.of(context).showSnackBar(
                     new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
               } else {
-                Navigator.of(context).pushNamed(GameSessionDemo.tag);
+                Navigator.push(context, new MaterialPageRoute(
+                  builder: (BuildContext context) => new GameSessionDemo(s),
+                ));
+                //Navigator.of(context).pushNamed(GameSessionDemo.tag);
               }
             },
             color: Colors.deepOrange,
@@ -114,7 +115,6 @@ class HomePage extends StatelessWidget {
               new SizedBox(height: 8.0),
               create_button,
               new SizedBox(height: 24.0),
-              snackBar,
             ],
           ),
       ),

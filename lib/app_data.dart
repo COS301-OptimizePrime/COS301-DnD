@@ -16,6 +16,10 @@ class AppData{
   GoogleUserCircleAvatar user_google_image = null;
 
   static String token = "anon";
+
+  // This should change we should not have a global session as there can be multiple
+  static Session temp_session;
+  // This should change we should not have a global session as there can be multiple
   static String sessionId;
   static ClientChannel channel;
   static SessionsManagerClient stub;
@@ -99,27 +103,29 @@ class AppData{
 
   static void connectToServer()
   {
-    channel = new ClientChannel('163.172.171.84',
+    channel = new ClientChannel('develop.optimizeprime.co.za',
         port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
     stub = new SessionsManagerClient(channel);
   }
 
-  static Future<String> createSession()
+  static Future<Session> createSession()
   async {
 
     if(channel==null)
       connectToServer();
 
     NewSessionRequest nsr = new NewSessionRequest();
-    nsr.name = "mySession";
+    nsr.name = "COS301 Friday demo";
     nsr.authIdToken = token;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');
 
+
+    temp_session = response;
     sessionId = response.sessionId;
-    return sessionId;
+    return response;
   }
 
   static Future<Session> joinSession(String sid) async

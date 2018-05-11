@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     HomePage.tag: (context) => new HomePage(),
     MonsterJournal.tag: (context) => new MonsterJournal(),
     CharacterSelection.tag: (context) => new CharacterSelection(),
-    GameSessionDemo.tag: (context) => new GameSessionDemo(),
+    GameSessionDemo.tag: (context) => new GameSessionDemo(null),
 
 //    HomePage.tsg: (context) => new HomePage();
   };

@@ -149,13 +149,13 @@ class HomePage extends StatelessWidget {
       appBar: new AppBar( //AppBars are the bars on top of the view
         title: const Text('Home Page'),
       ),
-      body: new Container(
+      body: new ListView(//new Container(
         padding: const EdgeInsets.only(bottom: 20.0),
-        width: double.infinity,
-        height: double.infinity,
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //width: double.infinity,
+        //height: double.infinity,
+        //child: new Column(
+          //mainAxisSize: MainAxisSize.min,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Column(
@@ -171,16 +171,16 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            new SessionViewList(),
             new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 join_button,
                 create_button
               ],
-            )
+            ),
+            new SessionViewList(),
           ],
-        )
+      //  )
       ),
     );
 

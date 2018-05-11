@@ -1,9 +1,10 @@
+import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/character_selection.dart';
 
 
 void main() => runApp(new MyApp());
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
     MonsterJournal.tag: (context) => new MonsterJournal(),
-    CharacterSelection.tag: (context) => new CharacterSelection()
+    CharacterSelection.tag: (context) => new CharacterSelection(),
+    GameSessionDemo.tag: (context) => new GameSessionDemo(),
+
 //    HomePage.tsg: (context) => new HomePage();
   };
 

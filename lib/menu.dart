@@ -10,36 +10,25 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(appData.googleUser!=null)
-      {
+    Widget displayImage;
 
-        final Hero google_image = new Hero(
+    if(appData.user_google_image!=null)
+      displayImage = new SizedBox(
+        height: 108.0,
+        width: 108.0,
+        child: appData.user_google_image,
+      );
+    else
+      displayImage = new Hero(
             tag: 'profile_pic',
             child: new CircleAvatar(
-                radius: 58.0,
-                backgroundImage: new NetworkImage(appData.googleSignIn.currentUser.photoUrl,scale: 1.0),
+                radius: 54.0,
+                backgroundImage: new AssetImage('assets/placeholder.jpg'),
             )
         );
 
-//      final Image temp_image = new Image.network(appData.googleUser.photoUrl,width: 100.0,);
-//      final Image gimage = temp_image;
 
-//      final Container google_image = new Container(
-//        height: 110.0,
-//        child: gimage,
-//      );
-
-//      final google_image = new Container(
-//        decoration: new BoxDecoration(
-//          image: new DecorationImage(
-//            image: gimage,
-//            fit: BoxFit.cover,
-//          ),
-//        ),
-//        child: null /* add child content content here */,
-//      );
-
-        return new Drawer(
+    return new Drawer(
             child: new ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
@@ -48,7 +37,7 @@ class Menu extends StatelessWidget {
                       child: new Column(
                         children: <Widget>[
                           new Text('D&D Game State Manager'),
-                          google_image,
+                          displayImage,
                         ],
                       )
                   ),
@@ -57,6 +46,7 @@ class Menu extends StatelessWidget {
                   ),
                 ),
                 new ListTile(
+                  key: new Key("menu_home_page_tile"),
                   title: new Text('Home Page'),
                   onTap: () {
                     Navigator.pop(context);
@@ -64,6 +54,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("character_selection_page_tile"),
                   title: new Text('Character Selection'),
                   onTap: () {
                     // Update the state of the app
@@ -73,6 +64,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 new ListTile(
+                  key: new Key("monster_journal_page_tile"),
                   title: new Text('Monster Journal'),
                   onTap: () {
                     // Update the state of the app
@@ -81,67 +73,22 @@ class Menu extends StatelessWidget {
                     Navigator.pushNamed(context, MonsterJournal.tag);
                   },
                 ),
+                const Divider(),
+                new ListTile(
+                  title: new Text('Sign Out'),
+                  onTap: () async {
+                    // Update the state of the app
+                    // ...
+                    await appData.signout();
+                    Navigator.pop(context);
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  },
+                )
               ],
             )
         );
-      }
-      else
-      {
 
-        final Hero defaultImage = new Hero(
-            tag: 'profile_pic',
-            child: new CircleAvatar(
-                radius: 58.0,
-                backgroundImage: new AssetImage('assets/placeholder.jpg')
-            )
-        );
 
-        return new Drawer(
-            child: new ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                new DrawerHeader(
-                  child: new SizedBox.expand(
-                      child: new Column(
-                        children: <Widget>[
-                          new Text('D&D Game State Manager'),
-                          defaultImage,
-                        ],
-                      )
-                  ),
-                  decoration: new BoxDecoration(
-                    color: Colors.deepOrange,
-                  ),
-                ),
-                new ListTile(
-                  title: new Text('Home Page'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).pushNamed(HomePage.tag);
-                  },
-                ),
-                new ListTile(
-                  title: new Text('Character Selection'),
-                  onTap: () {
-                    // Update the state of the app
-                    // ...
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, CharacterSelection.tag);
-                  },
-                ),
-                new ListTile(
-                  title: new Text('Monster Journal'),
-                  onTap: () {
-                    // Update the state of the app
-                    // ...
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, MonsterJournal.tag);
-                  },
-                ),
-              ],
-            )
-        );
-      }
 
 
 

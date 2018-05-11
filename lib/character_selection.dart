@@ -1,10 +1,13 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:dnd_301_final/menu.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
+
+import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/character_preview.dart';
+import 'package:dnd_301_final/menu.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 enum DismissDialogAction {
@@ -45,6 +48,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                 'Discard new event?',
                 style: dialogTextStyle
             ),
+
             actions: <Widget>[
               new FlatButton(
                   child: const Text('CANCEL'),
@@ -65,23 +69,40 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
   void addNewChar()
   {
+
+    formKey.currentState.save();
     Character temp = new Character(
       assetName: newCharAssetName,
-      title: 'James',
-      charClass: 'Knight',
-      charRace: 'Human',
+      title: newCharName,
+      charClass: newCharClass,
+      charRace: newCharRace,
+      charGender: newCharGender,
+      strength: 1,
+      dexterity: 1,
+      constitution: 1,
+      intelligence: 1,
+      wisdom: 1,
+      charisma: 1
     );
+
+    print("New Character " + newCharName + " created.");
     temp.imageIsFile=true;
     characters.add(temp);
 
     setState((){});
   }
 
+  final List<DropdownMenuItem<String>> raceList = [
+    new DropdownMenuItem<String>(child: new Text("Human"), value: "Human",),
+    new DropdownMenuItem<String>(child: new Text("Orc"), value: "Orc",),
+    new DropdownMenuItem<String>(child: new Text("Gnome"), value: "Gnome",),
+    new DropdownMenuItem<String>(child: new Text("Halfling"), value: "Halfling",),
+  ];
 
   final TextEditingController char_name = new TextEditingController();
-  final TextEditingController char_class = new TextEditingController();
-  final TextEditingController char_race = new TextEditingController();
-  String newCharName, newCharclass,newCharRace, newCharAssetName;
+//  final TextEditingController char_class = new TextEditingController();
+//  final TextEditingController char_race = new TextEditingController();
+  String newCharName, newCharClass = "Knight",newCharRace = "Human", newCharAssetName, newCharGender = "Male";
 
   @override
   Widget build(BuildContext context) {
@@ -124,42 +145,100 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                     ),
                   ],
                 ),
-                new Column(
-                  children: <Widget>[
-                    new Padding(  //padding on top and bottom to space from image box and description
-                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                      child: new Text('Character Class',
-                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
-                    ),
-                    new TextFormField(
-                        controller:char_class,
-                        onSaved: (val) => newCharclass = val,
-                        decoration: new InputDecoration(
-                          hintText: 'Type class here',
-                        )
-                    ),
-                  ],
-                ),
-                new Column(
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     new Padding(  //padding on top and bottom to space from image box and description
                       padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                       child: new Text('Race',
                           style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
                     ),
-                    new TextFormField(
-                        controller: char_race,
-                        onSaved: (val) => newCharRace = val,
-                        decoration: new InputDecoration(
-                          hintText: 'Type race here',
-                        )
+
+                new Row(
+                  children: <Widget>[
+                    new DropdownButton(items: [
+                      new DropdownMenuItem<String>(child: new Text("Human"), value: "Human",),
+                      new DropdownMenuItem<String>(child: new Text("Orc"), value: "Orc",),
+                      new DropdownMenuItem<String>(child: new Text("Gnome"), value: "Gnome",),
+                      new DropdownMenuItem<String>(child: new Text("Halfling"), value: "Halfling",),
+                    ], onChanged: (val){newCharRace = val; setState(() {});},
+                      value: newCharRace,),
+
+                    new IconButton(icon: new Icon(Icons.info), onPressed: null),
+                  ],
+                )
+
+                  ],
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Gender',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new Row(
+                      children: <Widget>[
+                        new DropdownButton(items: [
+                          new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
+                          new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
+                        ], onChanged: (val){newCharGender = val; setState(() {});},
+                          value: newCharGender,),
+
+                        new IconButton(icon: new Icon(Icons.info), onPressed: null),
+                      ],
+                    )
+                  ],
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Class',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new DropdownButton<String>(
+                      items: <String>['Warlock', 'Druid', 'Knight', 'Paladin'].map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value)
+                        );}).toList(),
+                      onChanged: (val){newCharClass = val; setState(() {});},
+                      value: newCharClass,
                     ),
                   ],
                 ),
-                new RaisedButton(
-                  onPressed: getImage,
-                  child: new Text('Pick Image'),
-                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Padding(  //padding on top and bottom to space from image box and description
+                      padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                      child: new Text('Add Picture',
+                          style: theme.textTheme.title.copyWith(color: Colors.deepOrange)),
+                    ),
+                    new FloatingActionButton(
+                        onPressed: getImage,
+                        child: new Icon(Icons.add)
+                    )
+                  ],
+                )
+                /*new Padding(
+                    padding: const EdgeInsets.fromLTRB(7.0,15.0,7.0,16.0),
+                    child:
+                      new Material(
+                        borderRadius: new BorderRadius.circular(30.0),
+                        elevation: 5.0,
+                        child: new MaterialButton(
+                          minWidth: 200.0,
+                          height: 22.0,
+                          onPressed: getImage,
+                          color: Colors.deepOrange,
+                            child: new Text('Pick Image', style: new TextStyle(color: Colors.white)),
+                        ),
+                      )
+                ),*/
               ]
                   .map((Widget child) {
                 return new Container(
@@ -182,7 +261,13 @@ class Character {
     this.title,
     this.charClass,
     this.charRace,
-
+    this.charGender,
+    this.strength,
+    this.dexterity,
+    this.constitution,
+    this.intelligence,
+    this.wisdom,
+    this.charisma,
   });
 
   Character.image({
@@ -190,17 +275,31 @@ class Character {
     this.title,
     this.charClass,
     this.charRace,
+    this.charGender,
+    this.strength,
+    this.dexterity,
+    this.constitution,
+    this.intelligence,
+    this.wisdom,
+    this.charisma,
     imageisFile = true,
-});
+  });
 
   final String assetName;
   final String title;
   final String charClass;
   final String charRace;
+  final String charGender;
+  final int strength;
+  final int dexterity;
+  final int constitution;
+  final int intelligence;
+  final int wisdom;
+  final int charisma;
   bool imageIsFile = false;
 
   bool isValid(){
-    return (assetName != null && title != null && charClass != null && charRace != null);
+    return (assetName != null && title != null && charClass != null && charRace != null && charGender != null);
   }
 }
 
@@ -210,24 +309,45 @@ final List<Character> characters = <Character>[
     title: 'James',
     charClass: 'Knight',
     charRace: 'Human',
+    charGender: 'Female',
+    strength: 6,
+    dexterity: 2,
+    constitution: 6,
+    intelligence: 2,
+    wisdom: 2,
+    charisma: 2
   ),
   new Character(
     assetName: 'assets/character_images/mage.jpg',
     title: 'Dorian',
     charClass: 'Mage',
     charRace: 'Human',
+    charGender: 'Male',
+    strength: 2,
+    dexterity: 2,
+    constitution: 2,
+    intelligence: 5,
+    wisdom: 5,
+    charisma: 5
   ),
   new Character(
     assetName: 'assets/character_images/archer.jpg',
     title: 'Elana',
     charClass: 'Archer',
     charRace: 'Elf',
+    charGender: 'Trap',
+    strength: 3,
+    dexterity: 5,
+    constitution: 2,
+    intelligence: 5,
+    wisdom: 4,
+    charisma: 1
   ),
 ];
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
-      : assert(true), //if it receives a null character object to populate the card, fatal error
+      : assert(char !=null), //if it receives a null character object to populate the card, fatal error
         super(key: key);
 
   static const double height = 187.0; // original value was 366.0
@@ -312,46 +432,73 @@ class CharacterItem extends StatelessWidget {
           softWrap: false,
           overflow: TextOverflow.ellipsis,//when text is too much for a container it should elipse (...)
           style: descriptionStyle,
-          child: new Column(  //add a column to allow our text to aign on x(horizontal) axis
+          child: new Row(  //add a column to allow our text to aign on x(horizontal) axis
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              new Text(char.charClass, //our text widget with our description
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis //overflow
-              )
+              new Text(char.charRace), //our text widget with our description
+              new Text(char.charClass), //our text widget with our description
+              new Text(char.charGender), //our text widget with our description
             ],
           ),
         ),
       ),
     );
 
-    Card card = new Card(child: new Column(
-      //move to crossaxis (aka horizontal as we are vertical)'s start (left)
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget> [
-          photoAndTitle,
-          description
-        ]
-    ));
+    GestureDetector card = new GestureDetector(
+      child: new Card(child: new Column(
+        //move to crossaxis (aka horizontal as we are vertical)'s start (left)
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [
+            photoAndTitle,
+            description
+          ]
+      )),
+    );
+
+    SizedBox imageDisplay;
+
+    if(char.imageIsFile)
+    {
+      imageDisplay  = new SizedBox( //holds our image
+          height: 184.0,
+          child: new Stack( //this stack is redundant - was originally to place text name over image
+              children: <Widget>[
+                new Positioned.fill(
+                child: new Image.file(
+                    new File(char.assetName),
+                    fit: BoxFit.fitWidth,//fit image to box
+                    alignment: Alignment.topCenter,
+                  ),
+                )
+            ]
+          )
+      );
+    }
+    else
+    {
+     imageDisplay = new SizedBox( //holds our image
+          height: 184.0,
+          child: new Stack( //this stack is redundant - was originally to place text name over image
+              children: <Widget>[
+                new Positioned.fill(
+                    child: new Image.asset(
+                      char.assetName,
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.topCenter,
+                    )
+                )
+              ]
+          )
+      );
+    }
 
     // A detailed view of the character that is called when a character card is tapped
     ListView detailedView = new ListView(
         shrinkWrap: true,
         padding: const EdgeInsets.all(10.0),
         children: <Widget>[
-          new SizedBox( //holds our image
-              height: 184.0,
-              child: new Stack( //this stack is redundant - was originally to place text name over image
-                  children: <Widget>[
-                    new Positioned.fill(
-                        child: new Image.asset(
-                          char.assetName,
-                          fit: BoxFit.fitHeight,
-                        )
-                    )
-                  ]
-              )
-          ),
+          imageDisplay,
           new Row( //allows us to place items consecutively on the horizontal
             children: <Widget>[
               new Padding(  //padding on top and bottom to space from image box and description
@@ -399,6 +546,24 @@ class CharacterItem extends StatelessWidget {
                 )
               ),
             ]
+          ),
+          new Row( //allows us to place items consecutively on the horizontal
+              children: <Widget>[
+                new Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 4.0),
+                    child: new Container(
+                      key: key,
+                      child: new Text('Gender:', style: descriptionStyle),//our description
+                    )
+                ),
+                new Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
+                    child: new Container(
+                      key: key,
+                      child: new Text(char.charGender, style: descriptionStyle),//our description
+                    )
+                ),
+              ]
           )
         ]
     );
@@ -408,12 +573,14 @@ class CharacterItem extends StatelessWidget {
         bottom: false,
         // Allow user to tap card
         child: new GestureDetector(
-            onTap: () {Navigator.of(context).push(new MaterialPageRoute<Null>(
+            onTap: () {
+              if(!CharacterSelection.inPreviewState)
+                Navigator.of(context).push(new MaterialPageRoute<Null>(
                 builder: (BuildContext context) {
                   //build a new widget
                   return new Scaffold( //new scaffold
                       appBar: new AppBar(
-                        title: const Text('Character Stats'), //title of view
+                        title: const Text('Character Details'), //title of view
                       ),
                       body: detailedView
                   );
@@ -431,50 +598,74 @@ class CharacterItem extends StatelessWidget {
 
 class CharacterSelection extends StatefulWidget {
   static String tag = 'character-selection';
+  static bool inPreviewState = false;
 
   @override
   CharacterSelectionState createState() => new CharacterSelectionState();
 }
 
-class CharacterSelectionState extends State<CharacterSelection>
+class CharacterSelectionState extends State<CharacterSelection> with SingleTickerProviderStateMixin
 {
+
+  AnimationController controller;
+  Animation<double> animation;
+  double screenWidthOffset = AppData.screenWidth*0.75;
+
+  @override
+  initState() {
+    super.initState();
+    controller = new AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    animation = new Tween(begin: 0.0, end: screenWidthOffset).animate(controller);
+//    controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    //setup for animation
+//    CharacterSwipePreview.screenOffset = MediaQuery.of(context).size.width*-0.75;
+//    controller = new AnimationController(
+//        duration: const Duration(milliseconds: 200), vsync: this);
+//    animation = new Tween(begin: 0.0, end: MediaQuery.of(context).size.width*0.75).animate(controller);
+////    controller.forward();
+
+
+    double swipeStart;
+    double swipeEnd;
+
+
     return new Scaffold(
-            body: new ListView(
-                itemExtent: CharacterItem.height,
-                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                children: characters.map((Character char) {  //this goes through all our characters and makes a card for each
-                  return new Container(       //this is our 'card'
-                      margin: const EdgeInsets.only(bottom: 8.0),
-                      child: new CharacterItem(char: char)  //give our card a character to use
-                  );
-                }).toList()
+            body: new Stack(
+              children: <Widget>[
+                new ListView(
+                    itemExtent: CharacterItem.height,
+                    padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+                    children: characters.map((Character char) {  //this goes through all our characters and makes a card for each
+                      return new Container(       //this is our 'card'
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                          child: new GestureDetector(
+                              onHorizontalDragStart: (start){swipeStart=start.globalPosition.dx;},
+                              onHorizontalDragUpdate: (update){swipeEnd=update.globalPosition.dx;},//open preview
+                              onHorizontalDragEnd: (end){
+                                                            print('Start: $swipeStart \nEnd: $swipeEnd');
+                                                            if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
+                                                              controller.forward();
+                                                              CharacterSelection.inPreviewState=true;
+                                                              CharacterSwipePreview.char = char;
+                                                            }
+                                                            swipeStart = swipeEnd = 0.0;
+                              },
+                              child: new CharacterItem(char: char))  //give our card a character to use
+                      );
+                    }).toList()
+                ),
+                new CharacterSwipePreview(animation: animation,controller: controller, screenOffset: screenWidthOffset,),
+              ],
             ),
             drawer: new Menu(),
             appBar: new AppBar( //AppBars are the bars on top of the view
                 title: const Text('Character Selection'),
-                actions: <Widget>[
-                  new Padding(
-                    padding: new EdgeInsets.symmetric(vertical: 16.0),
-                    child: new Material(
-                      borderRadius: new BorderRadius.circular(30.0),
-                      elevation: 5.0,
-                      child: new MaterialButton(
-                        minWidth: 100.0,
-                        height: 42.0,
-                        onPressed: () async {
-                          GoogleSignIn _googleSignIn = new GoogleSignIn();
-                          FirebaseAuth.instance.signOut();
-                          await _googleSignIn.signOut();
-                          Navigator.pop(context);
-                        },
-                        color: Colors.deepOrange,
-                        child: new Text('Sign Out!', style: new TextStyle(color: Colors.white)),
-                      ),
-                    ),
-                  )
-                ]
             ),
             floatingActionButton: new FloatingActionButton(
                 child: new Icon(Icons.add),
@@ -490,5 +681,9 @@ class CharacterSelectionState extends State<CharacterSelection>
     );
   }
 
+  dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
 }

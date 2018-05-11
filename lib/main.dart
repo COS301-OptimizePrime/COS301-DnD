@@ -5,6 +5,7 @@ import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:dnd_301_final/race_viewer.dart';
 
 
 void main() => runApp(new MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
     MonsterJournal.tag: (context) => new MonsterJournal(),
     CharacterSelection.tag: (context) => new CharacterSelection(),
     GameSessionDemo.tag: (context) => new GameSessionDemo(null),
+    RaceViewer.tag: (context) => new RaceViewer(),
 
 //    HomePage.tsg: (context) => new HomePage();
   };

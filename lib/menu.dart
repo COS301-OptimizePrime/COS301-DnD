@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/race_viewer.dart';
 
 class Menu extends StatelessWidget {
   AppData appData = AppData.instance();
@@ -71,6 +72,16 @@ class Menu extends StatelessWidget {
                     // ...
                     Navigator.pop(context);
                     Navigator.pushNamed(context, MonsterJournal.tag);
+                  },
+                ),
+                new ListTile(
+                  key: new Key("race_viewer_page_tile"),
+                  title: new Text('View Races'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, RaceViewer.tag);
                   },
                 ),
                 const Divider(),

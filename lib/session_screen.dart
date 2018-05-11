@@ -31,15 +31,22 @@ class GameSessionState extends State<GameSessionDemo> {
   final Session session;
 
 
+  static bool stopped = false;
+
   GameSessionState(this.session) {
-    _items = <String>['Welcome to ${this.session.name}','Dungeon master: ${this.session.dungeonMaster.name}'];
+    _items = <String>[];
+    stopped = false;
     _update();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    stopped = true;
+  }
 
   _update() async {
-    while(true) {
-      sleep(new Duration(seconds: 1));
+    while(stopped == false) {
       GetSessionRequest gsr = new GetSessionRequest();
       gsr.sessionId = this.session.sessionId;
       gsr.authIdToken = AppData.token;
@@ -48,15 +55,21 @@ class GameSessionState extends State<GameSessionDemo> {
       print('Status: ${response.status}');
       print('Status Message: ${response.statusMessage}');
 
-      _items = <String>['Welcome to ${this.session.name}','Dungeon master: ${this.session.dungeonMaster.name}'];
+      _items = <String>[];
 
       for (User user in session.users) {
         print(user.name);
-        _items.add('User: ' + user.name);
+        _items.add(user.name);
       }
-      setState((){
-        _items = _items;
-      });
+
+      if (stopped == false) {
+        setState((){
+          _items = _items;
+        });
+        sleep(new Duration(seconds: 1));
+      } else {
+        break;
+      }
     }
   }
 
@@ -69,11 +82,11 @@ class GameSessionState extends State<GameSessionDemo> {
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
 
-    _items = <String>['Welcome to ${this.session.name}','Dungeon master: ${this.session.dungeonMaster.name}'];
+    _items = <String>[];
 
     for (User user in session.users) {
       print(user.name);
-      _items.add('User: ' + user.name);
+      _items.add(user.name);
     }
     setState((){
       _items = _items;
@@ -91,19 +104,48 @@ class GameSessionState extends State<GameSessionDemo> {
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _handleRefresh,
+
         child: new Center(
-            child: new ListView.builder(
-                padding: kMaterialListPadding,
-                itemCount: _items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final String item = _items[index];
-                  return new ListTile(
-                    isThreeLine: true,
-                    title: new Text('$item.'),
-                    subtitle: const Text(
-                        'Even more additional list item information appears on line three.'),
-                  );
-                })
+            child:
+        new Container(
+            child: new Column(
+              children: <Widget>[
+                new Container (child: new Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new Container(
+                    child: new Text("Welcome to: ${this.session.name}!",style: new TextStyle(fontSize: 20.0,color: Colors.deepOrange),),
+                  ),
+                ),),
+                new Container (child: new Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new Container(
+                    child: new Text("The dungeon master for this session is: ${this.session.dungeonMaster.name}!",style: new TextStyle(fontSize: 15.0,color: Colors.white),),
+                  ),
+                ),),
+                new Container (child: new Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new Container(
+                    child: new Text("Current users in this session:",style: new TextStyle(fontSize: 15.0,color: Colors.deepOrange),),
+                  ),
+                ),),
+                new ListView.builder(
+                    shrinkWrap: true,
+                    padding: kMaterialListPadding,
+                    itemCount: _items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final String item = _items[index];
+                      return new ListTile(
+                        leading: new CircleAvatar(
+                          backgroundImage: new AssetImage('assets/placeholder.jpg'),
+                        ),
+                        title: new Text('$item'),
+                        subtitle: const Text(
+                            ''),
+                      );
+                    }),
+              ],
+             )
+            ),
           ),
         ),
       );

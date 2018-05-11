@@ -65,14 +65,18 @@ class HomePage extends StatelessWidget {
                   .setHandlePermissions(true) // default true
                   .setExecuteAfterPermissionGranted(true) // default true
                   .scan();
+              
+              showDialog(context: context,barrierDismissible: false, child: new QrReaderWaiter());
 
               Session s = await AppData.joinSession(sid);
 
               if (s.status == "FAILED") {
                 //snackBar.content = new Text(s.statusMessage);
+                Navigator.of(context).pop();
                 Scaffold.of(context).showSnackBar(
                     new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
               } else {
+                Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
                   builder: (BuildContext context) => new GameSessionDemo(s),
                 ));

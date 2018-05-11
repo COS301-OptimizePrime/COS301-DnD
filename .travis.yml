@@ -1,19 +1,29 @@
+language: android
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-27.0.2
+    - android-27
+    - sys-img-armeabi-v7a-google_apis-27
 os:
   - linux
 sudo: false
-addons:
-  apt:
-    # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
-    sources:
-      - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
-    packages:
-      - libstdc++6
-      - fonts-droid
 before_script:
+  - yes | /usr/local/android-sdk/tools/bin/sdkmanager --update
+  # install packages needed by flutter
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get install libstdc++6 fonts-droid
+  # download flutter
   - git clone https://github.com/flutter/flutter.git
-  - ./flutter/bin/flutter doctor
+  # install flutter and related entities
+  - yes | ./flutter/bin/flutter doctor --android-licenses
 script:
+  # see if application can build
+  - ./flutter/bin/flutter -v build apk
+  # run unit tests
   - ./flutter/bin/flutter test
-cache:
-  directories:
-    - $HOME/.pub-cache

@@ -49,6 +49,11 @@ class SessionsManagerClient extends Client {
       '/session.SessionsManager/GetSessionById',
       (GetSessionRequest value) => value.writeToBuffer(),
       (List<int> value) => new Session.fromBuffer(value));
+  static final _$getSessionsOfUser =
+      new ClientMethod<GetSessionsOfUserRequest, ListReply>(
+          '/session.SessionsManager/GetSessionsOfUser',
+          (GetSessionsOfUserRequest value) => value.writeToBuffer(),
+          (List<int> value) => new ListReply.fromBuffer(value));
 
   SessionsManagerClient(ClientChannel channel, {CallOptions options})
       : super(channel, options: options);
@@ -111,6 +116,14 @@ class SessionsManagerClient extends Client {
       {CallOptions options}) {
     final call = $createCall(
         _$getSessionById, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<ListReply> getSessionsOfUser(GetSessionsOfUserRequest request,
+      {CallOptions options}) {
+    final call = $createCall(
+        _$getSessionsOfUser, new Stream.fromIterable([request]),
         options: options);
     return new ResponseFuture(call);
   }
@@ -183,6 +196,13 @@ abstract class SessionsManagerServiceBase extends Service {
         false,
         (List<int> value) => new GetSessionRequest.fromBuffer(value),
         (Session value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<GetSessionsOfUserRequest, ListReply>(
+        'GetSessionsOfUser',
+        getSessionsOfUser_Pre,
+        false,
+        false,
+        (List<int> value) => new GetSessionsOfUserRequest.fromBuffer(value),
+        (ListReply value) => value.writeToBuffer()));
   }
 
   Future<Session> create_Pre(ServiceCall call, Future request) async {
@@ -221,6 +241,11 @@ abstract class SessionsManagerServiceBase extends Service {
     return getSessionById(call, await request);
   }
 
+  Future<ListReply> getSessionsOfUser_Pre(
+      ServiceCall call, Future request) async {
+    return getSessionsOfUser(call, await request);
+  }
+
   Future<Session> create(ServiceCall call, NewSessionRequest request);
   Future<Session> join(ServiceCall call, JoinRequest request);
   Future<LeaveReply> leave(ServiceCall call, LeaveRequest request);
@@ -230,4 +255,6 @@ abstract class SessionsManagerServiceBase extends Service {
   Future<Session> setPrivate(ServiceCall call, SetPrivateRequest request);
   Future<ListReply> list(ServiceCall call, ListRequest request);
   Future<Session> getSessionById(ServiceCall call, GetSessionRequest request);
+  Future<ListReply> getSessionsOfUser(
+      ServiceCall call, GetSessionsOfUserRequest request);
 }

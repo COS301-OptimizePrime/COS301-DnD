@@ -21,6 +21,7 @@ class AppData{
   static Session temp_session;
   // This should change we should not have a global session as there can be multiple
   static String sessionId;
+  static List<Session> activeSessions;
   static ClientChannel channel;
   static SessionsManagerClient stub;
 
@@ -140,6 +141,23 @@ class AppData{
     final response = await stub.join(jr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
+
+    return response;
+  }
+
+  static Future getUserSessions()
+  async {
+    if(channel==null)
+      connectToServer();
+
+    GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
+    gsur.limit = 10;
+    gsur.authIdToken = token;
+
+    final response = await stub.getSessionsOfUser(gsur);
+    activeSessions = response.sessions;
+    print('Status: ${response.status}');
+    print('Status Message: ${response.status}');
 
     return response;
   }

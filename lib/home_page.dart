@@ -1,3 +1,4 @@
+import 'package:dnd_301_final/SessionViewList.dart';
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/qr_handler.dart';
@@ -19,6 +20,7 @@ class HomePage extends StatelessWidget {
 
     AppData.screenWidth = MediaQuery.of(context).size.width;
     AppData.screenHeight = MediaQuery.of(context).size.height;
+    AppData.getUserSessions();
 
     final create_button = new Padding(
       padding: new EdgeInsets.symmetric(vertical: 16.0),
@@ -169,7 +171,7 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            activeSessionsView,
+            new SessionViewList(),
             new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

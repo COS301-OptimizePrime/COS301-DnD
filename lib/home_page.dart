@@ -64,6 +64,7 @@ class HomePage extends StatelessWidget {
             minWidth: 200.0,
             height: 42.0,
             onPressed: () async {
+
               String sid = await new QRCodeReader()
                   .setAutoFocusIntervalInMs(200) // default 5000
                   .setForceAutoFocus(true) // default false
@@ -72,17 +73,23 @@ class HomePage extends StatelessWidget {
                   .setExecuteAfterPermissionGranted(true) // default true
                   .scan();
 
-              Session s = await AppData.joinSession(sid);
+              if(sid!=null)
+                {
+                  showDialog(context: context,barrierDismissible: false, child: new QrReaderWaiter());
 
-              if (s.status == "FAILED") {
-                //snackBar.content = new Text(s.statusMessage);
-                Scaffold.of(context).showSnackBar(
-                    new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
-              } else {
-                Navigator.push(context, new MaterialPageRoute(
-                  builder: (BuildContext context) => new GameSessionDemo(s),
-                ));
-                //Navigator.of(context).pushNamed(GameSessionDemo.tag);
+                  Session s = await AppData.joinSession(sid);
+
+                  if (s.status == "FAILED") {
+                    //snackBar.content = new Text(s.statusMessage);
+                    Navigator.of(context).pop();
+                    Scaffold.of(context).showSnackBar(
+                        new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
+                  } else {
+                    Navigator.pop(context);
+                    Navigator.push(context, new MaterialPageRoute(
+                      builder: (BuildContext context) => new GameSessionDemo(s),
+                    ));
+                }
               }
             },
             color: Colors.deepOrange,

@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
-import 'backend/server.pb.dart';
-import 'backend/server.pbgrpc.dart';
-import 'package:dnd_301_final/menu.dart';
 import 'dart:async';
 import 'dart:io';
+
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/menu.dart';
+import 'package:flutter/material.dart';
+
+import 'backend/server.pb.dart';
+import 'backend/server.pbgrpc.dart';
 
 class GameSessionDemo extends StatefulWidget {
   static String tag = "game-session";
@@ -12,10 +14,6 @@ class GameSessionDemo extends StatefulWidget {
   final Session session;
 
   GameSessionDemo(this.session) {
-    /*for (User user in session.users) {
-      print(user.name);
-      _items.add('User: ' + user.name);
-    }*/
   }
   @override
   GameSessionState createState() => new GameSessionState(this.session);
@@ -26,7 +24,7 @@ class GameSessionState extends State<GameSessionDemo> {
 
   static List<String> _items = <String>[];
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+//  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   final Session session;
 

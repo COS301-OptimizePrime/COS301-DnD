@@ -26,7 +26,8 @@ class HomePage extends StatelessWidget {
         borderRadius: new BorderRadius.circular(30.0),
         elevation: 5.0,
         child: new MaterialButton(
-          minWidth: 200.0,
+//          minWidth: 300.0,
+          minWidth: AppData.screenWidth/1.38,
           height: 42.0,
           onPressed: () {
 
@@ -55,7 +56,8 @@ class HomePage extends StatelessWidget {
           borderRadius: new BorderRadius.circular(30.0),
           elevation: 5.0,
           child: new MaterialButton(
-            minWidth: 200.0,
+//            minWidth: 300.0,
+            minWidth: AppData.screenWidth/1.38,
             height: 42.0,
             onPressed: () async {
 
@@ -94,39 +96,112 @@ class HomePage extends StatelessWidget {
       })
     );
 
+    final List<String>_items = <String>['currently','active','sessions','appear','here'];
+
+    final activeSessionsView = new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children:[
+        new Padding(
+          padding: new EdgeInsets.only(bottom: 20.0),
+          child: new DecoratedBox(
+               decoration: new BoxDecoration(border: new Border(bottom: new BorderSide(color: Colors.deepOrange))),
+              child: new Text("Active Sessions:",style: new TextStyle(color: Colors.deepOrange,fontSize: 18.0,fontWeight: FontWeight.bold,))),
+        ),
+        new Container(
+          width: AppData.screenWidth/1.5,
+          height: AppData.screenHeight/4,
+          child: new ListView.builder(
+              padding: kTabLabelPadding,
+              itemCount: _items.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                final String item = _items[index];
+                return new DecoratedBox(
+                  decoration: new BoxDecoration(border: new Border(bottom: new BorderSide(color: Colors.deepOrange))),
+                  child: new ListTile(
+                    title: new Text('$item.'),
+                  ),
+                );}),
+        )
+    ]);
+
     final logo = new Hero(
       tag: 'loginLogo',
       child: new CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 60.0,
+        radius: AppData.screenWidth/4.25,
         child: new Image.asset('assets/dadlogo2.png'),
       ),
     );
+
 
     final main_page = new Scaffold(
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
         title: const Text('Home Page'),
       ),
-      body: new Center(
-        child: new ListView(
-            controller: new ScrollController(),
-            shrinkWrap: true,
-            padding: new EdgeInsets.only(left: 24.0, right: 24.0,top: 50.0),
-            children: <Widget>[
-              logo,
-              new SizedBox(height: 48.0),
-              new Container(child : new Text(flava_text,overflow: TextOverflow.ellipsis,maxLines: 7,textAlign: TextAlign.center,)),
-              new SizedBox(height: 70.0),
-              join_button,
-              new SizedBox(height: 8.0),
-              create_button,
-              new SizedBox(height: 24.0),
-            ],
-          ),
+      body: new Container(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        width: double.infinity,
+        height: double.infinity,
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                logo,
+                new Transform(
+                  transform: new Matrix4.translationValues(0.0, -10.0, 0.0),
+                  child: new Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: new Container(child : new Text(flava_text,overflow: TextOverflow.ellipsis,maxLines: 7,textAlign: TextAlign.center,)),
+                  ),
+                ),
+              ],
+            ),
+            activeSessionsView,
+            new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                join_button,
+                create_button
+              ],
+            )
+          ],
+        )
       ),
-
     );
+
+
+//    final main_page = new Scaffold(
+//      drawer: new Menu(),
+//      appBar: new AppBar( //AppBars are the bars on top of the view
+//        title: const Text('Home Page'),
+//      ),
+//      body: new Center(
+//        child: new ListView(
+//            controller: new ScrollController(),
+//            shrinkWrap: true,
+//            padding: new EdgeInsets.only(left: 24.0, right: 24.0,top: 50.0),
+//            children: <Widget>[
+//              logo,
+//              new SizedBox(height: 48.0),
+//              new Container(child : new Text(flava_text,overflow: TextOverflow.ellipsis,maxLines: 7,textAlign: TextAlign.center,)),
+//              new SizedBox(height: 70.0),
+//              join_button,
+//              new SizedBox(height: 8.0),
+//              create_button,
+//              new SizedBox(height: 24.0),
+//            ],
+//          ),
+//
+//        ),
+//
+//    );
 
     return main_page;
   }

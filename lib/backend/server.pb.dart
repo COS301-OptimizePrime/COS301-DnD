@@ -9,6 +9,42 @@ import 'dart:core' show int, bool, double, String, List, override;
 
 import 'package:protobuf/protobuf.dart';
 
+class GetSessionsOfUserRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('GetSessionsOfUserRequest')
+    ..aOS(1, 'authIdToken')
+    ..a<int>(2, 'limit', PbFieldType.OU3)
+    ..hasRequiredFields = false
+  ;
+
+  GetSessionsOfUserRequest() : super();
+  GetSessionsOfUserRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GetSessionsOfUserRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GetSessionsOfUserRequest clone() => new GetSessionsOfUserRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static GetSessionsOfUserRequest create() => new GetSessionsOfUserRequest();
+  static PbList<GetSessionsOfUserRequest> createRepeated() => new PbList<GetSessionsOfUserRequest>();
+  static GetSessionsOfUserRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetSessionsOfUserRequest();
+    return _defaultInstance;
+  }
+  static GetSessionsOfUserRequest _defaultInstance;
+  static void $checkItem(GetSessionsOfUserRequest v) {
+    if (v is! GetSessionsOfUserRequest) checkItemFailed(v, 'GetSessionsOfUserRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  int get limit => $_get(1, 0);
+  set limit(int v) { $_setUnsignedInt32(1, v); }
+  bool hasLimit() => $_has(1);
+  void clearLimit() => clearField(2);
+}
+
+class _ReadonlyGetSessionsOfUserRequest extends GetSessionsOfUserRequest with ReadonlyMessageMixin {}
+
 class GetSessionRequest extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('GetSessionRequest')
     ..aOS(1, 'authIdToken')

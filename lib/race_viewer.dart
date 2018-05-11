@@ -103,7 +103,7 @@ class RaceItem extends StatelessWidget {
               fit: BoxFit.cover,//fit image to box
               alignment: Alignment.topCenter,
             ),
-          ),
+          )/*,
           new Positioned(//positioned widgets can be moved within their parent (aka stack)
             bottom: 16.0,
             left: 16.0,
@@ -115,7 +115,7 @@ class RaceItem extends StatelessWidget {
                 style: titleStyle,
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );

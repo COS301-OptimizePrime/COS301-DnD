@@ -6,6 +6,8 @@ import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/session_screen.dart';
+import 'package:dnd_301_final/race_viewer.dart';
 
 main() {
   // Tests if app opens
@@ -62,6 +64,7 @@ main() {
     expect(find.text('Home Page'), findsNothing);
     expect(find.text('Character Selection'), findsNothing);
     expect(find.text('Monster Journal'), findsNothing);
+    expect(find.text('View Races'), findsNothing);
     expect(find.text('Sign Out'), findsNothing);
 
     final ScaffoldState state = tester.firstState(find.byType(Scaffold));
@@ -75,6 +78,7 @@ main() {
     expect(find.text('Home Page'), findsOneWidget);
     expect(find.text('Character Selection'), findsOneWidget);
     expect(find.text('Monster Journal'), findsOneWidget);
+    expect(find.text('View Races'), findsOneWidget);
     expect(find.text('Sign Out'), findsOneWidget);
   });
 
@@ -84,7 +88,9 @@ main() {
       LoginPage.tag: (context) => new LoginPage(),
       HomePage.tag: (context) => new HomePage(),
       MonsterJournal.tag: (context) => new MonsterJournal(),
-      CharacterSelection.tag: (context) => new CharacterSelection()
+      CharacterSelection.tag: (context) => new CharacterSelection(),
+      GameSessionDemo.tag: (context) => new GameSessionDemo(null),
+      RaceViewer.tag: (context) => new RaceViewer()
     };
 
     // set up environment
@@ -159,6 +165,25 @@ main() {
 
     // check if page is loaded correctly
     expect(find.text('Monster Journal'), findsOneWidget);
+    expect(find.byType(Card), findsWidgets);
+    expect(find.byType(Image), findsWidgets);
+    expect(find.byType(Text), findsWidgets);
+
+    // View Races
+    state = tester.firstState(find.byType(Scaffold));
+    state.openDrawer();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    tile = find.byKey(new Key("race_viewer_page_tile"));
+    expect(tile, findsOneWidget);
+    await tester.tap(tile);
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    // check if page is loaded correctly
+    expect(find.text('Races'), findsOneWidget);
     expect(find.byType(Card), findsWidgets);
     expect(find.byType(Image), findsWidgets);
     expect(find.byType(Text), findsWidgets);
@@ -282,5 +307,27 @@ main() {
     expect(find.text("Scan the QR code to join!"), findsOneWidget);
     //expect(find.byType(RefreshProgressIndicator), findsOneWidget);
     //expect(find.text("Enter Session"), findsOneWidget);
+  });
+
+  // Tests View Races
+  testWidgets('View Races Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new RaceViewer()
+    ));
+
+    // check if page is loaded correctly
+    expect(find.text('Races'), findsOneWidget);
+    expect(find.byType(Card), findsWidgets);
+    expect(find.byType(Image), findsWidgets);
+    expect(find.byType(Text), findsWidgets);
+
+    await tester.tap(find.byType(SafeArea).first);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.byType(Text), findsNWidgets(4));
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text('Stats'), findsOneWidget);
   });
 }

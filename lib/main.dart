@@ -3,6 +3,7 @@ import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/race_viewer.dart';
 import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +15,14 @@ class MyApp extends StatelessWidget {
 
   AppData appData = AppData.instance();
 
+
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
     MonsterJournal.tag: (context) => new MonsterJournal(),
     CharacterSelection.tag: (context) => new CharacterSelection(),
-    GameSessionDemo.tag: (context) => new GameSessionDemo(),
+    GameSessionDemo.tag: (context) => new GameSessionDemo(null),
+    RaceViewer.tag: (context) => new RaceViewer(),
 
 //    HomePage.tsg: (context) => new HomePage();
   };

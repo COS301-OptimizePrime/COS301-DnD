@@ -16,7 +16,12 @@ class AppData{
   GoogleUserCircleAvatar user_google_image = null;
 
   static String token = "anon";
+
+  // This should change we should not have a global session as there can be multiple
+  static Session temp_session;
+  // This should change we should not have a global session as there can be multiple
   static String sessionId;
+  static List<Session> activeSessions;
   static ClientChannel channel;
   static SessionsManagerClient stub;
 
@@ -99,30 +104,32 @@ class AppData{
 
   static void connectToServer()
   {
-    channel = new ClientChannel('163.172.171.84',
+    channel = new ClientChannel('develop.optimizeprime.co.za',
         port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
     stub = new SessionsManagerClient(channel);
   }
 
-  static Future<String> createSession()
+  static Future<Session> createSession()
   async {
 
     if(channel==null)
       connectToServer();
 
     NewSessionRequest nsr = new NewSessionRequest();
-    nsr.name = "mySession";
+    nsr.name = "COS301 Friday demo";
     nsr.authIdToken = token;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');
 
+
+    temp_session = response;
     sessionId = response.sessionId;
-    return sessionId;
+    return response;
   }
 
-  static joinSession(String sid) async
+  static Future<Session> joinSession(String sid) async
   {
     if(channel==null)
       connectToServer();
@@ -132,7 +139,27 @@ class AppData{
     jr.authIdToken = token;
 
     final response = await stub.join(jr);
-    print('Joined: ${response.sessionId})');
+    print('Status: ${response.status}');
+    print('Status Message: ${response.statusMessage}');
+
+    return response;
+  }
+
+  static Future getUserSessions()
+  async {
+    if(channel==null)
+      connectToServer();
+
+    GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
+    gsur.limit = 10;
+    gsur.authIdToken = token;
+
+    final response = await stub.getSessionsOfUser(gsur);
+    activeSessions = response.sessions;
+    print('Status: ${response.status}');
+    print('Status Message: ${response.status}');
+
+    return response;
   }
 
 }

@@ -4,6 +4,14 @@
 // ignore_for_file: non_constant_identifier_names,library_prefixes
 library session_server_pbjson;
 
+const GetSessionsOfUserRequest$json = const {
+  '1': 'GetSessionsOfUserRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'limit', '3': 2, '4': 1, '5': 13, '10': 'limit'},
+  ],
+};
+
 const GetSessionRequest$json = const {
   '1': 'GetSessionRequest',
   '2': const [

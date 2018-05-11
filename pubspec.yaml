@@ -4,7 +4,7 @@ description: A DnD Game State Manager
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth: '0.5.5'
+  firebase_auth:
   google_sign_in:
   image_picker:
   async: '>=1.13.3 <3.0.0'
@@ -47,6 +47,10 @@ flutter:
     - assets/character_images/archer.jpg
     - assets/character_images/knight.jpg
     - assets/character_images/mage.jpg
+    - assets/race_images/dragonborn_race.jpg
+    - assets/race_images/elf_race.jpg
+    - assets/race_images/human_race.jpg
+    - assets/race_images/orc_race.jpeg
 
   fonts:
         - family: Nunito

@@ -3,9 +3,9 @@ import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/race_viewer.dart';
 import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_301_final/race_viewer.dart';
 
 
 void main() => runApp(new MyApp());
@@ -14,6 +14,7 @@ void main() => runApp(new MyApp());
 class MyApp extends StatelessWidget {
 
   AppData appData = AppData.instance();
+
 
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => new LoginPage(),

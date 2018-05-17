@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed(HomePage.tag);
 
 //    googleSignedIn = true;
-    print('This user is signed in: '+ appData.user.toString());
+    //print('This user is signed in: '+ appData.user.toString());
   }
 
 //  Future <LoginPage> _signOut()  async{

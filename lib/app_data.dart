@@ -11,7 +11,7 @@ class AppData{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-  FirebaseUser user = null;
+  static FirebaseUser user = null;
   GoogleSignInAccount googleUser = null;
   GoogleUserCircleAvatar user_google_image = null;
 

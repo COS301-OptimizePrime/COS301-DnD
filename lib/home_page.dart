@@ -32,20 +32,13 @@ class HomePage extends StatelessWidget {
           minWidth: AppData.screenWidth/1.38,
           height: 42.0,
           onPressed: () async{
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) => new QrMakerWidget(),
+              //child:  new QrMakerWidget(),
+            );
 
-            Session s = await AppData.createSession();
-
-            if (s.status == "FAILED") {
-              Scaffold.of(context).showSnackBar(
-              new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
-            } else {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) => new QrMakerWidget(),
-                 //child:  new QrMakerWidget(),
-              );
-            }
           },
           color: Colors.deepOrange,
           child: new Text('Create Game Session', style: new TextStyle(color: Colors.white)),

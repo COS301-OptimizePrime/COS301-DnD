@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import 'backend/server.pb.dart';
 import 'backend/server.pbgrpc.dart';
@@ -101,6 +102,44 @@ class GameSessionState extends State<GameSessionDemo> {
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
         title: const Text('Current Session Page'),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.person_add),
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) => new Dialog(child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      new Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: new Container(
+                          child: new Text("Scan the QR code to join!",style: new TextStyle(fontSize: 20.0,color: Colors.deepOrange),),
+                        ),
+                      ),
+                      new Container(
+                        color: Colors.white,
+                        child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              new QrImage(data: this.responseSession.sessionId, size: 250.0,)
+                            ]),
+                      ),
+                    ]),
+                ),
+                //child:  new QrMakerWidget(),
+              );
+            },
+          ),
+          new IconButton(icon: new Icon(Icons.exit_to_app),
+              onPressed: () {
+            AppData.leaveSessions(this.responseSession.sessionId);
+            Navigator.pop(context);
+              }
+          ),
+        ],
       ),
       body: new RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -126,7 +165,7 @@ class GameSessionState extends State<GameSessionDemo> {
                 new Container (child: new Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: new Container(
-                    child: new Text("Current users in this session:",style: new TextStyle(fontSize: 15.0,color: Colors.deepOrange),),
+                    child: new Text("Maximum users possible in this session: ${this.responseSession.maxPlayers}\n Current users in this session:",style: new TextStyle(fontSize: 15.0,color: Colors.deepOrange),),
                   ),
                 ),),
                 new ListView.builder(

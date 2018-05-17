@@ -104,21 +104,30 @@ class AppData{
 
   static void connectToServer()
   {
-    channel = new ClientChannel('develop.optimizeprime.co.za',
+    try{channel = new ClientChannel('develop.optimizeprime.co.za',
         port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
-    stub = new SessionsManagerClient(channel);
+    stub = new SessionsManagerClient(channel);}
+    catch
+    (e){print('GRPC Error');}
+
   }
 
   static Future<Session> createSession()
   async {
 
-    if(channel==null)
-      connectToServer();
+      try
+      {
+        if(channel==null)
+          connectToServer();
+      }
+      catch
+      (e){print('GRPC Error');}
+
 
     NewSessionRequest nsr = new NewSessionRequest();
-    nsr.name = "COS301 Friday demo";
+    nsr.name = "17/05/2018";
     nsr.authIdToken = token;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');

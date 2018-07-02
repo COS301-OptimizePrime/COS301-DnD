@@ -151,12 +151,6 @@ class HomePage extends StatelessWidget {
       ),
       body: new ListView(//new Container(
         padding: const EdgeInsets.only(bottom: 20.0),
-        //width: double.infinity,
-        //height: double.infinity,
-        //child: new Column(
-          //mainAxisSize: MainAxisSize.min,
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Column(
               mainAxisSize: MainAxisSize.min,

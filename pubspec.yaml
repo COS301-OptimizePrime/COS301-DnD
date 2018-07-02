@@ -47,10 +47,56 @@ flutter:
     - assets/character_images/archer.jpg
     - assets/character_images/knight.jpg
     - assets/character_images/mage.jpg
-    - assets/race_images/dragonborn_race.jpg
-    - assets/race_images/elf_race.jpg
-    - assets/race_images/human_race.jpg
-    - assets/race_images/orc_race.jpeg
+    # Race images
+    - assets/race_images/Aarakocra.png
+    - assets/race_images/Aasimar.png
+    - assets/race_images/Bugbear.png
+    - assets/race_images/Centaur.png
+    - assets/race_images/Dragonborn.png
+    - assets/race_images/Dwarf.png
+    - assets/race_images/Elf.png
+    - assets/race_images/Feral Tiefling.png
+    - assets/race_images/Firbolg.png
+    - assets/race_images/Genasi.png
+    - assets/race_images/Gith.png
+    - assets/race_images/Gnome.png
+    - assets/race_images/Goblin.png
+    - assets/race_images/Goliath.png
+    - assets/race_images/Half-Elf.png
+    - assets/race_images/Half-Orc.png
+    - assets/race_images/Halfling.png
+    - assets/race_images/Hobgoblin.png
+    - assets/race_images/Human.png
+    - assets/race_images/Kenku.png
+    - assets/race_images/Kobold.png
+    - assets/race_images/Lizardfolk.png
+    - assets/race_images/Minotaur.png
+    - assets/race_images/Orc.png
+    - assets/race_images/Tabaxi.png
+    - assets/race_images/Tiefling.png
+    - assets/race_images/Tortle.png
+    - assets/race_images/Triton.png
+    - assets/race_images/Yuan-ti Pureblood.png
+    #classes
+    - assets/class_images/Barbarian.png
+    - assets/class_images/Bard.png
+    - assets/class_images/Cleric.png
+    - assets/class_images/Druid.png
+    - assets/class_images/Fighter.png
+    - assets/class_images/Monk.png
+    - assets/class_images/Paladin.png
+    - assets/class_images/Ranger.png
+    - assets/class_images/Rogue.png
+    - assets/class_images/Sorcerer.png
+    - assets/class_images/Warlock.png
+    - assets/class_images/Wizard.png
+    #stats icons
+    - assets/icon_assets/Charisma.png
+    - assets/icon_assets/Constitution.png
+    - assets/icon_assets/Dexterity.png
+    - assets/icon_assets/Intelligence.png
+    - assets/icon_assets/Strength.png
+    - assets/icon_assets/Wisdom.png
 
   fonts:
         - family: Nunito

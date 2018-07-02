@@ -5,6 +5,7 @@ import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/character_preview.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/races_and_monsters.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,8 @@ class Character {
   final int wisdom;
   final int charisma;
   bool imageIsFile = false;
+  Race race;
+  ClassType classType;
 
   bool isValid(){
     return (assetName != null && title != null && charClass != null && charRace != null && charGender != null);

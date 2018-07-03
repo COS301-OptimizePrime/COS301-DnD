@@ -90,6 +90,22 @@ class AppData{
     print(user.toString());
   }
 
+  static Future<LeaveReply> leaveSessions(String sid) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    LeaveRequest jr = new LeaveRequest();
+    jr.sessionId = sid;
+    jr.authIdToken = token;
+
+    final response = await stub.leave(jr);
+    print('Status: ${response.status}');
+    print('Status Message: ${response.statusMessage}');
+
+    return response;
+  }
+
   Future signout()
   async {
     auth.signOut();
@@ -104,22 +120,23 @@ class AppData{
 
   static void connectToServer()
   {
-    channel = new ClientChannel('develop.optimizeprime.co.za',
-        port: 50051,
+    channel = new ClientChannel('develop.optimizeprime.co.za', port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
     stub = new SessionsManagerClient(channel);
-  }
 
-  static Future<Session> createSession()
+  }
+  static Future<Session> createSession(String name, int maxPlayers)
   async {
 
-    if(channel==null)
-      connectToServer();
+        if(channel==null)
+          connectToServer();
+
 
     NewSessionRequest nsr = new NewSessionRequest();
-    nsr.name = "COS301 Friday demo";
+    nsr.name = name;
     nsr.authIdToken = token;
+    nsr.maxPlayers = maxPlayers;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');
 

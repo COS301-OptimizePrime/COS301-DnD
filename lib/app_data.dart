@@ -68,15 +68,10 @@ class AppData{
   Future<bool> signInWithEmailAndPass(String email, String pass) async{
     bool status = true;
     try{
-      user = await (auth.signInWithEmailAndPassword(email: email, password: pass)
-          .catchError((){
-        status = false;
-      }));
-
+      user = await (auth.signInWithEmailAndPassword(email: email, password: pass));
       token = await user.getIdToken();
-
-    }catch(PlatformException)
-    {
+    }
+    catch(PlatformException) {
       status = false;
     }
 

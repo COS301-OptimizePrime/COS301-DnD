@@ -57,6 +57,7 @@ class HomePage extends StatelessWidget {
           borderRadius: new BorderRadius.circular(30.0),
           elevation: 5.0,
           child: new MaterialButton(
+            key: new Key("join_btn"),
 //            minWidth: 300.0,
             minWidth: AppData.screenWidth/1.38,
             height: 42.0,

@@ -18,21 +18,21 @@ android:
 
     #- sys-img-armeabi-v7a-google_apis-25
     #- sys-img-x86_64-google_apis-25
-    - sys-img-armeabi-v7a-android-22
+    #- sys-img-armeabi-v7a-android-22
 
-    - extra-google-google_play_services
+    #- extra-google-google_play_services
 os:
   - linux
 sudo: false
 before_script:
   # create emulator
-  - android list targets
+  #- android list targets
   #- echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
   #- echo no | android create avd --force -n test -t android-25 --abi google_apis/x86_64
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+  #- echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  #- emulator -avd test -no-audio -no-window &
+  #- android-wait-for-emulator
+  #- adb shell input keyevent 82 &
 
   # install packages needed by flutter
   - yes | /usr/local/android-sdk/tools/bin/sdkmanager --update
@@ -45,8 +45,8 @@ before_script:
 script:
   #- ./flutter/bin/flutter emulators
   #- ./flutter/bin/flutter emulators --launch test
-  - ./flutter/bin/flutter devices
+  #- ./flutter/bin/flutter devices
   # run unit tests
   - ./flutter/bin/flutter test
   # run integration tests
-  - ./flutter/bin/flutter drive --target=test_driver/integration_test.dart
+  #- ./flutter/bin/flutter drive --target=test_driver/integration_test.dart

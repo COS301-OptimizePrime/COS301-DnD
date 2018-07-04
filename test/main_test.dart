@@ -24,6 +24,7 @@ main() {
     expect(find.text('Register'), findsOneWidget);
   });
 
+  // Unit test
   // Tests Login Page opens
   testWidgets('Login Page Test', (WidgetTester tester) async {
     // set up environment
@@ -40,6 +41,27 @@ main() {
     expect(find.text('Enter World!'), findsOneWidget);
     expect(find.text('Google Sign In!'), findsOneWidget);
     expect(find.text('Register'), findsOneWidget);
+
+    // test Register button
+    await tester.tap(find.text('Register'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds:1));
+
+    expect(find.text('Confirm Password'), findsOneWidget);
+    expect(find.text('Register New Account'), findsOneWidget);
+    expect(find.text('Login'), findsOneWidget);
+
+//    await tester.tap(find.text('Register New Account'));
+//    await tester.pump();
+//    await tester.pump(const Duration(seconds:1));
+
+    await tester.tap(find.text('Login'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds:1));
+
+    expect(find.text('Confirm Password'), findsNothing);
+    expect(find.text('Register New Account'), findsNothing);
+    expect(find.text('Login'), findsNothing);
 
     await tester.tap(find.text('Enter World!'));
     await tester.pump();

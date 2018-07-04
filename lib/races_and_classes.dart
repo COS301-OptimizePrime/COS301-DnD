@@ -93,7 +93,7 @@ final List<Race> races = <Race>[
   ),
   const Race(
     name: "Mountain Dwarf",
-    desc: "Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal, As a hill dwarf, you have keen senses, deep intuition, and remarkable resilience, As a mountain dwarf, you’re strong and hardy, accustomed to a difficult life in rugged terrain. You’re probably on the tall side (for a dwarf), and tend toward lighter coloration.",
+    desc: "Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal. As a mountain dwarf, you’re strong and hardy, accustomed to a difficult life in rugged terrain.",
     constitution: 2,
     wisdom: 1,
     strength: 2,

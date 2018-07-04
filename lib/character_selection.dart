@@ -5,7 +5,7 @@ import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/character_preview.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:dnd_301_final/races_and_monsters.dart';
+import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +44,8 @@ class Character {
 
   final String assetName;
   final String title;
-  final String charClass;
-  final String charRace;
+  final ClassType charClass;
+  final Race charRace;
   final String charGender;
   final int strength;
   final int dexterity;
@@ -66,8 +66,8 @@ final List<Character> characters = <Character>[
   new Character(
     assetName: 'assets/character_images/knight.jpg',
     title: 'James',
-    charClass: 'Knight',
-    charRace: 'Human',
+    charClass: typeClasses.elementAt(2),
+    charRace: races.elementAt(22),
     charGender: 'Female',
     strength: 6,
     dexterity: 2,
@@ -79,8 +79,8 @@ final List<Character> characters = <Character>[
   new Character(
     assetName: 'assets/character_images/mage.jpg',
     title: 'Dorian',
-    charClass: 'Mage',
-    charRace: 'Human',
+    charClass: typeClasses.elementAt(6),
+    charRace: races.elementAt(22),
     charGender: 'Male',
     strength: 2,
     dexterity: 2,
@@ -92,8 +92,8 @@ final List<Character> characters = <Character>[
   new Character(
     assetName: 'assets/character_images/archer.jpg',
     title: 'Elana',
-    charClass: 'Archer',
-    charRace: 'Elf',
+    charClass: typeClasses.elementAt(8),
+    charRace: races.elementAt(19),
     charGender: 'Trap',
     strength: 3,
     dexterity: 5,
@@ -195,8 +195,8 @@ class CharacterItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              new Text(char.charRace), //our text widget with our description
-              new Text(char.charClass), //our text widget with our description
+              new Text(char.charRace.name), //our text widget with our description
+              new Text(char.charClass.name), //our text widget with our description
               new Text(char.charGender), //our text widget with our description
             ],
           ),
@@ -283,7 +283,7 @@ class CharacterItem extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
                     child: new Container(
                       key: key,
-                      child: new Text(char.charClass, style: descriptionStyle),//our description
+                      child: new Text(char.charClass.name, style: descriptionStyle),//our description
                     )
                 ),
               ]
@@ -301,7 +301,7 @@ class CharacterItem extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
                 child: new Container(
                   key: key,
-                  child: new Text(char.charRace, style: descriptionStyle),//our description
+                  child: new Text(char.charRace.name, style: descriptionStyle),//our description
                 )
               ),
             ]

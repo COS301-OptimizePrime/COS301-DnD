@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 class LocalCharacter {
 
   LocalCharacter({
-    this.assetName  = 'assets/character_images/mage.jpg',
     this.characterId,
     this.title,
     this.charClass,
@@ -32,21 +31,6 @@ class LocalCharacter {
     this.bonds = '',
     this.flaws = '',
     this.featuresTraits = '',
-  });
-
-  LocalCharacter.image({
-    this.assetName,
-    this.title,
-    this.charClass,
-    this.charRace,
-    this.charGender,
-    this.strength,
-    this.dexterity,
-    this.constitution,
-    this.intelligence,
-    this.wisdom,
-    this.charisma,
-    imageisFile = true,
   });
 
   final String assetName;
@@ -71,7 +55,6 @@ class LocalCharacter {
   final String flaws;
   final String featuresTraits;
 
-  bool imageIsFile = false;
   Race race;
   ClassType classType;
 
@@ -491,10 +474,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
                     builder: (
                         BuildContext context) => new FullScreenDialog(),
                     fullscreenDialog: true,
-                  ));
-                  setState(() {
-                    //update list if added character
-                  });
+                  )).then((val){if(val==DismissDialogAction.save) updateCharacters();});
                 }
             )
     );

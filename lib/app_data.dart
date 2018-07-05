@@ -13,13 +13,13 @@ class AppData{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-  FirebaseUser user = null;
-  GoogleSignInAccount googleUser = null;
-  GoogleUserCircleAvatar user_google_image = null;
+  FirebaseUser user;
+  GoogleSignInAccount googleUser;
+  GoogleUserCircleAvatar user_google_image;
 
   static String token = "anon";
 
-  // This should change we should not have a global session as there can be multiple
+  // This should change, we should not have a global session as there can be multiple
   static Session temp_session;
   // This should change we should not have a global session as there can be multiple
   static String sessionId;
@@ -58,6 +58,8 @@ class AppData{
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
+
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
@@ -128,6 +130,7 @@ class AppData{
             credentials: const ChannelCredentials.insecure()));
 
   }
+
   static Future<Session> createSession(String name, int maxPlayers)
   async {
 
@@ -143,7 +146,6 @@ class AppData{
     nsr.maxPlayers = maxPlayers;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');
-
 
     temp_session = response;
     sessionId = response.sessionId;
@@ -217,10 +219,8 @@ class AppData{
       );
       charsLoaded++;
     }
-
     print('characters added');
   }
-
 
   static Future getUseCharacters()
   async
@@ -248,7 +248,8 @@ class AppData{
         );
       }
 
-      print('characters added');
+    print('characters added');
+
   }
 
   static addNewCharacter(LocalCharacter char)
@@ -271,11 +272,8 @@ class AppData{
    print('added character: ${response.characterId}');
 
    characters.add(char);
-//    charsLoaded++;
 
   }
-
-
 
   static LocalCharacter convertToLocalChar(Character netChar) {
     return new LocalCharacter(
@@ -328,7 +326,6 @@ class AppData{
 
     if(charStub==null)
       charStub = new CharactersManagerClient(channel);
-
 
     DeleteCharacterRequest dcr = new DeleteCharacterRequest();
     dcr.characterId = id;

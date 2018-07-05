@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
 enum DismissDialogAction {
   cancel,
   discard,
+  delete,
   save,
 }
 
@@ -25,15 +24,6 @@ class FullScreenDialog extends StatefulWidget {
 class FullScreenDialogState extends State<FullScreenDialog> {
   final formKey = new GlobalKey<FormState>();
 
-  File _image;
-
-  Future getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-//      newCharAssetName = _image.path;
-    });
-  }
   Future<bool> _onWillPop() async {
     if (!_saveNeeded)
       return true;
@@ -69,8 +59,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
   void addNewChar()
   {
-
-    formKey.currentState.save();
+//    formKey.currentState.save();
     LocalCharacter temp = new LocalCharacter(
       title: bit.newCharName,
       charClass: bit.selectedClass,
@@ -90,20 +79,16 @@ class FullScreenDialogState extends State<FullScreenDialog> {
       featuresTraits: lit.featuresTraits,
     );
 
-    print("New Character ${bit.newCharName} created.");
-//    temp.imageIsFile=true;
-//    characters.add(temp);
+    print("New Character ${bit.newCharName = ""} created.");
 
     AppData.addNewCharacter(temp);
 
     setState((){});
   }
 
-
   BasicInfoTab bit;
   LoreInfoTab lit;
   EquipInfoTab eit;
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +104,11 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     return new Material(
       child: new Form(
         key: formKey,
+        onChanged: (){
+          setState(() {
+            formKey.currentState.save();
+          });
+        },
         onWillPop: _onWillPop,
         child: new DefaultTabController(
           length: 3,
@@ -145,9 +135,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
             ),
             body: new TabBarView(
               children: [
-//                BasicInfoTab(),
-//                BasicInfoTab(popFunc: _onWillPop,),
-//                (bit = BasicInfoTab()),
+
                 bit,
                 lit,
                 eit,
@@ -162,7 +150,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
 class BasicInfoTab extends StatefulWidget {
 
-  String newCharName;
+  String newCharName = "";
   String newCharGender = "Male";
   ClassType selectedClass = typeClasses.elementAt(0);
   RacePreview racePrev = new RacePreview(race: races.elementAt(0));
@@ -193,9 +181,14 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                 ),
                 new Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: new TextFormField(
-                      controller: widget.char_name,
-                      onSaved: (val) {widget.newCharName = val;},
+                  child: new TextField(
+                      controller: TextEditingController(text: widget.newCharName),
+//                      onChanged: (val){widget.newCharName = val;},
+//                      onSaved: (val) {widget.newCharName = val;},
+                      onSubmitted: (val){widget.newCharName = val; print('saving name $val'); setState(() {
+
+                      });},
+                      autofocus: true,
                       decoration: new InputDecoration(
                         hintText: 'Type name here',
                       )
@@ -312,7 +305,9 @@ class LoreInfoTab extends StatefulWidget {
 
 class _LoreInfoTabState extends State<LoreInfoTab> {
 
-  updateFlaws (String val) => widget.flaws = val;
+  updateFlaws (String val) { setState(() {
+    widget.flaws = val;
+  }); }
 
   updateFeatures (String val) => widget.featuresTraits = val;
 
@@ -327,19 +322,17 @@ class _LoreInfoTabState extends State<LoreInfoTab> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Form(
-        child: ListView(
-          controller: ScrollController(keepScrollOffset: false),
-          padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 10.0),
-          children: <Widget>[
-              TextBox('Background',widget.background,updateBackground),
-              TextBox('Personality',widget.personality ,updatePersonality),
-              TextBox('Ideals',widget.ideals ,updateIdeals),
-              TextBox('Bonds',widget.bonds,updateBonds),
-              TextBox('Flaws',widget.flaws ,updateFlaws),
-              TextBox('Features & Traits',widget.featuresTraits,updateFeatures),
-          ],
-        ),
+      child: ListView(
+        controller: ScrollController(keepScrollOffset: false),
+        padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 10.0),
+        children: <Widget>[
+            TextBox('Background',widget.background,updateBackground),
+            TextBox('Personality',widget.personality ,updatePersonality),
+            TextBox('Ideals',widget.ideals ,updateIdeals),
+            TextBox('Bonds',widget.bonds,updateBonds),
+            TextBox('Flaws',widget.flaws ,updateFlaws),
+            TextBox('Features & Traits',widget.featuresTraits,updateFeatures),
+        ],
       ),
     );
   }
@@ -348,7 +341,7 @@ class _LoreInfoTabState extends State<LoreInfoTab> {
 class TextBox extends StatelessWidget {
 
   final String heading;
-  final String data;
+  String data;
   final Function update;
 
   TextBox(this.heading, this.data, this.update);
@@ -364,10 +357,16 @@ class TextBox extends StatelessWidget {
             heading,
             style: title,
           ),
-          TextFormField(
-            onSaved: (val) => update(val),
+          TextField(
+            onChanged: (val){data = val; update(val);
+//            print('saving $val');
+                },
+//            onSubmitted: (val){update(val); data = val; print('saving $data');},
+            controller: TextEditingController(text: data),
+//            onSaved: (val) => update(val),
             maxLines: null,
-            initialValue: data,
+//            initialValue: data,
+          keyboardType: TextInputType.multiline,
             style: descStyle,
           )
         ],
@@ -386,9 +385,21 @@ class EquipInfoTab extends StatefulWidget {
     new Equipment("Goldskin", "Breastplate", 5)
   );
 
-//  EquipInfoTab({
-//   this.equipment,
-//});
+  newItemDialog(BuildContext context)
+  {
+    showDialog(context: context,
+        builder: (_) => new SimpleDialog(
+          title: Text("Add New Item"),
+          children: <Widget>[
+            new Container(
+              width: AppData.screenHeight/4,
+              height: AppData.screenWidth/4,
+            )
+          ],
+        )
+    );
+  }
+
 
   @override
   _EquipInfoTabState createState() => _EquipInfoTabState();
@@ -414,53 +425,57 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Container(
-              width: AppData.screenWidth/4,
-              height: AppData.screenHeight/8,
-              child: Stack(
-                children: <Widget>[
-                  new Center(child: Image.asset('assets/shield.png',color: Colors.deepOrange,)),
+    return new Scaffold(
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: (){widget.newItemDialog(context);},),
+      body: new Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          children: <Widget>[
+            new Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: new Container(
+                width: AppData.screenWidth/4,
+                height: AppData.screenHeight/8,
+                child: Stack(
+                  children: <Widget>[
+                    new Center(child: Image.asset('assets/shield.png',color: Colors.deepOrange,)),
 
-                  Center(
-                    child: Text(
-                      '$armorClass',
-                      style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-
-          new Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(8.0),
-              children: widget.equipment.map(
-                (e)
-                {
-                  return new Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: EquipmentWidget(
-                        item: e,
+                    Center(
+                      child: Text(
+                        '$armorClass',
+                        style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),
                       ),
-                    );
-                }
-              ).toList(growable: true)..add(
-                new Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: EquipNewItem(),
+                    )
+                  ],
                 ),
               ),
             ),
-          )
-        ],
+
+            ///all items
+            new Expanded(
+              child: ListView(
+                padding: EdgeInsets.all(8.0),
+                children: widget.equipment.map(
+                  (e)
+                  {
+                    return new Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: EquipmentWidget(
+                          item: e,
+                        ),
+                      );
+                  }
+                ).toList(growable: true)..add(
+                  new Container(
+                    padding: EdgeInsets.all(5.0),
+                    child: EquipNewItem(),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -469,27 +484,30 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
 class EquipNewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        RichText(
-          text: TextSpan(
-              text: "Add new item\n",
-              style: traitsTitleStyle,
-              children: <TextSpan>[
-                TextSpan(
-                  text: "click here",
-                  style: descStyle,
-                )
-              ]
+    return new GestureDetector(
+      //implement tap
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          RichText(
+            text: TextSpan(
+                text: "Add new item\n",
+                style: traitsTitleStyle,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "click here",
+                    style: descStyle,
+                  )
+                ]
+            ),
           ),
-        ),
 
-        Expanded(child: new Container(),),
+          Expanded(child: new Container(),),
 
-        new Center(child: Icon(Icons.add,color: Colors.green,))
-      ],
+          new Center(child: Icon(Icons.add,color: Colors.green,))
+        ],
+      ),
     );
   }
 }
@@ -514,7 +532,6 @@ class EquipmentWidget extends StatelessWidget {
     this.item,
 });
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -533,28 +550,40 @@ class EquipmentWidget extends StatelessWidget {
           icon = 'assets/armor.png';
       }
 
-    return Container(
-      child: Row(
-        children: <Widget>[
-          RichText(
-            text: TextSpan(
-              text: "${item.name}\n",
-              style: traitsTitleStyle,
-              children: <TextSpan>[
-                TextSpan(
-                  text: item.type,
-                  style: descStyle,
-                )
-              ]
+    return new GestureDetector(
+      onTap: (){},
+      child: Container(
+        child: Row(
+          children: <Widget>[
+            RichText(
+              text: TextSpan(
+                text: "${item.name}\n",
+                style: traitsTitleStyle,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: item.type,
+                    style: descStyle,
+                  )
+                ]
+              ),
             ),
-          ),
 
-        Expanded(child: Container()),
+            Expanded(child: Container()),
 
-        new Container(
-          width: 20.0,
-            child: new Center(child: Image.asset(icon))),
-        ],
+            Row(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: new Center(child: Text(item.val.toString())),
+                ),
+                new Container(
+                    width: 20.0,
+                    child: new Center(child: Image.asset(icon))
+                ),
+            ],
+          )
+          ],
+        ),
       ),
     );
   }

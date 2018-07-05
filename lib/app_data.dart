@@ -208,7 +208,9 @@ class AppData{
 
     print('adding ${chars.characters.length - charsLoaded} characters');
 
-    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
+//    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
+    characters.clear();
+    for (int i = 0; i>=0 && i < chars.characters.length;i++)
     {
       characters.add(
           convertToLocalChar(chars.characters.elementAt(i))
@@ -264,15 +266,20 @@ class AppData{
 
     print('adding character: ${ncr.character.name}');
 
-     final response = await charStub.createCharacter(ncr);
+   final response = await charStub.createCharacter(ncr);
 
-     print('added character: ${response.characterId}');
+   print('added character: ${response.characterId}');
+
+   characters.add(char);
+//    charsLoaded++;
+
   }
 
 
 
   static LocalCharacter convertToLocalChar(Character netChar) {
     return new LocalCharacter(
+      characterId: netChar.characterId,
       title: netChar.name,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
@@ -312,6 +319,26 @@ class AppData{
 //    temp.features
 
     return temp;
+  }
+
+  static deleteCharacter(String id) async{
+
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+
+    DeleteCharacterRequest dcr = new DeleteCharacterRequest();
+    dcr.characterId = id;
+    dcr.authIdToken=token;
+
+    print("deleting character $id");
+
+    final response = await charStub.deleteCharacter(dcr);
+
+    print('deleted character ${response.status}');
   }
 
 }

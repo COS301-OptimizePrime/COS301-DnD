@@ -106,7 +106,7 @@ class CharacterSwipePreview extends AnimatedWidget
           controller.reverse(from: controller.value);
           CharacterSelection.inPreviewState=false;
           cp = new Container();
-        };},
+        }},
       child: new Transform(
         transform: new Matrix4.translationValues(
             animation.value-screenOffset,0.0,0.0

@@ -15,6 +15,7 @@ class LocalCharacter {
 
   LocalCharacter({
     this.assetName  = 'assets/character_images/mage.jpg',
+    this.characterId,
     this.title,
     this.charClass,
     this.charRace,
@@ -50,6 +51,7 @@ class LocalCharacter {
 
   final String assetName;
   final String title;
+  final String characterId;
 
   final ClassType charClass;
   final Race charRace;
@@ -286,6 +288,15 @@ class CharacterItem extends StatelessWidget {
           new Text(char.flaws),
           new Text(char.featuresTraits),
 
+
+          new Center(
+            child: new Container(
+              width: AppData.screenWidth/3,
+              height: AppData.screenHeight/20,
+              child: new DeleteButton(charId: char.characterId),
+            ),
+          )
+
         ]
     );
 
@@ -316,6 +327,58 @@ class CharacterItem extends StatelessWidget {
     );
   }
 }
+
+class DeleteButton extends StatefulWidget {
+
+  final String charId;
+
+  DeleteButton({
+    this.charId,
+});
+
+  @override
+  _DeleteButtonState createState() => _DeleteButtonState();
+}
+
+class _DeleteButtonState extends State<DeleteButton> {
+
+
+  bool confirmDelete = false;
+
+  delete()
+  {
+   if(confirmDelete)
+     AppData.deleteCharacter(widget.charId);
+   else
+     {
+       setState(() {
+         confirmDelete = true;
+         message = "Confirm?";
+       });
+     }
+  }
+
+
+  String message = "Delete";
+  @override
+  Widget build(BuildContext context) {
+    return new FlatButton(onPressed: (){delete();},
+      child: new Container(
+//                    width: AppData.screenWidth/8,
+        child: Row(
+          children: <Widget>[
+            Expanded(child: Container(),),
+            Text(message),
+            Icon(Icons.delete),
+            Expanded(child: Container(),),
+          ],
+        ),
+      ),
+      color: Colors.redAccent,
+    );
+  }
+}
+
 
 class CharacterSelection extends StatefulWidget {
   static String tag = 'character-selection';
@@ -427,6 +490,9 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
                         BuildContext context) => new FullScreenDialog(),
                     fullscreenDialog: true,
                   ));
+                  setState(() {
+                    //update list if added character
+                  });
                 }
             )
     );

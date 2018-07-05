@@ -11,10 +11,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 
-class Character {
+class LocalCharacter {
 
-  Character({
-    this.assetName,
+  LocalCharacter({
+    this.assetName  = 'assets/character_images/mage.jpg',
     this.title,
     this.charClass,
     this.charRace,
@@ -25,9 +25,15 @@ class Character {
     this.intelligence,
     this.wisdom,
     this.charisma,
+    this.background = '',
+    this.personality = '',
+    this.ideals = '',
+    this.bonds = '',
+    this.flaws = '',
+    this.featuresTraits = '',
   });
 
-  Character.image({
+  LocalCharacter.image({
     this.assetName,
     this.title,
     this.charClass,
@@ -44,26 +50,36 @@ class Character {
 
   final String assetName;
   final String title;
+
   final ClassType charClass;
   final Race charRace;
   final String charGender;
+
   final int strength;
   final int dexterity;
   final int constitution;
   final int intelligence;
   final int wisdom;
   final int charisma;
+
+  final String background;
+  final String personality;
+  final String ideals;
+  final String bonds;
+  final String flaws;
+  final String featuresTraits;
+
   bool imageIsFile = false;
   Race race;
   ClassType classType;
 
   bool isValid(){
-    return (assetName != null && title != null && charClass != null && charRace != null && charGender != null);
+    return (title != null && charClass != null && charRace != null && charGender != null);
   }
 }
 
-final List<Character> characters = <Character>[
-  new Character(
+final List<LocalCharacter> characters = <LocalCharacter>[
+  new LocalCharacter(
     assetName: 'assets/character_images/knight.jpg',
     title: 'James',
     charClass: typeClasses.elementAt(2),
@@ -76,7 +92,7 @@ final List<Character> characters = <Character>[
     wisdom: 2,
     charisma: 2
   ),
-  new Character(
+  new LocalCharacter(
     assetName: 'assets/character_images/mage.jpg',
     title: 'Dorian',
     charClass: typeClasses.elementAt(6),
@@ -89,7 +105,7 @@ final List<Character> characters = <Character>[
     wisdom: 5,
     charisma: 5
   ),
-  new Character(
+  new LocalCharacter(
     assetName: 'assets/character_images/archer.jpg',
     title: 'Elana',
     charClass: typeClasses.elementAt(8),
@@ -110,7 +126,7 @@ class CharacterItem extends StatelessWidget {
         super(key: key);
 
   static const double height = 187.0; // original value was 366.0
-  final Character char;
+  final LocalCharacter char;
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +339,54 @@ class CharacterItem extends StatelessWidget {
                     )
                 ),
               ]
-          )
+          ),
+
+         new Text(
+           'Stats: ',
+           style: titleStyle,
+         ),
+
+        new Container(
+          height: AppData.screenHeight/4,
+          child: new Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: new Row(
+              children: <Widget>[
+                new Expanded(
+                  flex: 1,
+                  child: new Column(
+                    children: <Widget>[
+                      ///main stats
+                      new Expanded(child: Stat.Int(value: char.intelligence,hasButtons: false,),),
+                      new Expanded(child: Stat.Str(value: char.strength,hasButtons: false,),),
+                      new Expanded(child: Stat.Dex(value: char.dexterity,hasButtons: false,),),
+                    ],
+                  ),
+                ),
+                new Expanded(
+                  flex: 1,
+                  child: new Column(
+                    children: <Widget>[
+                      ///main stats
+                      new Expanded(child: Stat.Wis(value: char.wisdom,hasButtons: false,),),
+                      new Expanded(child: Stat.Chr(value: char.charisma,hasButtons: false,),),
+                      new Expanded(child: Stat.Con(value: char.constitution,hasButtons: false,),),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+
+          new Text(char.background),
+          new Text(char.personality),
+          new Text(char.ideals),
+          new Text(char.bonds),
+          new Text(char.flaws),
+          new Text(char.featuresTraits),
+
         ]
     );
 
@@ -400,7 +463,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
                 new ListView(
                     itemExtent: CharacterItem.height,
                     padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                    children: characters.map((Character char) {  //this goes through all our characters and makes a card for each
+                    children: characters.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
                       return new Container(       //this is our 'card'
                           margin: const EdgeInsets.only(bottom: 8.0),
                           child: new GestureDetector(

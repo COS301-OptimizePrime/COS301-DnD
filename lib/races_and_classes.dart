@@ -307,6 +307,10 @@ class ClassType
     this.primaryAbility,
     this.saves,
 });
+
+  static getClass(String characterClass) {
+    return typeClasses.firstWhere( (tc) => tc.name.compareTo(characterClass)==0,orElse: (){return null;});
+  }
 }
 
 final List<ClassType> typeClasses = <ClassType>[

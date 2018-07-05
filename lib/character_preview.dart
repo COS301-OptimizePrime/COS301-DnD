@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // fits into preview and contains details about character
 class CharacterPreview extends StatelessWidget {
-  final Character char;
+  final LocalCharacter char;
 
   CharacterPreview(this.char);
 
@@ -88,7 +88,7 @@ class CharacterSwipePreview extends AnimatedWidget
   double startPos;
   double endPos;
 
-  static Character char = new Character(
+  static LocalCharacter char = new LocalCharacter(
       title: "Blank",
       strength: 0,
       dexterity: 0,

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:grpc/grpc.dart";
@@ -24,6 +26,10 @@ class AppData{
   static List<Session> activeSessions;
   static ClientChannel channel;
   static SessionsManagerClient stub;
+
+  ///characters
+  static CharactersManagerClient charStub;
+  static int charsLoaded;
 
   static double screenWidth;
   static double screenHeight;
@@ -118,7 +124,6 @@ class AppData{
     channel = new ClientChannel('develop.optimizeprime.co.za', port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
-    stub = new SessionsManagerClient(channel);
 
   }
   static Future<Session> createSession(String name, int maxPlayers)
@@ -127,8 +132,10 @@ class AppData{
         if(channel==null)
           connectToServer();
 
+        if(stub==null)
+          stub = new SessionsManagerClient(channel);
 
-    NewSessionRequest nsr = new NewSessionRequest();
+        NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = name;
     nsr.authIdToken = token;
     nsr.maxPlayers = maxPlayers;
@@ -146,6 +153,9 @@ class AppData{
     if(channel==null)
       connectToServer();
 
+    if(stub==null)
+      stub = new SessionsManagerClient(channel);
+
     JoinRequest jr = new JoinRequest();
     jr.sessionId = sid;
     jr.authIdToken = token;
@@ -162,6 +172,9 @@ class AppData{
     if(channel==null)
       connectToServer();
 
+    if(stub==null)
+      stub = new SessionsManagerClient(channel);
+
     GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
     gsur.limit = 10;
     gsur.authIdToken = token;
@@ -172,6 +185,130 @@ class AppData{
     print('Status Message: ${response.status}');
 
     return response;
+  }
+
+  static Future updateUserCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    if(charsLoaded==null)
+      return getUseCharacters();
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    print('adding ${chars.characters.length - charsLoaded} characters');
+
+    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
+    {
+      characters.add(
+          convertToLocalChar(chars.characters.elementAt(i))
+      );
+    }
+
+    print('characters added');
+  }
+
+
+  static Future getUseCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    print('retrieving characters');
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    charsLoaded = chars.characters.length;
+    print('adding ${chars.characters.length} characters');
+
+    for (int i = 0; i < chars.characters.length;i++)
+      {
+        characters.add(
+          convertToLocalChar(chars.characters.elementAt(i))
+        );
+      }
+
+      print('characters added');
+  }
+
+  static addNewCharacter(LocalCharacter char)
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    NewCharacterRequest ncr = new NewCharacterRequest();
+    ncr.authIdToken = token;
+    ncr.character = convertToNetChar(char);
+
+    print('adding character: ${ncr.character.name}');
+
+     final response = await charStub.createCharacter(ncr);
+
+     print('added character: ${response.characterId}');
+  }
+
+
+
+  static LocalCharacter convertToLocalChar(Character netChar) {
+    return new LocalCharacter(
+      title: netChar.name,
+      charClass: ClassType.getClass(netChar.characterClass),
+      charRace:  Race.getRace(netChar.race),
+      charGender: 'unimplemented',
+      strength: netChar.strength,
+      dexterity: netChar.dexterity,
+      charisma: netChar.charisma,
+      wisdom: netChar.wisdom,
+      intelligence: netChar.intelligence,
+      constitution: netChar.constitution,
+      background: netChar.background,
+      personality: netChar.personalityTraits,
+      ideals: netChar.ideals,
+      bonds: netChar.bonds,
+      flaws: netChar.flaws,
+      featuresTraits: 'unimplemented',
+    );
+  }
+
+  static Character convertToNetChar(LocalCharacter char) {
+    Character temp = new Character();
+    temp.name = char.title;
+    temp.characterClass = char.charClass.name;
+    temp.race = char.charRace.name;
+//    temp.gender
+    temp.strength = char.strength;
+    temp.dexterity = char.dexterity;
+    temp.charisma = char.charisma;
+    temp.wisdom = char.wisdom;
+    temp.intelligence = char.intelligence;
+    temp.constitution = char.constitution;
+    temp.background = char.background;
+    temp.personalityTraits = char.personality;
+    temp.ideals = char.ideals;
+    temp.bonds = char.bonds;
+    temp.flaws = char.flaws;
+//    temp.features
+
+    return temp;
   }
 
 }

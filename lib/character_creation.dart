@@ -92,7 +92,9 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
     print("New Character ${bit.newCharName} created.");
 //    temp.imageIsFile=true;
-    characters.add(temp);
+//    characters.add(temp);
+
+    AppData.addNewCharacter(temp);
 
     setState((){});
   }
@@ -743,12 +745,12 @@ class ClassPreview extends StatelessWidget {
 class StatsWidgets extends StatelessWidget {
 
   final Race race;
-  int intel;
-  int str;
-  int dex;
-  int wis;
-  int chr;
-  int con;
+  int intel = 0;
+  int str = 0;
+  int dex = 0;
+  int wis = 0;
+  int chr = 0;
+  int con = 0;
 
   StatsWidgets({
     @required

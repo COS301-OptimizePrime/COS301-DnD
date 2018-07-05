@@ -45,6 +45,10 @@ class Race
 
       return out;
   }
+
+  static Race getRace(String race) {
+    return races.firstWhere( (r) => r.name.compareTo(race)==0,orElse: (){return null;});
+  }
 }
 
 final List<Race> races = <Race>[
@@ -308,7 +312,7 @@ class ClassType
     this.saves,
 });
 
-  static getClass(String characterClass) {
+  static ClassType getClass(String characterClass) {
     return typeClasses.firstWhere( (tc) => tc.name.compareTo(characterClass)==0,orElse: (){return null;});
   }
 }

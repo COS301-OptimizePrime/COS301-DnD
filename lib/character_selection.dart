@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -422,12 +423,23 @@ class CharacterSelection extends StatefulWidget {
   static String tag = 'character-selection';
   static bool inPreviewState = false;
 
+
   @override
   CharacterSelectionState createState() => new CharacterSelectionState();
 }
 
 class CharacterSelectionState extends State<CharacterSelection> with SingleTickerProviderStateMixin
 {
+
+  CharacterSelectionState()
+  {
+    AppData.getUseCharacters().whenComplete(
+        (){setState(() {
+          //update characters
+          print('updating character list');
+        });}
+    );
+  }
 
   AnimationController controller;
   Animation<double> animation;
@@ -441,6 +453,21 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
     animation = new Tween(begin: 0.0, end: screenWidthOffset).animate(controller);
 //    controller.forward();
   }
+
+  Future<Null> updateCharacters() async
+  {
+    AppData.updateUserCharacters().whenComplete(
+        (){
+          print('updating character list');
+          setState(() {
+            //update list
+          });
+        }
+    );
+
+    return null;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -460,27 +487,30 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
     return new Scaffold(
             body: new Stack(
               children: <Widget>[
-                new ListView(
-                    itemExtent: CharacterItem.height,
-                    padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                    children: characters.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
-                      return new Container(       //this is our 'card'
-                          margin: const EdgeInsets.only(bottom: 8.0),
-                          child: new GestureDetector(
-                              onHorizontalDragStart: (start){swipeStart=start.globalPosition.dx;},
-                              onHorizontalDragUpdate: (update){swipeEnd=update.globalPosition.dx;},//open preview
-                              onHorizontalDragEnd: (end){
-                                                            print('Start: $swipeStart \nEnd: $swipeEnd');
-                                                            if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
-                                                              controller.forward();
-                                                              CharacterSelection.inPreviewState=true;
-                                                              CharacterSwipePreview.char = char;
-                                                            }
-                                                            swipeStart = swipeEnd = 0.0;
-                              },
-                              child: new CharacterItem(char: char))  //give our card a character to use
-                      );
-                    }).toList()
+                new RefreshIndicator(
+                  onRefresh: updateCharacters,
+                  child: new ListView(
+                      itemExtent: CharacterItem.height,
+                      padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+                      children: characters.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
+                        return new Container(       //this is our 'card'
+                            margin: const EdgeInsets.only(bottom: 8.0),
+                            child: new GestureDetector(
+                                onHorizontalDragStart: (start){swipeStart=start.globalPosition.dx;},
+                                onHorizontalDragUpdate: (update){swipeEnd=update.globalPosition.dx;},//open preview
+                                onHorizontalDragEnd: (end){
+                                                              print('Start: $swipeStart \nEnd: $swipeEnd');
+                                                              if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
+                                                                controller.forward();
+                                                                CharacterSelection.inPreviewState=true;
+                                                                CharacterSwipePreview.char = char;
+                                                              }
+                                                              swipeStart = swipeEnd = 0.0;
+                                },
+                                child: new CharacterItem(char: char))  //give our card a character to use
+                        );
+                      }).toList()
+                  ),
                 ),
                 new CharacterSwipePreview(animation: animation,controller: controller, screenOffset: screenWidthOffset,),
               ],

@@ -347,8 +347,10 @@ class _DeleteButtonState extends State<DeleteButton> {
 
   delete()
   {
-   if(confirmDelete)
+   if(confirmDelete) {
      AppData.deleteCharacter(widget.charId);
+     Navigator.pop(context);
+   }
    else
      {
        setState(() {

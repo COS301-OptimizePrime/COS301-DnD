@@ -283,12 +283,6 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                 ],
               ),
             ),
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new Divider(
-                height: 20.0,color: Colors.deepOrange,
-              ),
-            ),
 
             ////// Stats Preview
 

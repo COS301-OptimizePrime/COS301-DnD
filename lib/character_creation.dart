@@ -71,7 +71,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
   {
 
     formKey.currentState.save();
-    Character temp = new Character(
+    LocalCharacter temp = new LocalCharacter(
       title: bit.newCharName,
       charClass: bit.selectedClass,
       charRace: bit.selectedRace,

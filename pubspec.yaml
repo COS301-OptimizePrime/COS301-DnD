@@ -108,8 +108,12 @@ flutter:
     #monster list file
     - assets/dad_5e_monster_manual.txt
 
-    #shield icon
+    #shield (ac) - sword - armor icons
     - assets/shield.png
+    - assets/sword.png
+    - assets/armor.png
+
+
   fonts:
         - family: Nunito
           fonts:

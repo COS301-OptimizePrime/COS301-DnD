@@ -78,47 +78,48 @@ class LocalCharacter {
   }
 }
 
-final List<LocalCharacter> characters = <LocalCharacter>[
-  new LocalCharacter(
-    assetName: 'assets/character_images/knight.jpg',
-    title: 'James',
-    charClass: typeClasses.elementAt(2),
-    charRace: races.elementAt(22),
-    charGender: 'Female',
-    strength: 6,
-    dexterity: 2,
-    constitution: 6,
-    intelligence: 2,
-    wisdom: 2,
-    charisma: 2
-  ),
-  new LocalCharacter(
-    assetName: 'assets/character_images/mage.jpg',
-    title: 'Dorian',
-    charClass: typeClasses.elementAt(6),
-    charRace: races.elementAt(22),
-    charGender: 'Male',
-    strength: 2,
-    dexterity: 2,
-    constitution: 2,
-    intelligence: 5,
-    wisdom: 5,
-    charisma: 5
-  ),
-  new LocalCharacter(
-    assetName: 'assets/character_images/archer.jpg',
-    title: 'Elana',
-    charClass: typeClasses.elementAt(8),
-    charRace: races.elementAt(19),
-    charGender: 'Trap',
-    strength: 3,
-    dexterity: 5,
-    constitution: 2,
-    intelligence: 5,
-    wisdom: 4,
-    charisma: 1
-  ),
-];
+final List<LocalCharacter> characters = new List();
+//  = <LocalCharacter>[
+//  new LocalCharacter(
+//    assetName: 'assets/character_images/knight.jpg',
+//    title: 'James',
+//    charClass: typeClasses.elementAt(2),
+//    charRace: races.elementAt(22),
+//    charGender: 'Female',
+//    strength: 6,
+//    dexterity: 2,
+//    constitution: 6,
+//    intelligence: 2,
+//    wisdom: 2,
+//    charisma: 2
+//  ),
+//  new LocalCharacter(
+//    assetName: 'assets/character_images/mage.jpg',
+//    title: 'Dorian',
+//    charClass: typeClasses.elementAt(6),
+//    charRace: races.elementAt(22),
+//    charGender: 'Male',
+//    strength: 2,
+//    dexterity: 2,
+//    constitution: 2,
+//    intelligence: 5,
+//    wisdom: 5,
+//    charisma: 5
+//  ),
+//  new LocalCharacter(
+//    assetName: 'assets/character_images/archer.jpg',
+//    title: 'Elana',
+//    charClass: typeClasses.elementAt(8),
+//    charRace: races.elementAt(19),
+//    charGender: 'Trap',
+//    strength: 3,
+//    dexterity: 5,
+//    constitution: 2,
+//    intelligence: 5,
+//    wisdom: 4,
+//    charisma: 1
+//  ),
+//];
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })

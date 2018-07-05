@@ -117,6 +117,8 @@ class AppData{
         user_google_image=null;
       }
     user = null;
+    characters.clear();
+    charsLoaded = null;
   }
 
   static void connectToServer()
@@ -211,6 +213,7 @@ class AppData{
       characters.add(
           convertToLocalChar(chars.characters.elementAt(i))
       );
+      charsLoaded++;
     }
 
     print('characters added');

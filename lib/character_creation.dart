@@ -170,12 +170,6 @@ class BasicInfoTab extends StatefulWidget {
   StatsWidgets stats = new StatsWidgets(race: races.elementAt(0),);
   Race selectedRace = races.elementAt(0);
 
-//  final popFunc;
-//
-//  BasicInfoTab({
-//    this.popFunc
-//  });
-
   final TextEditingController char_name = new TextEditingController();
 
   
@@ -233,7 +227,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       _saveNeeded = true;
                       setState(() {
                         widget.racePrev=new RacePreview(race: widget.selectedRace,);
-                        widget.stats = new StatsWidgets(race: widget.selectedRace);
+                        new StatsWidgets(race: widget.selectedRace);
                       });},
                     value: widget.selectedRace,
                   )

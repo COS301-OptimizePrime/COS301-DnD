@@ -16,7 +16,6 @@ enum DismissDialogAction {
 }
 
 bool _saveNeeded = false;
-final Key scafKey = new Key('scaffold_lore');
 
 class FullScreenDialog extends StatefulWidget {
   @override
@@ -73,64 +72,85 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
     formKey.currentState.save();
     Character temp = new Character(
-//        assetName: newCharAssetName,
-//        title: newCharName,
-//        charClass: newCharClass,
-//        charRace: newCharRace,
-//        charGender: newCharGender,
-        strength: 1,
-        dexterity: 1,
-        constitution: 1,
-        intelligence: 1,
-        wisdom: 1,
-        charisma: 1
+      title: bit.newCharName,
+      charClass: bit.selectedClass,
+      charRace: bit.selectedRace,
+      charGender: bit.newCharGender,
+      strength: bit.stats.intel,
+      dexterity: bit.stats.dex,
+      constitution: bit.stats.con,
+      intelligence: bit.stats.intel,
+      wisdom: bit.stats.intel,
+      charisma: bit.stats.chr,
+      background: lit.background,
+      personality: lit.personality,
+      ideals:  lit.ideals,
+      flaws:  lit.flaws,
+      bonds: lit.bonds,
+      featuresTraits: lit.featuresTraits,
     );
 
-//    print("New Character " + newCharName + " created.");
-    temp.imageIsFile=true;
+    print("New Character ${bit.newCharName} created.");
+//    temp.imageIsFile=true;
     characters.add(temp);
 
     setState((){});
   }
 
 
+  BasicInfoTab bit;
+  LoreInfoTab lit;
+  EquipInfoTab eit;
 
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
+    if(bit==null)
+      bit = new BasicInfoTab();
+    if(lit==null)
+      lit = new LoreInfoTab();
+    if(eit==null)
+      eit = new EquipInfoTab();
+
     return new Material(
-      child: new DefaultTabController(
-        length: 3,
-        child: new Scaffold(
-          key: scafKey,
-          resizeToAvoidBottomPadding: true,
-          appBar: new AppBar(
-              title: const Text('Create Character'),
-              actions: <Widget> [
-                new FlatButton(
-                    child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
-                    onPressed: () {
-                      addNewChar();
-                      Navigator.pop(context, DismissDialogAction.save);
-                    }
-                )
-              ],
-            bottom: TabBar(
-              tabs: <Widget>[
-                Tab(text: 'Basic',),
-                Tab(text: 'Lore',),
-                Tab(text: 'Equipment',),
-              ],
+      child: new Form(
+        key: formKey,
+        onWillPop: _onWillPop,
+        child: new DefaultTabController(
+          length: 3,
+          child: new Scaffold(
+            resizeToAvoidBottomPadding: true,
+            appBar: new AppBar(
+                title: const Text('Create Character'),
+                actions: <Widget> [
+                  new FlatButton(
+                      child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
+                      onPressed: () {
+                        addNewChar();
+                        Navigator.pop(context, DismissDialogAction.save);
+                      }
+                  )
+                ],
+              bottom: TabBar(
+                tabs: <Widget>[
+                  Tab(text: 'Basic',),
+                  Tab(text: 'Lore',),
+                  Tab(text: 'Equipment',),
+                ],
+              ),
             ),
-          ),
-          body: new TabBarView(
-            children: [
-              BasicInfoTab(popFunc: _onWillPop,),
-              LoreInfoTab(),
-              EquipInfoTab(),
-          ]
+            body: new TabBarView(
+              children: [
+//                BasicInfoTab(),
+//                BasicInfoTab(popFunc: _onWillPop,),
+//                (bit = BasicInfoTab()),
+                bit,
+                lit,
+                eit,
+            ]
+            ),
           ),
         ),
       ),
@@ -140,11 +160,19 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
 class BasicInfoTab extends StatefulWidget {
 
-  final popFunc;
+  String newCharName;
+  String newCharGender = "Male";
+  ClassType selectedClass = typeClasses.elementAt(0);
+  RacePreview racePrev = new RacePreview(race: races.elementAt(0));
+  ClassPreview classPrev = new ClassPreview(classType: typeClasses.elementAt(0));
+  StatsWidgets stats = new StatsWidgets(race: races.elementAt(0),);
+  Race selectedRace = races.elementAt(0);
 
-  BasicInfoTab({
-    this.popFunc
-  });
+//  final popFunc;
+//
+//  BasicInfoTab({
+//    this.popFunc
+//  });
 
   final TextEditingController char_name = new TextEditingController();
 
@@ -155,154 +183,156 @@ class BasicInfoTab extends StatefulWidget {
 
 class _BasicInfoTabState extends State<BasicInfoTab> {
 
-  String newCharName;
-  String newCharGender = "Male";
-  ClassType selectedClass = typeClasses.elementAt(0);
-  RacePreview racePrev = new RacePreview(race: races.elementAt(0));
-  ClassPreview classPrev = new ClassPreview(classType: typeClasses.elementAt(0));
-  StatsWidgets stats = new StatsWidgets(race: races.elementAt(0),);
-  Race selectedRace = races.elementAt(0);
-  
   @override
   Widget build(BuildContext context) {
     return new Material(
-      child: new Form(
-//          key: formKey,
-          onWillPop: widget.popFunc,
-          child: new Column(
+      child: new Column(
+          children: <Widget>[
+            new Column(
               children: <Widget>[
-                new Column(
-                  children: <Widget>[
-                    new Padding(  //padding on top and bottom to space from image box and description
-                      padding: new EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 2.0),
-                      child: new Text('Character Name',
-                          style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: new TextFormField(
-                          controller: widget.char_name,
-                          onSaved: (val) {newCharName = val; _saveNeeded=true;},
-                          decoration: new InputDecoration(
-                            hintText: 'Type name here',
-                          )
-                      ),
-                    ),
-                  ],
+                new Padding(  //padding on top and bottom to space from image box and description
+                  padding: new EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 2.0),
+                  child: new Text('Character Name',
+                      style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
                 ),
-
                 new Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      new Padding(  //padding on top and bottom to space from image box and description
-                        padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                        child: new Text('Race',
-                            style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                      ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: new TextFormField(
+                      controller: widget.char_name,
+                      onSaved: (val) {widget.newCharName = val;},
+                      decoration: new InputDecoration(
+                        hintText: 'Type name here',
+                      )
+                  ),
+                ),
+              ],
+            ),
 
-                      new DropdownButton<Race>(
-                        items: races.map((Race race) {
-                          return new DropdownMenuItem<Race>(
-                              value: race,
-                              child: new Text(race.name)
-                          );}).toList(),
-                        onChanged: (val){
+            new Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new Padding(  //padding on top and bottom to space from image box and description
+                    padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                    child: new Text('Race',
+                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
+                  ),
+
+                  new DropdownButton<Race>(
+                    items: races.map((Race race) {
+                      return new DropdownMenuItem<Race>(
+                          value: race,
+                          child: new Text(race.name)
+                      );}).toList(),
+                    onChanged: (val){
 //                                newCharRace = val.name;
-                          selectedRace=val;
-                          _saveNeeded = true;
-                          setState(() {
-                            racePrev=new RacePreview(race: selectedRace,);
-                            stats = new StatsWidgets(race: selectedRace);
-                          });},
-                        value: selectedRace,
-                      )
-                    ],
+                      widget.selectedRace=val;
+                      _saveNeeded = true;
+                      setState(() {
+                        widget.racePrev=new RacePreview(race: widget.selectedRace,);
+                        widget.stats = new StatsWidgets(race: widget.selectedRace);
+                      });},
+                    value: widget.selectedRace,
+                  )
+                ],
+              ),
+            ),
+            new Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new Padding(  //padding on top and bottom to space from image box and description
+                    padding: new EdgeInsets.symmetric(vertical: 4.0),
+                    child: new Text('Gender',
+                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
                   ),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+                  new DropdownButton(items: [
+                    new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
+                    new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
+                  ], onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
+                    value: widget.newCharGender,)
+                ],
+              ),
+            ),
+            new Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+
+                  new Padding(  //padding on top and bottom to space from image box and description
+                    padding: new EdgeInsets.symmetric(vertical: 4.0),
+                    child: new Text('Class',
+                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
+                  ),
+
+                  new Row(
                     children: <Widget>[
-                      new Padding(  //padding on top and bottom to space from image box and description
-                        padding: new EdgeInsets.symmetric(vertical: 4.0),
-                        child: new Text('Gender',
-                            style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
+                      new DropdownButton<ClassType>(
+                        items: typeClasses.map((ClassType c) {
+                          return new DropdownMenuItem<ClassType>(
+                              value: c,
+                              child: new Text(c.name)
+                          );}).toList(),
+                        isDense: true,
+                        onChanged: (val){if(val!=null) widget.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: widget.selectedClass,);});},
+                        value: widget.selectedClass,
                       ),
 
-                      new DropdownButton(items: [
-                        new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
-                        new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
-                      ], onChanged: (val){newCharGender = val; _saveNeeded=true; setState(() {});},
-                        value: newCharGender,)
                     ],
-                  ),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
+                  )
+                ],
+              ),
+            ),
+            new Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: new Divider(
+                height: 20.0,color: Colors.deepOrange,
+              ),
+            ),
 
-                      new Padding(  //padding on top and bottom to space from image box and description
-                        padding: new EdgeInsets.symmetric(vertical: 4.0),
-                        child: new Text('Class',
-                            style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                      ),
+            ////// Stats Preview
 
-                      new Row(
-                        children: <Widget>[
-                          new DropdownButton<ClassType>(
-                            items: typeClasses.map((ClassType c) {
-                              return new DropdownMenuItem<ClassType>(
-                                  value: c,
-                                  child: new Text(c.name)
-                              );}).toList(),
-                            isDense: true,
-                            onChanged: (val){if(val!=null) selectedClass = val; _saveNeeded=true; setState(() {classPrev = new ClassPreview(classType: selectedClass,);});},
-                            value: selectedClass,
-                          ),
-
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: new Divider(
-                    height: 20.0,color: Colors.deepOrange,
-                  ),
-                ),
-
-                ////// Stats Preview
-
-                new Expanded(child: racePrev, flex: 1,),
-                new Expanded(child: classPrev, flex: 1,),
-                new Expanded(child: stats, flex: 1,),
+            new Expanded(child: widget.racePrev, flex: 1,),
+            new Expanded(child: widget.classPrev, flex: 1,),
+            new Expanded(child: widget.stats, flex: 1,),
 
 
-              ]
-          )
+          ]
       ),
     );
   }
 }
 
 class LoreInfoTab extends StatefulWidget {
+
+  String background = 'Those things that happend to me that make me want to do some other things.';
+  String personality = 'The best person to ever exist ever';
+  String ideals = 'The best ideals a person can have, no seriously, they are the ideal ideals.';
+  String bonds = 'Everyone loves me anyway, isnt that fine?';
+  String flaws = 'My only flaw is that I\'m flawless';
+  String featuresTraits = 'Those extra goodies that make me special <3.';
+
   @override
   _LoreInfoTabState createState() => _LoreInfoTabState();
 }
 
 class _LoreInfoTabState extends State<LoreInfoTab> {
 
-  String personality;
-  String ideals;
-  String bonds;
-  String flaws;
-  String featuresTraits;
+  updateFlaws (String val) => widget.flaws = val;
+
+  updateFeatures (String val) => widget.featuresTraits = val;
+
+  updatePersonality (String val) => widget.personality = val;
+
+  updateIdeals (String val) => widget.ideals = val;
+
+  updateBonds (String val) => widget.bonds = val;
+
+  updateBackground (String val) => widget.background = val;
 
   @override
   Widget build(BuildContext context) {
@@ -312,11 +342,12 @@ class _LoreInfoTabState extends State<LoreInfoTab> {
           controller: ScrollController(keepScrollOffset: false),
           padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 10.0),
           children: <Widget>[
-              TextBox('Personality','The best person to ever exist ever'),
-              TextBox('Ideals','The best ideals a person can have, no seriously, they are the ideal ideals.'),
-              TextBox('Bonds','Everyone loves me anyway, isnt that fine?'),
-              TextBox('Flaws','My only flaw is that I\'m flawless' ),
-              TextBox('Features & Traits','Those extra goodies that make me special <3.'),
+              TextBox('Background',widget.background,updateBackground),
+              TextBox('Personality',widget.personality ,updatePersonality),
+              TextBox('Ideals',widget.ideals ,updateIdeals),
+              TextBox('Bonds',widget.bonds,updateBonds),
+              TextBox('Flaws',widget.flaws ,updateFlaws),
+              TextBox('Features & Traits',widget.featuresTraits,updateFeatures),
           ],
         ),
       ),
@@ -324,13 +355,45 @@ class _LoreInfoTabState extends State<LoreInfoTab> {
   }
 }
 
+class TextBox extends StatelessWidget {
+
+  final String heading;
+  final String data;
+  final Function update;
+
+  TextBox(this.heading, this.data, this.update);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            heading,
+            style: title,
+          ),
+          TextFormField(
+            onSaved: (val) => update(val),
+            maxLines: null,
+            initialValue: data,
+            style: descStyle,
+          )
+        ],
+      ),
+    );
+  }
+}
 
 class EquipInfoTab extends StatefulWidget {
 
   final List<Equipment> equipment = List()..add(
-    new Equipment('Sword of Girth', "Broadsword", 10),
+    new Equipment('Sword of Girth', "Broadsword", 10,isWep: true),
   )..add(
-    new Equipment("Thunderfury", "Blessed Blade of the Windseeker", 20)
+    new Equipment("Thunderfury", "Blessed Blade of the Windseeker", 20,isWep: true),
+  )..add(
+    new Equipment("Goldskin", "Breastplate", 5)
   );
 
 //  EquipInfoTab({
@@ -392,7 +455,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
               children: widget.equipment.map(
                 (e)
                 {
-                    return new Container(
+                  return new Container(
                       padding: EdgeInsets.all(5.0),
                       child: EquipmentWidget(
                         item: e,
@@ -446,9 +509,10 @@ class Equipment
 {
   final String name;
   final String type;
+  final bool isWep;
   final int val;
 
-  Equipment(this.name, this.type, this.val);
+  Equipment(this.name, this.type, this.val, {this.isWep=false});
 
 }
 
@@ -456,23 +520,31 @@ class EquipmentWidget extends StatelessWidget {
 
   final Equipment item;
 
-
   EquipmentWidget({
     this.item,
 });
 
+
   @override
   Widget build(BuildContext context) {
+
+    String icon;
 
     if(item==null)
       return Container(
         height: AppData.screenHeight/15,
         color: Colors.redAccent,
       );
+    else
+      {
+        if(item.isWep)
+          icon = 'assets/sword.png';
+        else
+          icon = 'assets/armor.png';
+      }
 
     return Container(
       child: Row(
-//        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           RichText(
             text: TextSpan(
@@ -487,48 +559,17 @@ class EquipmentWidget extends StatelessWidget {
             ),
           ),
 
-
         Expanded(child: Container()),
-//          new Container(child: Image.asset('assets/shield.png'))
-        new Center(child: Icon(Icons.beach_access))
+
+        new Container(
+          width: 20.0,
+            child: new Center(child: Image.asset(icon))),
         ],
       ),
     );
   }
 }
 
-
-
-class TextBox extends StatelessWidget {
-
-  final String heading;
-  final String data;
-
-
-  TextBox(this.heading, this.data);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            heading,
-            style: title,
-          ),
-//        Text(data,style: descStyle,),
-          TextFormField(
-            maxLines: null,
-            initialValue: data,
-            style: descStyle,
-          )
-        ],
-      ),
-    );
-  }
-}
 
 
 final TextStyle title = new TextStyle(
@@ -702,11 +743,26 @@ class ClassPreview extends StatelessWidget {
 class StatsWidgets extends StatelessWidget {
 
   final Race race;
+  int intel;
+  int str;
+  int dex;
+  int wis;
+  int chr;
+  int con;
 
   StatsWidgets({
     @required
     this.race,
 });
+
+
+  updateInt (int val) => intel = val;
+  updateStr (int val) => str = val;
+  updateDex (int val) => dex = val;
+  updateWis (int val) => wis = val;
+  updateChr (int val) => chr = val;
+  updateCon (int val) => con = val;
+
 
   @override
   Widget build(BuildContext context) {
@@ -719,9 +775,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: new Stat.Int(value: race.intelligence)),
-                new Expanded(child: new Stat.Str(value: race.strength)),
-                new Expanded(child: new Stat.Dex(value: race.dexterity)),
+                new Expanded(child: Stat.Int(value: race.intelligence,update: updateInt,)),
+                new Expanded(child: Stat.Str(value: race.strength,update: updateStr,)),
+                new Expanded(child: Stat.Dex(value: race.dexterity,update: updateDex,)),
               ],
             ),
           ),
@@ -730,9 +786,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: new Stat.Wis(value: race.wisdom)),
-                new Expanded(child: new Stat.Chr(value: race.charisma)),
-                new Expanded(child: new Stat.Con(value: race.constitution)),
+                new Expanded(child: Stat.Wis(value: race.wisdom,update: updateWis,)),
+                new Expanded(child: Stat.Chr(value: race.charisma, update: updateChr)),
+                new Expanded(child: Stat.Con(value: race.constitution, update: updateCon,)),
               ],
             ),
           ),
@@ -748,6 +804,8 @@ class Stat extends StatefulWidget {
   final String iconPath;
   final int value;
   final Color col;
+  final bool hasButtons;
+  final Function update;
 
 
   Stat.Int({
@@ -755,6 +813,8 @@ class Stat extends StatefulWidget {
     @required
     this.value,
     this.col = Colors.lightBlueAccent,
+    this.hasButtons = true,
+    this.update,
   });
 
   Stat.Dex({
@@ -762,6 +822,8 @@ class Stat extends StatefulWidget {
     @required
     this.value,
     this.col = Colors.green,
+    this.hasButtons = true,
+    this.update,
   });
 
   Stat.Con({
@@ -769,6 +831,8 @@ class Stat extends StatefulWidget {
     @required
     this.value,
     this.col = Colors.orange,
+    this.hasButtons = true,
+    this.update,
   });
 
   Stat.Str({
@@ -776,13 +840,17 @@ class Stat extends StatefulWidget {
     @required
     this.value,
     this.col = Colors.red,
+    this.hasButtons = true,
+    this.update,
   });
 
   Stat.Wis({
     this.iconPath = 'assets/icon_assets/Wisdom.png',
     @required
     this.value,
-    this.col = Colors.brown
+    this.col = Colors.brown,
+    this.hasButtons = true,
+    this.update,
   });
 
   Stat.Chr({
@@ -790,6 +858,8 @@ class Stat extends StatefulWidget {
     @required
     this.value,
     this.col = Colors.yellow,
+    this.hasButtons = true,
+    this.update,
   });
 
 
@@ -801,6 +871,10 @@ class _StatState extends State<Stat> {
 
   int value = 0;
   int calcVal;
+
+  Widget leftButton = new Container();
+  Widget rightButton = new Container();
+
   @override
   initState()
   {
@@ -816,6 +890,8 @@ class _StatState extends State<Stat> {
       value+=1;
       calcVal = ((value-10)/2).floor();
     });
+
+    widget.update(value);
   }
 
   sub()
@@ -825,10 +901,20 @@ class _StatState extends State<Stat> {
         value-=1;
       calcVal = ((value-10)/2).floor();
     });
+
+    widget.update(value);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if(widget.hasButtons && leftButton.runtimeType==Container)
+      {
+        leftButton = new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();});
+        rightButton = new IconButton(icon: new Icon(Icons.add), onPressed: (){add();});
+      }
+
+
     return new Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: new Row(
@@ -841,7 +927,7 @@ class _StatState extends State<Stat> {
 
           ///left - minus - button
           new Expanded( flex: 2,
-              child: new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();})),
+              child: leftButton),
 
           ///display text
           new RichText(
@@ -860,7 +946,7 @@ class _StatState extends State<Stat> {
 
           ///right - add - button
           new Expanded( flex: 2,
-              child: new IconButton(icon: new Icon(Icons.add), onPressed: (){add();})),
+              child: rightButton),
 
         ],
       ),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:dnd_301_final/app_data.dart';
@@ -401,7 +400,8 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
                                                               if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
                                                                 controller.forward();
                                                                 CharacterSelection.inPreviewState=true;
-                                                                CharacterSwipePreview.char = char;
+//                                                                CharacterSwipePreview.char = char;
+                                                                CharacterSwipePreview.setChar(char);
                                                               }
                                                               swipeStart = swipeEnd = 0.0;
                                 },

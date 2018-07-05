@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/character_creation.dart';
+import 'package:dnd_301_final/character_selection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -70,15 +70,23 @@ class CharacterSwipePreview extends AnimatedWidget
   double startPos;
   double endPos;
 
-  static LocalCharacter char = new LocalCharacter(
-      title: "Blank",
-      strength: 0,
-      dexterity: 0,
-      constitution: 0,
-      intelligence: 0,
-      wisdom: 0,
-      charisma: 0
-  );//updated when a swipe is detected
+  static Widget cp = new Container();
+
+  static setChar(LocalCharacter c)
+  {
+//    char = c;
+    cp = new CharacterPreview(c);
+  }
+
+//  static LocalCharacter char = new LocalCharacter(
+//      title: "Blank",
+//      strength: 0,
+//      dexterity: 0,
+//      constitution: 0,
+//      intelligence: 0,
+//      wisdom: 0,
+//      charisma: 0
+//  );//updated when a swipe is detected
 
   bool swipeLeft()
   {
@@ -97,6 +105,7 @@ class CharacterSwipePreview extends AnimatedWidget
         if(swipeLeft() && sqrt(pow((endPos-startPos),2)) < 300){
           controller.reverse(from: controller.value);
           CharacterSelection.inPreviewState=false;
+          cp = new Container();
         };},
       child: new Transform(
         transform: new Matrix4.translationValues(
@@ -107,7 +116,7 @@ class CharacterSwipePreview extends AnimatedWidget
           child: new Container(
             width: MediaQuery.of(context).size.width*(0.75),//3/4 screen width
             height: MediaQuery.of(context).size.height,//double.infinity,
-            child: new CharacterPreview(char),
+            child: cp,
             color: Colors.black,
           ),
         ),

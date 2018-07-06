@@ -113,7 +113,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
         child: new DefaultTabController(
           length: 3,
           child: new Scaffold(
-            resizeToAvoidBottomPadding: true,
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
                 title: const Text('Create Character'),
                 actions: <Widget> [
@@ -125,13 +125,21 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                       }
                   )
                 ],
-              bottom: TabBar(
+              bottom: PreferredSize(
+                preferredSize: Size(17.0, 10.0),
+                child: Container(child: TabBar(
                 tabs: <Widget>[
-                  Tab(text: 'Basic',),
-                  Tab(text: 'Lore',),
-                  Tab(text: 'Equipment',),
+                  Container(
+                    child: Tab(text: 'Basic'), height: 17.0,
+                  ),
+                  Container(
+                    child: Tab(text: 'Lore'), height: 17.0,
+                  ),
+                  Container(
+                    child: Tab(text: 'Equipment'), height: 17.0,
+                  ),
                 ],
-              ),
+              ))),
             ),
             body: new TabBarView(
               children: [
@@ -174,11 +182,6 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
           children: <Widget>[
             new Column(
               children: <Widget>[
-                new Padding(  //padding on top and bottom to space from image box and description
-                  padding: new EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 2.0),
-                  child: new Text('Character Name',
-                      style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                ),
                 new Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: new TextField(
@@ -196,19 +199,15 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                 ),
               ],
             ),
-
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                    child: new Text('Race',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
-
+                  new Text('Race',
+                        style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
                   new DropdownButton<Race>(
+                    isDense: true,
                     items: races.map((Race race) {
                       return new DropdownMenuItem<Race>(
                           value: race,
@@ -225,46 +224,40 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                     value: widget.selectedRace,
                   )
                 ],
-              ),
+              )
             ),
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.symmetric(vertical: 4.0),
-                    child: new Text('Gender',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
+                    new Text('Gender',
+                        style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
 
                   new DropdownButton(items: [
                     new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
                     new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
-                  ], onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
+                    new DropdownMenuItem<String>(child: new Text("Apache Helicopter"), value: "Apache Helicopter",),
+                  ], isDense: true,onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
                     value: widget.newCharGender,)
                 ],
-              ),
+              )
             ),
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.symmetric(vertical: 4.0),
-                    child: new Text('Class',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                  new Text('Class',
+                    style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
 
                   new Row(
                     children: <Widget>[
                       new DropdownButton<ClassType>(
                         items: typeClasses.map((ClassType c) {
                           return new DropdownMenuItem<ClassType>(
-                              value: c,
-                              child: new Text(c.name)
+                            value: c,
+                            child: new Text(c.name)
                           );}).toList(),
                         isDense: true,
                         onChanged: (val){if(val!=null) widget.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: widget.selectedClass,);});},
@@ -274,14 +267,14 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                     ],
                   )
                 ],
-              ),
+              )
             ),
 
             ////// Stats Preview
 
             new Expanded(child: widget.racePrev, flex: 1,),
             new Expanded(child: widget.classPrev, flex: 1,),
-            new Expanded(child: widget.stats, flex: 1,),
+            new Expanded(child: widget.stats, flex: 2,),
 
 
           ]
@@ -839,8 +832,8 @@ class StatsWidgets extends StatelessWidget {
               children: <Widget>[
                 ///main stats
                 new Expanded(child: Stat.Int(value: intel,update: updateInt,)),
-                new Expanded(child: Stat.Str(value: str,update: updateStr,)),
-                new Expanded(child: Stat.Dex(value: dex,update: updateDex,)),
+                new Expanded(child: Stat.Str(value: str, update: updateStr)),
+                new Expanded(child: Stat.Dex(value: dex, update: updateDex,)),
               ],
             ),
           ),
@@ -985,7 +978,16 @@ class _StatState extends State<Stat> {
           ///icon
           new Expanded(
             flex: 3,
-            child: new Image.asset(widget.iconPath),
+            child: Stack(
+              children: <Widget>[
+                new Image.asset(widget.iconPath),
+                Positioned(
+                  top: 10.0,
+                  left: 10.0,
+                  child: Text(widget.iconPath.split('/')[2].substring(0,3))
+                ),
+              ]
+            )
           ),
 
           ///left - minus - button

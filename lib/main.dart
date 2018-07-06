@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       home: new LoginPage(),
       routes: routes,
+
     );
   }
 }

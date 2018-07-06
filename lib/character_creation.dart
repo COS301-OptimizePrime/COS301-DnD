@@ -155,7 +155,7 @@ class BasicInfoTab extends StatefulWidget {
   ClassType selectedClass = typeClasses.elementAt(0);
   RacePreview racePrev = new RacePreview(race: races.elementAt(0));
   ClassPreview classPrev = new ClassPreview(classType: typeClasses.elementAt(0));
-  StatsWidgets stats = new StatsWidgets(race: races.elementAt(0),);
+  StatsWidgets stats = new StatsWidgets(race: null,);
   Race selectedRace = races.elementAt(0);
 
   final TextEditingController char_name = new TextEditingController();
@@ -220,7 +220,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       _saveNeeded = true;
                       setState(() {
                         widget.racePrev=new RacePreview(race: widget.selectedRace,);
-                        new StatsWidgets(race: widget.selectedRace);
+//                        new StatsWidgets(race: widget.selectedRace);
                       });},
                     value: widget.selectedRace,
                   )
@@ -305,9 +305,7 @@ class LoreInfoTab extends StatefulWidget {
 
 class _LoreInfoTabState extends State<LoreInfoTab> {
 
-  updateFlaws (String val) { setState(() {
-    widget.flaws = val;
-  }); }
+  updateFlaws (String val) => widget.flaws = val;
 
   updateFeatures (String val) => widget.featuresTraits = val;
 
@@ -387,13 +385,49 @@ class EquipInfoTab extends StatefulWidget {
 
   newItemDialog(BuildContext context)
   {
+    String name;
+    String type;
+    int value;
+    bool isWep;
+
+    String itemTypeText = 'ATK';
+
     showDialog(context: context,
         builder: (_) => new SimpleDialog(
-          title: Text("Add New Item"),
+//          title: Text("Add New Item"),
           children: <Widget>[
             new Container(
               width: AppData.screenHeight/4,
               height: AppData.screenWidth/4,
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Text('Item Name:',style: title,),
+                    TextFormField(
+                      onSaved: (val){name = val;},
+                    ),
+                    Text('Item Type:'),
+                    TextFormField(
+                      onSaved: (val){type = val;},
+                    ),
+                    Text(itemTypeText,),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      onSaved: (val){value = int.parse(val);},
+                    ),
+
+                    Row(
+                      children: <Widget>[
+                        FlatButton(
+                          child: Container(
+                            child: Image.asset(''),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         )
@@ -417,7 +451,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
     armorClass = 0;
     widget.equipment.forEach(
         (item){
-          if(item!=null)
+          if(item!=null && !item.isWep)
             armorClass+=item.val;
         }
     );
@@ -785,6 +819,16 @@ class StatsWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(race!=null)
+      {
+        intel = race.intelligence;
+        str = race.strength;
+        dex = race.dexterity;
+        wis = race.wisdom;
+        chr = race.charisma;
+        con = race.constitution;
+      }
     return new Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: new Row(
@@ -794,9 +838,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: Stat.Int(value: race.intelligence,update: updateInt,)),
-                new Expanded(child: Stat.Str(value: race.strength,update: updateStr,)),
-                new Expanded(child: Stat.Dex(value: race.dexterity,update: updateDex,)),
+                new Expanded(child: Stat.Int(value: intel,update: updateInt,)),
+                new Expanded(child: Stat.Str(value: str,update: updateStr,)),
+                new Expanded(child: Stat.Dex(value: dex,update: updateDex,)),
               ],
             ),
           ),
@@ -805,9 +849,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: Stat.Wis(value: race.wisdom,update: updateWis,)),
-                new Expanded(child: Stat.Chr(value: race.charisma, update: updateChr)),
-                new Expanded(child: Stat.Con(value: race.constitution, update: updateCon,)),
+                new Expanded(child: Stat.Wis(value: wis,update: updateWis,)),
+                new Expanded(child: Stat.Chr(value: chr, update: updateChr)),
+                new Expanded(child: Stat.Con(value: con, update: updateCon,)),
               ],
             ),
           ),
@@ -973,3 +1017,20 @@ class _StatState extends State<Stat> {
   }
 }
 
+class Integer{
+  int val;
+
+  Integer(int i)
+  {
+    val = i;
+  }
+
+  set(int i) => val = i;
+
+  operator ==(x) => val==x.val;
+
+  operator +(x) => Integer(val+x.val);
+
+  operator -(x)=> Integer(val-x.val);
+
+}

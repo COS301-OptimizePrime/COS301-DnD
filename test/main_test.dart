@@ -167,9 +167,6 @@ main() {
 
     // check if page is loaded correctly
     expect(find.text('Character Selection'), findsOneWidget);
-    expect(find.byType(Card), findsWidgets);
-    expect(find.byType(Image), findsWidgets);
-    expect(find.byType(Text), findsWidgets);
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
     // Monster Journal
@@ -244,44 +241,7 @@ main() {
 
     // check if page is loaded correctly
     expect(find.text('Character Selection'), findsOneWidget);
-    expect(find.byType(Card), findsWidgets);
-    expect(find.byType(Image), findsWidgets);
-    expect(find.byType(Text), findsWidgets);
     expect(find.byType(FloatingActionButton), findsOneWidget);
-
-    await tester.tap(find.byType(SafeArea).first);
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-
-    expect(find.byType(Image), findsWidgets);
-    expect(find.text('Character Details'), findsOneWidget);
-  });
-
-  // Tests Character Preview
-  testWidgets('Character Preview Test', (WidgetTester tester) async {
-    // set up environment
-    // Character Selection cannot run on its own
-    await tester.pumpWidget(new MaterialApp(
-        home: new HomePage()
-    ));
-
-    await tester.pumpWidget(new MaterialApp(
-        home: new CharacterSelection()
-    ));
-
-    // check if page is loaded correctly
-    expect(find.text('Character Selection'), findsOneWidget);
-    expect(find.byType(Card), findsWidgets);
-    expect(find.byType(Image), findsWidgets);
-    expect(find.byType(Text), findsWidgets);
-    expect(find.byType(FloatingActionButton), findsOneWidget);
-
-    Finder char = find.byType(SafeArea).first;
-    await tester.drag(char, new Offset(120.0, 183.25));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-
-    expect(find.text('Stats'), findsOneWidget);
   });
 
   // Tests Monster Journal Page

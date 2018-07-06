@@ -32,20 +32,13 @@ class HomePage extends StatelessWidget {
           minWidth: AppData.screenWidth/1.38,
           height: 42.0,
           onPressed: () async{
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) => new QrMakerWidget(),
+              //child:  new QrMakerWidget(),
+            );
 
-            Session s = await AppData.createSession();
-
-            if (s.status == "FAILED") {
-              Scaffold.of(context).showSnackBar(
-              new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
-            } else {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) => new QrMakerWidget(),
-                 //child:  new QrMakerWidget(),
-              );
-            }
           },
           color: Colors.deepOrange,
           child: new Text('Create Game Session', style: new TextStyle(color: Colors.white)),
@@ -64,6 +57,7 @@ class HomePage extends StatelessWidget {
           borderRadius: new BorderRadius.circular(30.0),
           elevation: 5.0,
           child: new MaterialButton(
+            key: new Key("join_btn"),
 //            minWidth: 300.0,
             minWidth: AppData.screenWidth/1.38,
             height: 42.0,
@@ -151,12 +145,6 @@ class HomePage extends StatelessWidget {
       ),
       body: new ListView(//new Container(
         padding: const EdgeInsets.only(bottom: 20.0),
-        //width: double.infinity,
-        //height: double.infinity,
-        //child: new Column(
-          //mainAxisSize: MainAxisSize.min,
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Column(
               mainAxisSize: MainAxisSize.min,

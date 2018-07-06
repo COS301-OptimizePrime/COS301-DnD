@@ -23,14 +23,12 @@ class MyApp extends StatelessWidget {
     CharacterSelection.tag: (context) => new CharacterSelection(),
     GameSessionDemo.tag: (context) => new GameSessionDemo(null),
     RaceViewer.tag: (context) => new RaceViewer(),
-
-//    HomePage.tsg: (context) => new HomePage();
   };
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: '301 DnD Demo',
+      title: 'DnD Game State Manager',
       debugShowCheckedModeBanner: false,
       theme: new ThemeData(
         brightness: Brightness.dark,
@@ -42,6 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       home: new LoginPage(),
       routes: routes,
+
     );
   }
 }

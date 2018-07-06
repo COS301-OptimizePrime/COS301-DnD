@@ -56,7 +56,9 @@ class _LoginPageState extends State<LoginPage> {
 //    return new LoginPage();
 //  }
 
-  final loginDialog = new Dialog(child: new SizedBox(
+  final loginDialog = new Dialog(
+    key: new Key("login_dialog"),
+    child: new SizedBox(
       width: 100.0,
       height: 100.0,
       child: new Row(
@@ -65,7 +67,10 @@ class _LoginPageState extends State<LoginPage> {
           new CircularProgressIndicator(
             strokeWidth: 2.0,
           ),
-          new Text("Logging you in..."), ],  ))
+          new Text("Logging you in..."),
+        ],
+      )
+    )
   );
 
   Future _submit() async {
@@ -215,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final confirm_password = new TextFormField(
+      key: new Key("confirm_txt"),
       autofocus: false,
       validator: (val) => val.compareTo(_pass)==0 ? 'Passwords do not match.' : null,
       onSaved: (val) => _confirmPass = val,
@@ -241,7 +247,8 @@ class _LoginPageState extends State<LoginPage> {
           _submit();
           },
           color: Colors.deepOrange,
-          child: new Text(enter_register_message, style: new TextStyle(color: Colors.white)),
+          child: new Text(enter_register_message,
+              style: new TextStyle(color: Colors.white)),
         ),
       ),
     );

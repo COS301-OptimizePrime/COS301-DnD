@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:grpc/grpc.dart";
@@ -11,19 +13,23 @@ class AppData{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-  FirebaseUser user = null;
-  GoogleSignInAccount googleUser = null;
-  GoogleUserCircleAvatar user_google_image = null;
+  FirebaseUser user;
+  GoogleSignInAccount googleUser;
+  GoogleUserCircleAvatar user_google_image;
 
   static String token = "anon";
 
-  // This should change we should not have a global session as there can be multiple
+  // This should change, we should not have a global session as there can be multiple
   static Session temp_session;
   // This should change we should not have a global session as there can be multiple
   static String sessionId;
   static List<Session> activeSessions;
   static ClientChannel channel;
   static SessionsManagerClient stub;
+
+  ///characters
+  static CharactersManagerClient charStub;
+  static int charsLoaded;
 
   static double screenWidth;
   static double screenHeight;
@@ -52,6 +58,8 @@ class AppData{
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
+
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
@@ -68,15 +76,10 @@ class AppData{
   Future<bool> signInWithEmailAndPass(String email, String pass) async{
     bool status = true;
     try{
-      user = await (auth.signInWithEmailAndPassword(email: email, password: pass)
-          .catchError((){
-        status = false;
-      }));
-
+      user = await (auth.signInWithEmailAndPassword(email: email, password: pass));
       token = await user.getIdToken();
-
-    }catch(PlatformException)
-    {
+    }
+    catch(PlatformException) {
       status = false;
     }
 
@@ -90,6 +93,22 @@ class AppData{
     print(user.toString());
   }
 
+  static Future<LeaveReply> leaveSessions(String sid) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    LeaveRequest jr = new LeaveRequest();
+    jr.sessionId = sid;
+    jr.authIdToken = token;
+
+    final response = await stub.leave(jr);
+    print('Status: ${response.status}');
+    print('Status Message: ${response.statusMessage}');
+
+    return response;
+  }
+
   Future signout()
   async {
     auth.signOut();
@@ -100,29 +119,33 @@ class AppData{
         user_google_image=null;
       }
     user = null;
+    characters.clear();
+    charsLoaded = null;
   }
 
   static void connectToServer()
   {
-    channel = new ClientChannel('develop.optimizeprime.co.za',
-        port: 50051,
+    channel = new ClientChannel('develop.optimizeprime.co.za', port: 50051,
         options: const ChannelOptions(
             credentials: const ChannelCredentials.insecure()));
-    stub = new SessionsManagerClient(channel);
+
   }
 
-  static Future<Session> createSession()
+  static Future<Session> createSession(String name, int maxPlayers)
   async {
 
-    if(channel==null)
-      connectToServer();
+        if(channel==null)
+          connectToServer();
 
-    NewSessionRequest nsr = new NewSessionRequest();
-    nsr.name = "COS301 Friday demo";
+        if(stub==null)
+          stub = new SessionsManagerClient(channel);
+
+        NewSessionRequest nsr = new NewSessionRequest();
+    nsr.name = name;
     nsr.authIdToken = token;
+    nsr.maxPlayers = maxPlayers;
     final response = await stub.create(nsr);
     print('Client received: ${response.status}');
-
 
     temp_session = response;
     sessionId = response.sessionId;
@@ -133,6 +156,9 @@ class AppData{
   {
     if(channel==null)
       connectToServer();
+
+    if(stub==null)
+      stub = new SessionsManagerClient(channel);
 
     JoinRequest jr = new JoinRequest();
     jr.sessionId = sid;
@@ -150,6 +176,9 @@ class AppData{
     if(channel==null)
       connectToServer();
 
+    if(stub==null)
+      stub = new SessionsManagerClient(channel);
+
     GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
     gsur.limit = 10;
     gsur.authIdToken = token;
@@ -160,6 +189,153 @@ class AppData{
     print('Status Message: ${response.status}');
 
     return response;
+  }
+
+  static Future updateUserCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    if(charsLoaded==null)
+      return getUseCharacters();
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    print('adding ${chars.characters.length - charsLoaded} characters');
+
+//    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
+    characters.clear();
+    for (int i = 0; i>=0 && i < chars.characters.length;i++)
+    {
+      characters.add(
+          convertToLocalChar(chars.characters.elementAt(i))
+      );
+      charsLoaded++;
+    }
+    print('characters added');
+  }
+
+  static Future getUseCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    print('retrieving characters');
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    charsLoaded = chars.characters.length;
+    print('adding ${chars.characters.length} characters');
+
+    for (int i = 0; i < chars.characters.length;i++)
+      {
+        characters.add(
+          convertToLocalChar(chars.characters.elementAt(i))
+        );
+      }
+
+    print('characters added');
+
+  }
+
+  static addNewCharacter(LocalCharacter char)
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    NewCharacterRequest ncr = new NewCharacterRequest();
+    ncr.authIdToken = token;
+    ncr.character = convertToNetChar(char);
+
+    print('adding character: ${ncr.character.name}');
+
+   final response = await charStub.createCharacter(ncr);
+
+   print('added character: ${response.characterId}');
+
+   characters.add(char);
+
+  }
+
+  static LocalCharacter convertToLocalChar(Character netChar) {
+    return new LocalCharacter(
+      characterId: netChar.characterId,
+      title: netChar.name,
+      charClass: ClassType.getClass(netChar.characterClass),
+      charRace:  Race.getRace(netChar.race),
+      charGender: 'unimplemented',
+      strength: netChar.strength,
+      dexterity: netChar.dexterity,
+      charisma: netChar.charisma,
+      wisdom: netChar.wisdom,
+      intelligence: netChar.intelligence,
+      constitution: netChar.constitution,
+      background: netChar.background,
+      personality: netChar.personalityTraits,
+      ideals: netChar.ideals,
+      bonds: netChar.bonds,
+      flaws: netChar.flaws,
+      featuresTraits: 'unimplemented',
+    );
+  }
+
+  static Character convertToNetChar(LocalCharacter char) {
+    Character temp = new Character();
+    temp.name = char.title;
+    temp.characterClass = char.charClass.name;
+    temp.race = char.charRace.name;
+//    temp.gender
+    temp.strength = char.strength;
+    temp.dexterity = char.dexterity;
+    temp.charisma = char.charisma;
+    temp.wisdom = char.wisdom;
+    temp.intelligence = char.intelligence;
+    temp.constitution = char.constitution;
+    temp.background = char.background;
+    temp.personalityTraits = char.personality;
+    temp.ideals = char.ideals;
+    temp.bonds = char.bonds;
+    temp.flaws = char.flaws;
+//    temp.features
+
+    return temp;
+  }
+
+  static deleteCharacter(String id) async{
+
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    DeleteCharacterRequest dcr = new DeleteCharacterRequest();
+    dcr.characterId = id;
+    dcr.authIdToken=token;
+
+    print("deleting character $id");
+
+    final response = await charStub.deleteCharacter(dcr);
+
+    print('deleted character ${response.status}');
   }
 
 }

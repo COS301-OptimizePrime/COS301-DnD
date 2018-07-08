@@ -41,13 +41,13 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
             actions: <Widget>[
               new FlatButton(
-                  child: const Text('GO BACK!'),
+                  child: const Text('CONTINUE CREATION'),
                   onPressed: () {
                     Navigator.of(context).pop(false); // Pops the confirmation dialog but not the page.
                   }
               ),
               new FlatButton(
-                  child: const Text('DISCARD!'),
+                  child: const Text('DISCARD'),
                   onPressed: () {
                     Navigator.of(context).pop(true); // Returning true to _onWillPop will pop again.
                   }
@@ -112,7 +112,8 @@ class FullScreenDialogState extends State<FullScreenDialog> {
         onWillPop: _onWillPop,
         child: new DefaultTabController(
           length: 3,
-          child: new Scaffold(
+          child: new Scaffold(resizeToAvoidBottomPadding: false,
+          body: new Builder(builder: (BuildContext context) {return new Scaffold(
             resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
                 title: const Text('Create Character'),
@@ -120,8 +121,16 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                   new FlatButton(
                       child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
                       onPressed: () {
-                        addNewChar();
-                        Navigator.pop(context, DismissDialogAction.save);
+                        // validate that character has name
+                        if (bit.newCharName.length == 0) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: new Text("Character needs a name"),
+                          ));
+                        }
+                        else {
+                          addNewChar();
+                          Navigator.pop(context, DismissDialogAction.save);
+                        }
                       }
                   )
                 ],
@@ -149,7 +158,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                 eit,
             ]
             ),
-          ),
+          );}))
         ),
       ),
     );

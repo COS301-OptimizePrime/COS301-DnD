@@ -41,13 +41,13 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
             actions: <Widget>[
               new FlatButton(
-                  child: const Text('GO BACK!'),
+                  child: const Text('CONTINUE CREATION'),
                   onPressed: () {
                     Navigator.of(context).pop(false); // Pops the confirmation dialog but not the page.
                   }
               ),
               new FlatButton(
-                  child: const Text('DISCARD!'),
+                  child: const Text('DISCARD'),
                   onPressed: () {
                     Navigator.of(context).pop(true); // Returning true to _onWillPop will pop again.
                   }
@@ -112,26 +112,43 @@ class FullScreenDialogState extends State<FullScreenDialog> {
         onWillPop: _onWillPop,
         child: new DefaultTabController(
           length: 3,
-          child: new Scaffold(
-            resizeToAvoidBottomPadding: true,
+          child: new Scaffold(resizeToAvoidBottomPadding: false,
+          body: new Builder(builder: (BuildContext context) {return new Scaffold(
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
                 title: const Text('Create Character'),
                 actions: <Widget> [
                   new FlatButton(
                       child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
                       onPressed: () {
-                        addNewChar();
-                        Navigator.pop(context, DismissDialogAction.save);
+                        // validate that character has name
+                        if (bit.newCharName.length == 0) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: new Text("Character needs a name"),
+                          ));
+                        }
+                        else {
+                          addNewChar();
+                          Navigator.pop(context, DismissDialogAction.save);
+                        }
                       }
                   )
                 ],
-              bottom: TabBar(
+              bottom: PreferredSize(
+                preferredSize: Size(17.0, 10.0),
+                child: Container(child: TabBar(
                 tabs: <Widget>[
-                  Tab(text: 'Basic',),
-                  Tab(text: 'Lore',),
-                  Tab(text: 'Equipment',),
+                  Container(
+                    child: Tab(text: 'Basic'), height: 17.0,
+                  ),
+                  Container(
+                    child: Tab(text: 'Lore'), height: 17.0,
+                  ),
+                  Container(
+                    child: Tab(text: 'Equipment'), height: 17.0,
+                  ),
                 ],
-              ),
+              ))),
             ),
             body: new TabBarView(
               children: [
@@ -141,7 +158,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                 eit,
             ]
             ),
-          ),
+          );}))
         ),
       ),
     );
@@ -155,7 +172,7 @@ class BasicInfoTab extends StatefulWidget {
   ClassType selectedClass = typeClasses.elementAt(0);
   RacePreview racePrev = new RacePreview(race: races.elementAt(0));
   ClassPreview classPrev = new ClassPreview(classType: typeClasses.elementAt(0));
-  StatsWidgets stats = new StatsWidgets(race: races.elementAt(0),);
+  StatsWidgets stats = new StatsWidgets(race: null,);
   Race selectedRace = races.elementAt(0);
 
   final TextEditingController char_name = new TextEditingController();
@@ -174,11 +191,6 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
           children: <Widget>[
             new Column(
               children: <Widget>[
-                new Padding(  //padding on top and bottom to space from image box and description
-                  padding: new EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 2.0),
-                  child: new Text('Character Name',
-                      style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                ),
                 new Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: new TextField(
@@ -196,19 +208,15 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                 ),
               ],
             ),
-
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                    child: new Text('Race',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
-
+                  new Text('Race',
+                        style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
                   new DropdownButton<Race>(
+                    isDense: true,
                     items: races.map((Race race) {
                       return new DropdownMenuItem<Race>(
                           value: race,
@@ -220,51 +228,45 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       _saveNeeded = true;
                       setState(() {
                         widget.racePrev=new RacePreview(race: widget.selectedRace,);
-                        new StatsWidgets(race: widget.selectedRace);
+//                        new StatsWidgets(race: widget.selectedRace);
                       });},
                     value: widget.selectedRace,
                   )
                 ],
-              ),
+              )
             ),
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.symmetric(vertical: 4.0),
-                    child: new Text('Gender',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
+                    new Text('Gender',
+                        style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
 
                   new DropdownButton(items: [
                     new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
                     new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
-                  ], onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
+                    new DropdownMenuItem<String>(child: new Text("Apache Helicopter"), value: "Apache Helicopter",),
+                  ], isDense: true,onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
                     value: widget.newCharGender,)
                 ],
-              ),
+              )
             ),
             new Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-
-                  new Padding(  //padding on top and bottom to space from image box and description
-                    padding: new EdgeInsets.symmetric(vertical: 4.0),
-                    child: new Text('Class',
-                        style: Theme.of(context).textTheme.title.copyWith(color: Colors.deepOrange)),
-                  ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                  new Text('Class',
+                    style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.deepOrange)),
 
                   new Row(
                     children: <Widget>[
                       new DropdownButton<ClassType>(
                         items: typeClasses.map((ClassType c) {
                           return new DropdownMenuItem<ClassType>(
-                              value: c,
-                              child: new Text(c.name)
+                            value: c,
+                            child: new Text(c.name)
                           );}).toList(),
                         isDense: true,
                         onChanged: (val){if(val!=null) widget.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: widget.selectedClass,);});},
@@ -274,14 +276,14 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                     ],
                   )
                 ],
-              ),
+              )
             ),
 
             ////// Stats Preview
 
             new Expanded(child: widget.racePrev, flex: 1,),
             new Expanded(child: widget.classPrev, flex: 1,),
-            new Expanded(child: widget.stats, flex: 1,),
+            new Expanded(child: widget.stats, flex: 2,),
 
 
           ]
@@ -305,9 +307,7 @@ class LoreInfoTab extends StatefulWidget {
 
 class _LoreInfoTabState extends State<LoreInfoTab> {
 
-  updateFlaws (String val) { setState(() {
-    widget.flaws = val;
-  }); }
+  updateFlaws (String val) => widget.flaws = val;
 
   updateFeatures (String val) => widget.featuresTraits = val;
 
@@ -387,13 +387,49 @@ class EquipInfoTab extends StatefulWidget {
 
   newItemDialog(BuildContext context)
   {
+    String name;
+    String type;
+    int value;
+    bool isWep;
+
+    String itemTypeText = 'ATK';
+
     showDialog(context: context,
         builder: (_) => new SimpleDialog(
-          title: Text("Add New Item"),
+//          title: Text("Add New Item"),
           children: <Widget>[
             new Container(
               width: AppData.screenHeight/4,
               height: AppData.screenWidth/4,
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Text('Item Name:',style: title,),
+                    TextFormField(
+                      onSaved: (val){name = val;},
+                    ),
+                    Text('Item Type:'),
+                    TextFormField(
+                      onSaved: (val){type = val;},
+                    ),
+                    Text(itemTypeText,),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      onSaved: (val){value = int.parse(val);},
+                    ),
+
+                    Row(
+                      children: <Widget>[
+                        FlatButton(
+                          child: Container(
+                            child: Image.asset(''),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         )
@@ -417,7 +453,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
     armorClass = 0;
     widget.equipment.forEach(
         (item){
-          if(item!=null)
+          if(item!=null && !item.isWep)
             armorClass+=item.val;
         }
     );
@@ -785,6 +821,16 @@ class StatsWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(race!=null)
+      {
+        intel = race.intelligence;
+        str = race.strength;
+        dex = race.dexterity;
+        wis = race.wisdom;
+        chr = race.charisma;
+        con = race.constitution;
+      }
     return new Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: new Row(
@@ -794,9 +840,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: Stat.Int(value: race.intelligence,update: updateInt,)),
-                new Expanded(child: Stat.Str(value: race.strength,update: updateStr,)),
-                new Expanded(child: Stat.Dex(value: race.dexterity,update: updateDex,)),
+                new Expanded(child: Stat.Int(value: intel,update: updateInt,)),
+                new Expanded(child: Stat.Str(value: str, update: updateStr)),
+                new Expanded(child: Stat.Dex(value: dex, update: updateDex,)),
               ],
             ),
           ),
@@ -805,9 +851,9 @@ class StatsWidgets extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 ///main stats
-                new Expanded(child: Stat.Wis(value: race.wisdom,update: updateWis,)),
-                new Expanded(child: Stat.Chr(value: race.charisma, update: updateChr)),
-                new Expanded(child: Stat.Con(value: race.constitution, update: updateCon,)),
+                new Expanded(child: Stat.Wis(value: wis,update: updateWis,)),
+                new Expanded(child: Stat.Chr(value: chr, update: updateChr)),
+                new Expanded(child: Stat.Con(value: con, update: updateCon,)),
               ],
             ),
           ),
@@ -941,7 +987,16 @@ class _StatState extends State<Stat> {
           ///icon
           new Expanded(
             flex: 3,
-            child: new Image.asset(widget.iconPath),
+            child: Stack(
+              children: <Widget>[
+                new Image.asset(widget.iconPath),
+                Positioned(
+                  top: 10.0,
+                  left: 10.0,
+                  child: Text(widget.iconPath.split('/')[2].substring(0,3))
+                ),
+              ]
+            )
           ),
 
           ///left - minus - button
@@ -973,3 +1028,20 @@ class _StatState extends State<Stat> {
   }
 }
 
+class Integer{
+  int val;
+
+  Integer(int i)
+  {
+    val = i;
+  }
+
+  set(int i) => val = i;
+
+  operator ==(x) => val==x.val;
+
+  operator +(x) => Integer(val+x.val);
+
+  operator -(x)=> Integer(val-x.val);
+
+}

@@ -9,7 +9,6 @@ import 'dart:async';
 import 'package:grpc/grpc.dart';
 
 import 'server.pb.dart';
-
 export 'server.pb.dart';
 
 class SessionsManagerClient extends Client {

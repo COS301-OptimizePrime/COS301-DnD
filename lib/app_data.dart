@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -293,8 +294,36 @@ class AppData{
       ideals: netChar.ideals,
       bonds: netChar.bonds,
       flaws: netChar.flaws,
-      featuresTraits: 'unimplemented',
+      featuresTraits: netChar.featuresAndTraits,
+      equipment: convertToLocalEquip(netChar.equipment),
     );
+  }
+
+  static List<LocalEquipment> convertToLocalEquip(List<Equipment> netList)
+  {
+    List<LocalEquipment> newList = new List();
+
+    netList.forEach((item){
+      List<String> splitName = item.name.split('日本');
+      newList.add(LocalEquipment(splitName[0], splitName[1], item.value,isWep: splitName[2]=='y'));
+    });
+
+    return newList;
+  }
+
+  static convertToNetEquip(List<Equipment> netList ,List<LocalEquipment> localList)
+  {
+    localList.forEach((item){
+      var isWep = 'n';
+      if(item.isWep)
+        isWep='y';
+
+      Equipment temp = new Equipment();
+      temp.name=item.name+'日本'+item.type+'日本'+isWep.toString();
+      temp.value = item.val;
+      netList.add(temp);
+
+    });
   }
 
   static Character convertToNetChar(LocalCharacter char) {
@@ -314,7 +343,8 @@ class AppData{
     temp.ideals = char.ideals;
     temp.bonds = char.bonds;
     temp.flaws = char.flaws;
-//    temp.features
+    temp.featuresAndTraits = char.featuresTraits;
+    convertToNetEquip(temp.equipment ,char.equipment);
 
     return temp;
   }

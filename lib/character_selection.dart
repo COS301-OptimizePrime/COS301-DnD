@@ -31,6 +31,7 @@ class LocalCharacter {
     this.bonds = '',
     this.flaws = '',
     this.featuresTraits = '',
+    this.equipment,
   });
 
   final String assetName;
@@ -40,6 +41,7 @@ class LocalCharacter {
   final ClassType charClass;
   final Race charRace;
   final String charGender;
+  final List<LocalEquipment> equipment;
 
   final int strength;
   final int dexterity;
@@ -270,6 +272,30 @@ class CharacterItem extends StatelessWidget {
           new Text(char.bonds),
           new Text(char.flaws),
           new Text(char.featuresTraits),
+
+          new Divider(),
+
+          Text(char.equipment.length.toString()),
+
+          Container(
+            width: AppData.screenWidth,
+            height: AppData.screenHeight/2,
+            child: Column(
+              children: char.equipment.map(
+                      (e)
+                  {
+                    return Expanded(
+                      child: new Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: EquipmentWidget(
+                          item: e,
+                        ),
+                      ),
+                    );
+                  }
+              ).toList(growable: true),
+            ),
+          ),
 
 
           new Center(

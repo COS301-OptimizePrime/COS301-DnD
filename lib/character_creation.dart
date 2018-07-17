@@ -77,6 +77,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
       flaws:  lit.flaws,
       bonds: lit.bonds,
       featuresTraits: lit.featuresTraits,
+      equipment:  ListToArray(eit.equipment),
     );
 
     print("New Character ${bit.newCharName = ""} created.");
@@ -84,6 +85,18 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     AppData.addNewCharacter(temp);
 
     setState((){});
+  }
+
+  List<LocalEquipment> ListToArray(List list)
+  {
+    List<LocalEquipment> newList = new List(list.length);
+
+    for(int i = 0; i < list.length;i++)
+      {
+        newList[i]=list[i];
+      }
+
+    return newList;
   }
 
   BasicInfoTab bit;
@@ -377,69 +390,20 @@ class TextBox extends StatelessWidget {
 
 class EquipInfoTab extends StatefulWidget {
 
-  final List<Equipment> equipment = List()..add(
-    new Equipment('Sword of Girth', "Broadsword", 10,isWep: true),
+  final List<LocalEquipment> equipment = List()..add(
+    new LocalEquipment('Sword of Girth', "Broadsword", 10,isWep: true),
   )..add(
-    new Equipment("Thunderfury", "Blessed Blade of the Windseeker", 20,isWep: true),
+    new LocalEquipment("Thunderfury", "Blessed Blade of the Windseeker", 20,isWep: true),
   )..add(
-    new Equipment("Goldskin", "Breastplate", 5)
+    new LocalEquipment("Goldskin", "Breastplate", 5)
   );
-
-  newItemDialog(BuildContext context)
-  {
-    String name;
-    String type;
-    int value;
-    bool isWep;
-
-    String itemTypeText = 'ATK';
-
-    showDialog(context: context,
-        builder: (_) => new SimpleDialog(
-//          title: Text("Add New Item"),
-          children: <Widget>[
-            new Container(
-              width: AppData.screenHeight/4,
-              height: AppData.screenWidth/4,
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    Text('Item Name:',style: title,),
-                    TextFormField(
-                      onSaved: (val){name = val;},
-                    ),
-                    Text('Item Type:'),
-                    TextFormField(
-                      onSaved: (val){type = val;},
-                    ),
-                    Text(itemTypeText,),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      onSaved: (val){value = int.parse(val);},
-                    ),
-
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                          child: Container(
-                            child: Image.asset(''),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        )
-    );
-  }
 
 
   @override
   _EquipInfoTabState createState() => _EquipInfoTabState();
 }
+
+
 
 class _EquipInfoTabState extends State<EquipInfoTab> {
 
@@ -459,13 +423,38 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
     );
   }
 
+  newItemDialog(BuildContext context) async
+  {
+
+    LocalEquipment newItem = await (showDialog(context: context,
+      builder: (_) => new SimpleDialog(
+        children: <Widget>[
+          NewItemDialogWidget(),
+        ],
+      ),
+    )
+    );
+
+    if(newItem!=null) {
+      widget.equipment.add(newItem);
+
+      if(!newItem.isWep)
+        armorClass+=newItem.val;
+    }
+
+    setState(() {
+      //show new item
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: (){widget.newItemDialog(context);},),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: (){newItemDialog(context);},),
       body: new Container(
         width: double.infinity,
         height: double.infinity,
+        padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
             new Padding(
@@ -488,7 +477,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
               ),
             ),
 
-            ///all items
+            ///all items less the equipped items
             new Expanded(
               child: ListView(
                 padding: EdgeInsets.all(8.0),
@@ -502,12 +491,13 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
                         ),
                       );
                   }
-                ).toList(growable: true)..add(
-                  new Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: EquipNewItem(),
-                  ),
-                ),
+                ).toList(growable: true)
+//                  ..add(
+//                  new Container(
+//                    padding: EdgeInsets.all(5.0),
+//                    child: EquipNewItem(),
+//                  ),
+//                ),
               ),
             )
           ],
@@ -516,6 +506,136 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
     );
   }
 }
+
+
+class NewItemDialogWidget extends StatefulWidget {
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  _NewItemDialogWidgetState createState() => _NewItemDialogWidgetState();
+}
+
+class _NewItemDialogWidgetState extends State<NewItemDialogWidget> {
+
+  Widget view;
+
+  LocalEquipment item;
+  String name;
+  String type;
+  String value;
+  bool isShield;
+
+  setView(bool isShield)
+  {
+    this.isShield = isShield;
+
+    String itemTypeText = 'ATK:';
+    if(isShield)
+      itemTypeText='DEF:';
+
+    view = Form(
+      key: widget._formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('Item Name:',style: title,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                name=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Name.';
+              },
+            ),
+          ),
+          Text('Item Type:',style: traitsTitleStyle,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                type=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Type.';
+              },
+            ),
+          ),
+          Text(itemTypeText,style: traitsTitleStyle,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                value=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Value.';
+              },
+            ),
+          ),
+
+          MaterialButton(
+            child: Text('Add new Item.'),
+            onPressed: () {
+              if(widget._formKey.currentState.validate()){
+
+                widget._formKey.currentState.save();
+                item = new LocalEquipment(name, type, int.parse(value),isWep: !isShield);
+                Navigator.pop(context,item);
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('init state');
+
+    view = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Image.asset('assets/armor.png')),
+          onPressed: (){
+            setState(() {
+              setView(true);
+            });
+          },
+        ),
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Image.asset('assets/sword.png')),
+          onPressed: (){
+            setState(() {
+              setView(false);
+            });
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return view;
+  }
+}
+
 
 class EquipNewItem extends StatelessWidget {
   @override
@@ -549,20 +669,20 @@ class EquipNewItem extends StatelessWidget {
 }
 
 
-class Equipment
+class LocalEquipment
 {
   final String name;
   final String type;
   final bool isWep;
   final int val;
 
-  Equipment(this.name, this.type, this.val, {this.isWep=false});
+  LocalEquipment(this.name, this.type, this.val, {this.isWep=false});
 
 }
 
 class EquipmentWidget extends StatelessWidget {
 
-  final Equipment item;
+  final LocalEquipment item;
 
   EquipmentWidget({
     this.item,
@@ -867,6 +987,7 @@ class StatsWidgets extends StatelessWidget {
 class Stat extends StatefulWidget {
 
   final String iconPath;
+  final String name;
   final int value;
   final Color col;
   final bool hasButtons;
@@ -880,6 +1001,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.lightBlueAccent,
     this.hasButtons = true,
     this.update,
+    this.name = 'Int',
   });
 
   Stat.Dex({
@@ -889,6 +1011,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.green,
     this.hasButtons = true,
     this.update,
+    this.name = 'Dex',
   });
 
   Stat.Con({
@@ -898,6 +1021,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.orange,
     this.hasButtons = true,
     this.update,
+    this.name = 'Con',
   });
 
   Stat.Str({
@@ -907,6 +1031,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.red,
     this.hasButtons = true,
     this.update,
+    this.name = 'Str',
   });
 
   Stat.Wis({
@@ -916,6 +1041,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.brown,
     this.hasButtons = true,
     this.update,
+    this.name = 'Wis',
   });
 
   Stat.Chr({
@@ -925,6 +1051,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.yellow,
     this.hasButtons = true,
     this.update,
+    this.name = 'Chr',
   });
 
 
@@ -975,8 +1102,8 @@ class _StatState extends State<Stat> {
 
     if(widget.hasButtons && leftButton.runtimeType==Container)
       {
-        leftButton = new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();});
-        rightButton = new IconButton(icon: new Icon(Icons.add), onPressed: (){add();});
+        leftButton = new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();},iconSize: 12.0,);
+        rightButton = new IconButton(icon: new Icon(Icons.add), onPressed: (){add();},iconSize: 12.0,);
       }
 
 
@@ -1007,13 +1134,13 @@ class _StatState extends State<Stat> {
           new RichText(
             softWrap: false,
             text: new TextSpan(
-              text: "+$value ",
-              children: <TextSpan>[
-                new TextSpan(
-                  text: "($calcVal)",
-                  style: new TextStyle(color: widget.col)
-                )
-              ]
+                text: "+$value ",
+                children: <TextSpan>[
+                  new TextSpan(
+                      text: "($calcVal)",
+                      style: new TextStyle(color: widget.col)
+                  )
+                ]
             ),
           ),
 
@@ -1028,20 +1155,20 @@ class _StatState extends State<Stat> {
   }
 }
 
-class Integer{
-  int val;
-
-  Integer(int i)
-  {
-    val = i;
-  }
-
-  set(int i) => val = i;
-
-  operator ==(x) => val==x.val;
-
-  operator +(x) => Integer(val+x.val);
-
-  operator -(x)=> Integer(val-x.val);
-
-}
+//class Integer{
+//  int val;
+//
+//  Integer(int i)
+//  {
+//    val = i;
+//  }
+//
+//  set(int i) => val = i;
+//
+//  operator ==(x) => val==x.val;
+//
+//  operator +(x) => Integer(val+x.val);
+//
+//  operator -(x)=> Integer(val-x.val);
+//
+//}

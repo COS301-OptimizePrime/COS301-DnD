@@ -98,6 +98,8 @@ class GameSessionState extends State<GameSessionDemo> {
 
   @override
   Widget build(BuildContext context) {
+    AppData appData = AppData.instance();
+
     return new Scaffold(
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
@@ -171,8 +173,30 @@ class GameSessionState extends State<GameSessionDemo> {
                 new ListView.builder(
                     shrinkWrap: true,
                     padding: kMaterialListPadding,
-                    itemCount: _items.length,
+                    itemCount: _items.length + 1,
                     itemBuilder: (BuildContext context, int index) {
+                      if (index == _items.length) {
+                        return new Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: new Material(
+                              borderRadius: new BorderRadius.circular(30.0),
+                              elevation: 5.0,
+                              child: new MaterialButton(
+                                minWidth: 200.0,
+                                height: 42.0,
+                                onPressed: () {},
+                                color: Colors.deepOrange,
+                                child: (this.session.dungeonMaster.name ==
+                                    appData.user.email)
+                                  ? new Text(
+                                    "Start Session",
+                                    style: new TextStyle(color: Colors.white))
+                                  : new Text("Ready Up",
+                                    style: new TextStyle(color: Colors.white)),
+                              ),
+                            )
+                        );
+                      }
                       final String item = _items[index];
                       return new ListTile(
                         leading: new CircleAvatar(

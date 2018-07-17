@@ -275,12 +275,13 @@ class CharacterItem extends StatelessWidget {
 
           new Divider(),
 
-          Text(char.equipment.length.toString()),
+          (char.equipment != null) ? Text(char.equipment.length.toString())
+              : Text("0"),
 
           Container(
             width: AppData.screenWidth,
             height: AppData.screenHeight/2,
-            child: Column(
+            child: (char.equipment != null) ? Column(
               children: char.equipment.map(
                       (e)
                   {
@@ -294,7 +295,7 @@ class CharacterItem extends StatelessWidget {
                     );
                   }
               ).toList(growable: true),
-            ),
+            ) : new Column(),
           ),
 
 

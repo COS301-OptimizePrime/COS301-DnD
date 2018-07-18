@@ -49,11 +49,11 @@ class InSessionState extends State<InSession> {
           ),
           body: new TabBarView(
               children: (isDM) ? [
-                Container(),
-                Container(),
+                AllCharactersTab(session),
+                MonstersTab(session),
               ]
               : [ // NP tabs
-                Container(),
+                CharactersTab(session),
                 PartyTab(session),
               ]
           ),
@@ -111,7 +111,7 @@ class CharactersTab extends StatefulWidget {
   CharactersTabState createState() => new CharactersTabState(this.session);
 }
 
-class CharactersTabState extends State<PartyTab> {
+class CharactersTabState extends State<CharactersTab> {
   final Session session;
 
   CharactersTabState(this.session);
@@ -145,7 +145,7 @@ class AllCharactersTab extends StatefulWidget {
   AllCharactersTabState createState() => new AllCharactersTabState(this.session);
 }
 
-class AllCharactersTabState extends State<PartyTab> {
+class AllCharactersTabState extends State<AllCharactersTab> {
   final Session session;
 
   AllCharactersTabState(this.session);
@@ -178,7 +178,7 @@ class MonstersTab extends StatefulWidget {
   MonstersTabState createState() => new MonstersTabState(this.session);
 }
 
-class MonstersTabState extends State<PartyTab> {
+class MonstersTabState extends State<MonstersTab> {
   final Session session;
 
   MonstersTabState(this.session);

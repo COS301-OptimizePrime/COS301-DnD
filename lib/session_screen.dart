@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/in_session.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -184,7 +185,27 @@ class GameSessionState extends State<GameSessionDemo> {
                               child: new MaterialButton(
                                 minWidth: 200.0,
                                 height: 42.0,
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (this.session.dungeonMaster.name ==
+                                      appData.user.email) {
+                                    // TODO: Start session for all players
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => InSession(this.responseSession.name, true)),
+                                    );
+                                  }
+                                  else {
+                                    // TODO: Indicate ready to play on DM screen and wait for session
+//                                    while (waitForSession());
+
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => InSession(this.responseSession.name, false)),
+                                    );
+                                  }
+                                },
                                 color: Colors.deepOrange,
                                 child: (this.session.dungeonMaster.name ==
                                     appData.user.email)

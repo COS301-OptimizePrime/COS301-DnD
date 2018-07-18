@@ -188,21 +188,17 @@ class GameSessionState extends State<GameSessionDemo> {
                                 onPressed: () {
                                   if (this.session.dungeonMaster.name ==
                                       appData.user.email) {
-                                    // TODO: Start session for all players
                                     Navigator.pop(context);
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => InSession(this.responseSession.name, true)),
+                                      MaterialPageRoute(builder: (context) => InSession(this.session, true)),
                                     );
                                   }
                                   else {
-                                    // TODO: Indicate ready to play on DM screen and wait for session
-//                                    while (waitForSession());
-
                                     Navigator.pop(context);
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => InSession(this.responseSession.name, false)),
+                                      MaterialPageRoute(builder: (context) => InSession(this.session, false)),
                                     );
                                   }
                                 },

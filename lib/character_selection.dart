@@ -34,7 +34,6 @@ class LocalCharacter {
     this.equipment,
   });
 
-  final String assetName;
   final String title;
   final String characterId;
 

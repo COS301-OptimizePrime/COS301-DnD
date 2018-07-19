@@ -37,6 +37,7 @@ class LocalCharacter {
   final String assetName;
   final String title;
   final String characterId;
+  String sessionId = '';
 
   final ClassType charClass;
   final Race charRace;
@@ -157,7 +158,8 @@ class CharacterItem extends StatelessWidget {
                 children: <Widget>[
                   racePreview,
                   classPreview,
-                  new Text(char.charGender), //our text widget with our description
+                  new Text(char.charGender),
+                  new Text((char.sessionId == '') ? "" : "In Session"), //our text widget with our description
                 ],
               )
             )

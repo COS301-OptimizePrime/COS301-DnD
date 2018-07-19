@@ -3,7 +3,7 @@ import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/monster_journal.dart';
-import 'package:dnd_301_final/races_and_classes.dart';
+import 'package:dnd_301_final/app_data.dart';
 
 class SessionCharacterItem extends StatelessWidget {
   SessionCharacterItem({ Key key, @required this.char , this.armorClass})
@@ -218,6 +218,141 @@ class PartyTabState extends State<PartyTab> {
   }
 }
 
+class AddCharDialogWidget extends StatefulWidget {
+
+  final _formKey = GlobalKey<FormState>();
+  final Session session;
+
+  AddCharDialogWidget(this.session);
+
+  @override
+  AddCharDialogWidgetState createState() => AddCharDialogWidgetState(session);
+}
+
+class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
+
+  Widget view;
+
+  List<bool> inSession;
+  String type;
+  String value;
+  bool createChar;
+  final Session session;
+  
+  AddCharDialogWidgetState(this.session);
+
+  setView(bool createChar) {
+    // TODO: get chars and see if in session
+    AppData.getUseCharacters().whenComplete((){setState(() {
+          //update characters
+          print('updating character list');
+        });}
+    );
+
+    inSession = new List(characters.length);
+
+    List<Widget> characterSelects = new List(inSession.length);
+
+    for (int i = 0; i < characters.length; i++) {
+      inSession[i] = characters.elementAt(i).sessionId != session.sessionId;
+      characterSelects[i] = new CharacterSelectTile(
+        index: i,
+        value: inSession[i],
+        onChanged: (bool value) {
+          setState(() {
+            inSession[i] = value;
+          });
+        },
+      );
+    }
+    
+    this.createChar = createChar;
+
+    view = Form(
+      key: widget._formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // characters
+          Container(
+            height: AppData.screenHeight / 2,
+            child: ListView(
+              children: characterSelects,
+            ),
+          ),
+
+          RaisedButton(
+            child: Text('Add Selected Characters.'),
+            color: Colors.deepOrange,
+            onPressed: () {
+              if(widget._formKey.currentState.validate()){
+
+                widget._formKey.currentState.save();
+                Navigator.pop(context);
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('init state');
+
+    view = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Icon(Icons.file_upload)
+          ),
+          onPressed: (){
+            setState(() {
+              setView(true);
+            });
+          },
+        ),
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Icon(Icons.add_circle_outline)
+          ),
+          onPressed: (){
+            setState(() {
+              setView(false);
+            });
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return view;
+  }
+}
+
+class CharacterSelectTile extends StatelessWidget {
+  final int index;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  CharacterSelectTile({@required this.index, @required this.value, @required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return new CheckboxListTile(value: value, onChanged: onChanged);
+  }
+}
+
 class CharactersTab extends StatefulWidget {
   final Session session;
 
@@ -232,47 +367,75 @@ class CharactersTabState extends State<CharactersTab> {
 
   CharactersTabState(this.session);
 
+  addCharToSession(BuildContext context) async {
+    await (showDialog(context: context,
+      builder: (_) => new SimpleDialog(
+        children: <Widget>[
+          AddCharDialogWidget(session),
+        ],
+      ),
+    ));
+
+    if(characters != null) {
+      characters.forEach((char) {
+        char.sessionId = session.sessionId;
+        AppData.updateCharacter(char);
+      });
+    }
+
+    setState(() {
+      //show new item
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<LocalCharacter> sessionChars = new List();
+//    LocalCharacter char = new LocalCharacter(
+//        title: 'James',
+//        charClass: typeClasses.elementAt(2),
+//        charRace: races.elementAt(22),
+//        charGender: 'Female',
+//        strength: 6,
+//        dexterity: 2,
+//        constitution: 6,
+//        intelligence: 2,
+//        wisdom: 2,
+//        charisma: 2
+//    );
+//    char.equipment = new List<LocalEquipment>();
+//    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
+//    sessionChars.add(char);
 
-    LocalCharacter char = new LocalCharacter(
-        title: 'James',
-        charClass: typeClasses.elementAt(2),
-        charRace: races.elementAt(22),
-        charGender: 'Female',
-        strength: 6,
-        dexterity: 2,
-        constitution: 6,
-        intelligence: 2,
-        wisdom: 2,
-        charisma: 2
-    );
-    char.equipment = new List<LocalEquipment>();
-    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
-    // TODO: get session chars of player
-    sessionChars.clear();
-    sessionChars.add(char);
+    return Scaffold(
+      body: new ListView(
+          itemExtent: SessionCharacterItem.height,
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+          children: characters.map((LocalCharacter char) {
+            int armorClass = 0;
 
-    return new ListView(
-        itemExtent: SessionCharacterItem.height,
-        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-        children: sessionChars.map((LocalCharacter char) {
-          int armorClass = 0;
-          if (char.equipment != null) {
-            char.equipment.forEach(
-                    (item) {
-                  if (item != null && !item.isWep)
-                    armorClass += item.val;
-                }
+            if (char.sessionId != session.sessionId) {
+              return null;
+            }
+
+            if (char.equipment != null) {
+              char.equipment.forEach(
+                      (item) {
+                    if (item != null && !item.isWep)
+                      armorClass += item.val;
+                  }
+              );
+            }
+            // all our characters and makes a card for each
+            return new Container(       //this is our 'card'
+                margin: const EdgeInsets.only(bottom: 8.0),
+                child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
             );
-          }
-          // all our characters and makes a card for each
-          return new Container(       //this is our 'card'
-              margin: const EdgeInsets.only(bottom: 8.0),
-              child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
-          );
-        }).toList()
+          }).toList()
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {addCharToSession(context);}
+      ),
     );
   }
 }

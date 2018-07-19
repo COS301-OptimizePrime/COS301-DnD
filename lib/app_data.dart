@@ -328,6 +328,7 @@ class AppData{
 
   static Character convertToNetChar(LocalCharacter char) {
     Character temp = new Character();
+    if (char.characterId!=null) temp.characterId = char.characterId;
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;
@@ -366,6 +367,49 @@ class AppData{
     final response = await charStub.deleteCharacter(dcr);
 
     print('deleted character ${response.status}');
+  }
+
+  static void removeEquipment(LocalCharacter char, int index) async{
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    UpdateCharacterRequest ucr = new UpdateCharacterRequest();
+    ucr.authIdToken = token;
+
+    final netChar = convertToNetChar(char);
+
+    ucr.character = netChar;
+
+    print("deleting equipment: $index from character: ${char.characterId}");
+
+    final response = await charStub.updateCharacter(ucr);
+
+    print('deleted equipment: ${response.status}');
+    print(response.statusMessage);
+  }
+
+  static void updateCharacter(LocalCharacter localChar) async {
+
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    UpdateCharacterRequest ucr = new UpdateCharacterRequest();
+    ucr.authIdToken = token;
+    ucr.character = convertToNetChar(localChar);
+
+    print("Updating charcter with id: ${localChar.characterId}");
+
+    final response = await charStub.updateCharacter(ucr);
+
+    print('Update: ${response.status}');
+    print(response.statusMessage);
+
   }
 
 }

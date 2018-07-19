@@ -137,16 +137,6 @@ final List<Race> races = <Race>[
     strength: 1,
     traits: <String>["Firbold Magic","Hidden Step","Powerful Build","Speech of Beast and Leef"]
   ),
-  const Race(
-    name: "Genasi",
-    desc: "Genasi carry the power of the elemental planes of air, earth, fire, and water in their blood.",
-    constitution: 2,
-  ),
-  const Race(
-    name: "Gith",
-    desc: "Long ago, the gith rose up to overthrow the mind flayers that held them in servitude, but two factions arose that remain bitter enemies today.",
-    intelligence: 1,
-  ),
 
   ///Gnomes
   const Race(

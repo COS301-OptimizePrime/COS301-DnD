@@ -31,6 +31,7 @@ class LocalCharacter {
     this.bonds = '',
     this.flaws = '',
     this.featuresTraits = '',
+    this.equipment,
   });
 
   final String assetName;
@@ -40,6 +41,7 @@ class LocalCharacter {
   final ClassType charClass;
   final Race charRace;
   final String charGender;
+  List<LocalEquipment> equipment;
 
   final int strength;
   final int dexterity;
@@ -61,50 +63,10 @@ class LocalCharacter {
   bool isValid(){
     return (title != null && charClass != null && charRace != null && charGender != null);
   }
+
 }
 
 final List<LocalCharacter> characters = new List();
-//  = <LocalCharacter>[
-//  new LocalCharacter(
-//    assetName: 'assets/character_images/knight.jpg',
-//    title: 'James',
-//    charClass: typeClasses.elementAt(2),
-//    charRace: races.elementAt(22),
-//    charGender: 'Female',
-//    strength: 6,
-//    dexterity: 2,
-//    constitution: 6,
-//    intelligence: 2,
-//    wisdom: 2,
-//    charisma: 2
-//  ),
-//  new LocalCharacter(
-//    assetName: 'assets/character_images/mage.jpg',
-//    title: 'Dorian',
-//    charClass: typeClasses.elementAt(6),
-//    charRace: races.elementAt(22),
-//    charGender: 'Male',
-//    strength: 2,
-//    dexterity: 2,
-//    constitution: 2,
-//    intelligence: 5,
-//    wisdom: 5,
-//    charisma: 5
-//  ),
-//  new LocalCharacter(
-//    assetName: 'assets/character_images/archer.jpg',
-//    title: 'Elana',
-//    charClass: typeClasses.elementAt(8),
-//    charRace: races.elementAt(19),
-//    charGender: 'Trap',
-//    strength: 3,
-//    dexterity: 5,
-//    constitution: 2,
-//    intelligence: 5,
-//    wisdom: 4,
-//    charisma: 1
-//  ),
-//];
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
@@ -112,7 +74,7 @@ class CharacterItem extends StatelessWidget {
         super(key: key);
 
   static const double height = 160.0; // original value was 366.0
-  final LocalCharacter char;
+  LocalCharacter char;
 
   @override
   Widget build(BuildContext context) {
@@ -271,6 +233,17 @@ class CharacterItem extends StatelessWidget {
           new Text(char.flaws),
           new Text(char.featuresTraits),
 
+          new Divider(),
+
+          (char.equipment != null) ? Text(char.equipment.length.toString())
+              : Text("0"),
+
+          Container(
+            width: AppData.screenWidth,
+            height: AppData.screenHeight/2,
+            child: (char.equipment != null && char.equipment.length>0) ? EquipmentList(char: char) : new Column(),
+          ),
+
 
           new Center(
             child: new Container(
@@ -296,6 +269,18 @@ class CharacterItem extends StatelessWidget {
                   return new Scaffold( //new scaffold
                       appBar: new AppBar(
                         title: const Text('Character Details'), //title of view
+                        actions: <Widget>[
+                          IconButton(icon: Icon(Icons.edit), onPressed: (){
+                            Navigator.push(
+                                context, new MaterialPageRoute<LocalCharacter>(
+                              builder: (
+                                  BuildContext context) => new FullScreenDialog(char: char,),
+                              fullscreenDialog: true,
+                            )).then((val){if(val!=null)
+                              //@TODO: implement update on return
+                              ;});
+                          })
+                        ],
                       ),
                       body: detailedView
                   );
@@ -310,6 +295,71 @@ class CharacterItem extends StatelessWidget {
     );
   }
 }
+
+class EquipmentList extends StatefulWidget {
+
+  final LocalCharacter char;
+
+  EquipmentList({
+    this.char,
+});
+
+  @override
+  _EquipmentListState createState() => _EquipmentListState();
+}
+
+class _EquipmentListState extends State<EquipmentList> {
+
+  int index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        padding: EdgeInsets.all(8.0),
+        itemCount: widget.char.equipment.length,
+        itemBuilder: (context, index) {
+
+          final item = widget.char.equipment[index];
+
+          if(item==null)
+            return Container();
+
+           return Dismissible(
+            child: new Container(
+              padding: EdgeInsets.all(5.0),
+              child: EquipmentWidget(
+                item: item,
+              ),
+            ),
+            // Each Dismissible must contain a Key. Keys allow Flutter to
+            // uniquely identify Widgets.
+            key: UniqueKey(),
+            // We also need to provide a function that will tell our app
+            // what to do after an item has been swiped away.
+            onDismissed: (direction) {
+
+
+              widget.char.equipment.removeAt(index);
+
+              AppData.removeEquipment(widget.char,index);
+
+              setState(() {
+                //redraw list
+              });
+
+              Scaffold
+                  .of(context)
+                  .showSnackBar(
+                  SnackBar(content: Text("$item deleted")));
+
+            },
+            background: Container(color: Colors.red),
+          );
+        }
+    );
+  }
+}
+
 
 class DeleteButton extends StatefulWidget {
 

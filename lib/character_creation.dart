@@ -17,6 +17,13 @@ enum DismissDialogAction {
 bool _saveNeeded = false;
 
 class FullScreenDialog extends StatefulWidget {
+
+  LocalCharacter char;
+
+  FullScreenDialog({
+    this.char
+});
+
   @override
   FullScreenDialogState createState() => new FullScreenDialogState();
 }
@@ -59,11 +66,12 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
   void addNewChar()
   {
+
 //    formKey.currentState.save();
     LocalCharacter temp = new LocalCharacter(
       title: bit.newCharName,
-      charClass: bit.selectedClass,
-      charRace: bit.selectedRace,
+      charClass: BasicInfoTab.selectedClass,
+      charRace: BasicInfoTab.selectedRace,
       charGender: bit.newCharGender,
       strength: bit.stats.intel,
       dexterity: bit.stats.dex,
@@ -77,13 +85,59 @@ class FullScreenDialogState extends State<FullScreenDialog> {
       flaws:  lit.flaws,
       bonds: lit.bonds,
       featuresTraits: lit.featuresTraits,
+      equipment:  ListToArray(eit.equipment),
     );
 
     print("New Character ${bit.newCharName = ""} created.");
 
+
     AppData.addNewCharacter(temp);
 
     setState((){});
+  }
+
+  LocalCharacter updateChar()
+  {
+    LocalCharacter temp = new LocalCharacter(
+      characterId: widget.char.characterId,
+      title: bit.newCharName,
+      charClass: BasicInfoTab.selectedClass,
+      charRace: BasicInfoTab.selectedRace,
+      charGender: bit.newCharGender,
+      strength: bit.stats.intel,
+      dexterity: bit.stats.dex,
+      constitution: bit.stats.con,
+      intelligence: bit.stats.intel,
+      wisdom: bit.stats.intel,
+      charisma: bit.stats.chr,
+      background: lit.background,
+      personality: lit.personality,
+      ideals:  lit.ideals,
+      flaws:  lit.flaws,
+      bonds: lit.bonds,
+      featuresTraits: lit.featuresTraits,
+      equipment:  ListToArray(eit.equipment),
+    );
+
+    print("Updating Character ${bit.newCharName = ""}.");
+
+    widget.char = temp;
+    AppData.updateCharacter(temp);
+
+    return temp;
+
+  }
+
+  List<LocalEquipment> ListToArray(List list)
+  {
+    List<LocalEquipment> newList = new List(list.length);
+
+    for(int i = 0; i < list.length;i++)
+      {
+        newList[i]=list[i];
+      }
+
+    return newList;
   }
 
   BasicInfoTab bit;
@@ -95,11 +149,11 @@ class FullScreenDialogState extends State<FullScreenDialog> {
     final ThemeData theme = Theme.of(context);
 
     if(bit==null)
-      bit = new BasicInfoTab();
+      bit = new BasicInfoTab(widget.char);
     if(lit==null)
-      lit = new LoreInfoTab();
+      lit = new LoreInfoTab(widget.char);
     if(eit==null)
-      eit = new EquipInfoTab();
+      eit = new EquipInfoTab(widget.char);
 
     return new Material(
       child: new Form(
@@ -128,8 +182,16 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                           ));
                         }
                         else {
-                          addNewChar();
-                          Navigator.pop(context, DismissDialogAction.save);
+                          if(widget.char==null)
+                            {
+                              addNewChar();
+                              Navigator.pop(context, DismissDialogAction.save);
+                            }
+                          else
+                            {
+                              final char = updateChar();
+                              Navigator.pop(context, char);
+                            }
                         }
                       }
                   )
@@ -167,17 +229,40 @@ class FullScreenDialogState extends State<FullScreenDialog> {
 
 class BasicInfoTab extends StatefulWidget {
 
-  String newCharName = "";
+  String newCharName;
   String newCharGender = "Male";
-  ClassType selectedClass = typeClasses.elementAt(0);
-  RacePreview racePrev = new RacePreview(race: races.elementAt(0));
-  ClassPreview classPrev = new ClassPreview(classType: typeClasses.elementAt(0));
-  StatsWidgets stats = new StatsWidgets(race: null,);
-  Race selectedRace = races.elementAt(0);
+  static ClassType selectedClass = typeClasses.elementAt(0);
+  static Race selectedRace = races.elementAt(0);
+  RacePreview racePrev;
+  ClassPreview classPrev;
+  StatsWidgets stats;
 
   final TextEditingController char_name = new TextEditingController();
 
-  
+
+  BasicInfoTab(LocalCharacter c)
+  {
+    if(c!=null)
+      {
+        newCharName = c.title;
+//        newCharGender = "Male";//@TODO: fix when gender is added to server
+        selectedClass = c.charClass;
+        selectedRace = c.charRace;
+        racePrev = new RacePreview(race: selectedRace);
+        classPrev = new ClassPreview(classType: selectedClass);
+        stats = new StatsWidgets(
+          intel: c.intelligence, dex: c.dexterity, str: c.strength, chr: c.charisma, con: c.constitution, wis: c.wisdom,
+        );
+      }
+      else
+      {
+        newCharGender = "Male";
+        racePrev = new RacePreview(race: selectedRace);
+        classPrev = new ClassPreview(classType: selectedClass);
+        stats = new StatsWidgets();
+      }
+  }
+
   @override
   _BasicInfoTabState createState() => _BasicInfoTabState();
 }
@@ -224,13 +309,13 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       );}).toList(),
                     onChanged: (val){
 //                                newCharRace = val.name;
-                      widget.selectedRace=val;
+                      BasicInfoTab.selectedRace=val;
                       _saveNeeded = true;
                       setState(() {
-                        widget.racePrev=new RacePreview(race: widget.selectedRace,);
+                        widget.racePrev=new RacePreview(race: BasicInfoTab.selectedRace,);
 //                        new StatsWidgets(race: widget.selectedRace);
                       });},
-                    value: widget.selectedRace,
+                    value: BasicInfoTab.selectedRace,
                   )
                 ],
               )
@@ -269,8 +354,8 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                             child: new Text(c.name)
                           );}).toList(),
                         isDense: true,
-                        onChanged: (val){if(val!=null) widget.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: widget.selectedClass,);});},
-                        value: widget.selectedClass,
+                        onChanged: (val){if(val!=null) BasicInfoTab.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: BasicInfoTab.selectedClass,);});},
+                        value: BasicInfoTab.selectedClass,
                       ),
 
                     ],
@@ -294,12 +379,34 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
 
 class LoreInfoTab extends StatefulWidget {
 
-  String background = 'Those things that happend to me that make me want to do some other things.';
-  String personality = 'The best person to ever exist ever';
-  String ideals = 'The best ideals a person can have, no seriously, they are the ideal ideals.';
-  String bonds = 'Everyone loves me anyway, isnt that fine?';
-  String flaws = 'My only flaw is that I\'m flawless';
-  String featuresTraits = 'Those extra goodies that make me special <3.';
+  String background;
+  String personality;
+  String ideals;
+  String bonds;
+  String flaws;
+  String featuresTraits;
+
+  LoreInfoTab(LocalCharacter c)
+  {
+    if(c!=null)
+      {
+        background = c.background;
+        personality = c.personality;
+        ideals = c.ideals;
+        bonds = c.bonds;
+        flaws = c.flaws;
+        featuresTraits = c.featuresTraits;
+      }
+      else
+      {
+        background = 'Those things that happend to me that make me want to do some other things.';
+        personality = 'The best person to ever exist ever';
+        ideals = 'The best ideals a person can have, no seriously, they are the ideal ideals.';
+        bonds = 'Everyone loves me anyway, isnt that fine?';
+        flaws = 'My only flaw is that I\'m flawless';
+        featuresTraits = 'Those extra goodies that make me special <3.';
+      }
+  }
 
   @override
   _LoreInfoTabState createState() => _LoreInfoTabState();
@@ -377,65 +484,25 @@ class TextBox extends StatelessWidget {
 
 class EquipInfoTab extends StatefulWidget {
 
-  final List<Equipment> equipment = List()..add(
-    new Equipment('Sword of Girth', "Broadsword", 10,isWep: true),
-  )..add(
-    new Equipment("Thunderfury", "Blessed Blade of the Windseeker", 20,isWep: true),
-  )..add(
-    new Equipment("Goldskin", "Breastplate", 5)
-  );
+  List<LocalEquipment> equipment;
 
-  newItemDialog(BuildContext context)
+  EquipInfoTab(LocalCharacter c)
   {
-    String name;
-    String type;
-    int value;
-    bool isWep;
-
-    String itemTypeText = 'ATK';
-
-    showDialog(context: context,
-        builder: (_) => new SimpleDialog(
-//          title: Text("Add New Item"),
-          children: <Widget>[
-            new Container(
-              width: AppData.screenHeight/4,
-              height: AppData.screenWidth/4,
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    Text('Item Name:',style: title,),
-                    TextFormField(
-                      onSaved: (val){name = val;},
-                    ),
-                    Text('Item Type:'),
-                    TextFormField(
-                      onSaved: (val){type = val;},
-                    ),
-                    Text(itemTypeText,),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      onSaved: (val){value = int.parse(val);},
-                    ),
-
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                          child: Container(
-                            child: Image.asset(''),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        )
-    );
+    if(c!=null)
+      {
+        equipment = c.equipment;
+      }
+    else
+      {
+        equipment = new List()..add(
+          new LocalEquipment('Sword of Girth', "Broadsword", 10,isWep: true),
+            )..add(
+            new LocalEquipment("Thunderfury", "Blessed Blade of the Windseeker", 20,isWep: true),
+          )..add(
+          new LocalEquipment("Goldskin", "Breastplate", 5)
+          );
+      }
   }
-
 
   @override
   _EquipInfoTabState createState() => _EquipInfoTabState();
@@ -459,13 +526,38 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
     );
   }
 
+  newItemDialog(BuildContext context) async
+  {
+
+    LocalEquipment newItem = await (showDialog(context: context,
+      builder: (_) => new SimpleDialog(
+        children: <Widget>[
+          NewItemDialogWidget(),
+        ],
+      ),
+    )
+    );
+
+    if(newItem!=null) {
+      widget.equipment.add(newItem);
+
+      if(!newItem.isWep)
+        armorClass+=newItem.val;
+    }
+
+    setState(() {
+      //show new item
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: (){widget.newItemDialog(context);},),
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: (){newItemDialog(context);},),
       body: new Container(
         width: double.infinity,
         height: double.infinity,
+        padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
             new Padding(
@@ -488,32 +580,172 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
               ),
             ),
 
-            ///all items
+            ///all items less the equipped items
             new Expanded(
-              child: ListView(
+              child: ListView.builder(
                 padding: EdgeInsets.all(8.0),
-                children: widget.equipment.map(
-                  (e)
-                  {
-                    return new Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: EquipmentWidget(
-                          item: e,
+                itemCount: widget.equipment.length,
+                itemBuilder: (context, index) {
+                  final item = widget.equipment[index];
+
+                  return Dismissible(
+                    child: new Container(
+                          padding: EdgeInsets.all(5.0),
+                          child: EquipmentWidget(
+                            item: item,
+                          ),
                         ),
-                      );
-                  }
-                ).toList(growable: true)..add(
-                  new Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: EquipNewItem(),
-                  ),
-                ),
-              ),
+                    // Each Dismissible must contain a Key. Keys allow Flutter to
+                    // uniquely identify Widgets.
+                    key: UniqueKey(),
+                    // We also need to provide a function that will tell our app
+                    // what to do after an item has been swiped away.
+                    onDismissed: (direction) {
+                      widget.equipment.removeAt(index);
+
+                      Scaffold
+                          .of(context)
+                          .showSnackBar(
+                          SnackBar(content: Text("$item deleted")));
+                    },
+                    background: Container(color: Colors.red),
+                  );
+                }
+              )
             )
           ],
         ),
       ),
     );
+  }
+}
+
+class NewItemDialogWidget extends StatefulWidget {
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  _NewItemDialogWidgetState createState() => _NewItemDialogWidgetState();
+}
+
+class _NewItemDialogWidgetState extends State<NewItemDialogWidget> {
+
+  Widget view;
+
+  LocalEquipment item;
+  String name;
+  String type;
+  String value;
+  bool isShield;
+
+  setView(bool isShield)
+  {
+    this.isShield = isShield;
+
+    String itemTypeText = 'ATK:';
+    if(isShield)
+      itemTypeText='DEF:';
+
+    view = Form(
+      key: widget._formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('Item Name:',style: title,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                name=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Name.';
+              },
+            ),
+          ),
+          Text('Item Type:',style: traitsTitleStyle,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                type=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Type.';
+              },
+            ),
+          ),
+          Text(itemTypeText,style: traitsTitleStyle,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0,left: 25.0,right: 25.0),
+            child: TextFormField(
+              onSaved: (val){
+                value=val;
+              },
+              validator: (val){
+                if(val.isEmpty)
+                  return 'Please enter a Value.';
+              },
+            ),
+          ),
+
+          RaisedButton(
+            child: Text('Add new Item.'),
+            color: Colors.deepOrange,
+            onPressed: () {
+              if(widget._formKey.currentState.validate()){
+
+                widget._formKey.currentState.save();
+                item = new LocalEquipment(name, type, int.parse(value),isWep: !isShield);
+                Navigator.pop(context,item);
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('init state');
+
+    view = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Image.asset('assets/armor.png')),
+          onPressed: (){
+            setState(() {
+              setView(true);
+            });
+          },
+        ),
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Image.asset('assets/sword.png')),
+          onPressed: (){
+            setState(() {
+              setView(false);
+            });
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return view;
   }
 }
 
@@ -548,21 +780,23 @@ class EquipNewItem extends StatelessWidget {
   }
 }
 
-
-class Equipment
+class LocalEquipment
 {
   final String name;
   final String type;
   final bool isWep;
   final int val;
 
-  Equipment(this.name, this.type, this.val, {this.isWep=false});
+  LocalEquipment(this.name, this.type, this.val, {this.isWep=false});
+
+  @override
+  String toString() => name;
 
 }
 
 class EquipmentWidget extends StatelessWidget {
 
-  final Equipment item;
+  final LocalEquipment item;
 
   EquipmentWidget({
     this.item,
@@ -624,8 +858,6 @@ class EquipmentWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 final TextStyle title = new TextStyle(
   color: Colors.deepOrange,
@@ -797,17 +1029,20 @@ class ClassPreview extends StatelessWidget {
 
 class StatsWidgets extends StatelessWidget {
 
-  final Race race;
-  int intel = 0;
-  int str = 0;
-  int dex = 0;
-  int wis = 0;
-  int chr = 0;
-  int con = 0;
+  int intel;
+  int str;
+  int dex;
+  int wis;
+  int chr;
+  int con;
 
   StatsWidgets({
-    @required
-    this.race,
+    this.intel = 0,
+    this.str = 0,
+    this.dex = 0,
+    this.wis = 0,
+    this.chr = 0,
+    this.con = 0,
 });
 
 
@@ -822,15 +1057,6 @@ class StatsWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(race!=null)
-      {
-        intel = race.intelligence;
-        str = race.strength;
-        dex = race.dexterity;
-        wis = race.wisdom;
-        chr = race.charisma;
-        con = race.constitution;
-      }
     return new Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: new Row(
@@ -867,6 +1093,7 @@ class StatsWidgets extends StatelessWidget {
 class Stat extends StatefulWidget {
 
   final String iconPath;
+  final String name;
   final int value;
   final Color col;
   final bool hasButtons;
@@ -880,6 +1107,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.lightBlueAccent,
     this.hasButtons = true,
     this.update,
+    this.name = 'Int',
   });
 
   Stat.Dex({
@@ -889,6 +1117,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.green,
     this.hasButtons = true,
     this.update,
+    this.name = 'Dex',
   });
 
   Stat.Con({
@@ -898,6 +1127,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.orange,
     this.hasButtons = true,
     this.update,
+    this.name = 'Con',
   });
 
   Stat.Str({
@@ -907,6 +1137,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.red,
     this.hasButtons = true,
     this.update,
+    this.name = 'Str',
   });
 
   Stat.Wis({
@@ -916,6 +1147,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.brown,
     this.hasButtons = true,
     this.update,
+    this.name = 'Wis',
   });
 
   Stat.Chr({
@@ -925,6 +1157,7 @@ class Stat extends StatefulWidget {
     this.col = Colors.yellow,
     this.hasButtons = true,
     this.update,
+    this.name = 'Chr',
   });
 
 
@@ -975,8 +1208,8 @@ class _StatState extends State<Stat> {
 
     if(widget.hasButtons && leftButton.runtimeType==Container)
       {
-        leftButton = new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();});
-        rightButton = new IconButton(icon: new Icon(Icons.add), onPressed: (){add();});
+        leftButton = new IconButton(icon: new Icon(Icons.remove), onPressed: (){sub();},iconSize: 12.0,);
+        rightButton = new IconButton(icon: new Icon(Icons.add), onPressed: (){add();},iconSize: 12.0,);
       }
 
 
@@ -1007,13 +1240,13 @@ class _StatState extends State<Stat> {
           new RichText(
             softWrap: false,
             text: new TextSpan(
-              text: "+$value ",
-              children: <TextSpan>[
-                new TextSpan(
-                  text: "($calcVal)",
-                  style: new TextStyle(color: widget.col)
-                )
-              ]
+                text: "+$value ",
+                children: <TextSpan>[
+                  new TextSpan(
+                      text: "($calcVal)",
+                      style: new TextStyle(color: widget.col)
+                  )
+                ]
             ),
           ),
 
@@ -1028,20 +1261,20 @@ class _StatState extends State<Stat> {
   }
 }
 
-class Integer{
-  int val;
-
-  Integer(int i)
-  {
-    val = i;
-  }
-
-  set(int i) => val = i;
-
-  operator ==(x) => val==x.val;
-
-  operator +(x) => Integer(val+x.val);
-
-  operator -(x)=> Integer(val-x.val);
-
-}
+//class Integer{
+//  int val;
+//
+//  Integer(int i)
+//  {
+//    val = i;
+//  }
+//
+//  set(int i) => val = i;
+//
+//  operator ==(x) => val==x.val;
+//
+//  operator +(x) => Integer(val+x.val);
+//
+//  operator -(x)=> Integer(val-x.val);
+//
+//}

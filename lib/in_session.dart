@@ -1,7 +1,123 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/races_and_classes.dart';
+
+class SessionCharacterItem extends StatelessWidget {
+  SessionCharacterItem({ Key key, @required this.char , this.armorClass})
+      : assert(char != null),
+  //if it receives a null character object to populate the card, fatal error
+        super(key: key);
+
+  static const double height = 160.0; // original value was 366.0
+  final LocalCharacter char;
+  int armorClass;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context); //copy theme data from parent
+    final TextStyle titleStyle = theme.textTheme.headline.copyWith(
+        color: Colors.white); //make our titl
+    SizedBox title;
+
+    title = new SizedBox(
+        height: 60.0,
+        child: new Padding(
+          padding: new EdgeInsets.only(left: 16.0),
+          child: new FittedBox( //new box, fitted to remaining space
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft, //place box left
+            child: new Text(char.title,
+              //place a Text widget inside - aka our title - which is above our image on the stack
+              style: titleStyle,
+            ),
+          ),
+        )
+    );
+
+    SizedBox racePreview = new SizedBox(
+      height: 60.0,
+      width: 60.0,
+      child: new Stack(
+          children: <Widget>[
+            new Positioned.fill( //add image to bottom of stack
+                child: new Image.asset(
+                  'assets/race_images/' + char.charRace.getImage() + '.png',
+                  fit: BoxFit.scaleDown,)
+            ),
+            new Positioned( //positioned widgets can be moved within their parent (aka stack)
+              bottom: 1.0,
+              left: 1.0,
+              right: 1.0,
+              child: new FittedBox( //new box, fitted to remaining space
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft, //place box left
+                  child: Text(char.charRace.name)
+              ),
+            ),
+          ]
+      ),
+    );
+
+    SizedBox classPreview = new SizedBox(
+      height: 60.0,
+      width: 60.0,
+      child: new Stack(
+          children: <Widget>[
+            new Positioned.fill( //add image to bottom of stack
+                child: new Image.asset(
+                  'assets/class_images/' + char.charClass.name + '.png',
+                  fit: BoxFit.scaleDown,)
+            ),
+            new Positioned( //positioned widgets can be moved within their parent (aka stack)
+              bottom: 1.0,
+              left: 1.0,
+              right: 1.0,
+              child: new FittedBox( //new box, fitted to remaining space
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft, //place box left
+                  child: Text(char.charClass.name)
+              ),
+            ),
+          ]
+      ),
+    );
+
+    Card card = new Card(child: new Column(
+        //move to crossaxis (aka horizontal as we are vertical)'s start (left)
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            title,
+            new Padding(
+                padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    racePreview,
+                    classPreview,
+//                    profeciecy,
+                    Container(width: 60.0, child: new Shield(armorClass)),
+                  ],
+                )
+            )
+          ]
+      ),
+    );
+
+    return new SafeArea(
+        top: false,
+        bottom: false,
+        child: new Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+            height: height,
+            child: card
+        )
+    );
+  }
+}
 
 // The screen that players see when session is initiated
 // Dungeon Master and normal players see different screens
@@ -120,15 +236,41 @@ class CharactersTabState extends State<CharactersTab> {
   Widget build(BuildContext context) {
     final List<LocalCharacter> sessionChars = new List();
 
+    LocalCharacter char = new LocalCharacter(
+        title: 'James',
+        charClass: typeClasses.elementAt(2),
+        charRace: races.elementAt(22),
+        charGender: 'Female',
+        strength: 6,
+        dexterity: 2,
+        constitution: 6,
+        intelligence: 2,
+        wisdom: 2,
+        charisma: 2
+    );
+    char.equipment = new List<LocalEquipment>();
+    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
     // TODO: get session chars of player
+    sessionChars.clear();
+    sessionChars.add(char);
 
     return new ListView(
-        itemExtent: CharacterItem.height,
+        itemExtent: SessionCharacterItem.height,
         padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-        children: sessionChars.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
+        children: sessionChars.map((LocalCharacter char) {
+          int armorClass = 0;
+          if (char.equipment != null) {
+            char.equipment.forEach(
+                    (item) {
+                  if (item != null && !item.isWep)
+                    armorClass += item.val;
+                }
+            );
+          }
+          // all our characters and makes a card for each
           return new Container(       //this is our 'card'
               margin: const EdgeInsets.only(bottom: 8.0),
-              child: new CharacterItem(char: char)  //give our card a character to use
+              child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
           );
         }).toList()
     );
@@ -157,12 +299,12 @@ class AllCharactersTabState extends State<AllCharactersTab> {
     // TODO: get session chars
 
     return new ListView(
-        itemExtent: CharacterItem.height,
+        itemExtent: SessionCharacterItem.height,
         padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
         children: sessionChars.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
           return new Container(       //this is our 'card'
               margin: const EdgeInsets.only(bottom: 8.0),
-              child: new CharacterItem(char: char)  //give our card a character to use
+              child: new SessionCharacterItem(char: char)  //give our card a character to use
           );
         }).toList()
     );

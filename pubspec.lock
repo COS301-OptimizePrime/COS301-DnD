@@ -105,7 +105,7 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.12"
+    version: "0.5.9"
   fixnum:
     dependency: transitive
     description:
@@ -155,7 +155,7 @@ packages:
       name: google_sign_in
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.3"
   googleapis_auth:
     dependency: transitive
     description:
@@ -218,7 +218,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.5"
+    version: "0.4.1"
   intl:
     dependency: transitive
     description:
@@ -372,7 +372,7 @@ packages:
       name: qr_reader
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.0"
   quiver:
     dependency: transitive
     description:

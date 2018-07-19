@@ -73,21 +73,33 @@ class _MonsterJournalUpdatedState extends State<MonsterJournalUpdated> {
     return typing;
   }
 
+  final TextEditingController monsterController = new TextEditingController();
+
+
+  MonsterListBody mlb;
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar( //AppBars are the bars on top of the view
-        title: const Text('Monster Journal'),
+        centerTitle: true,
+        title: TextField(
+          controller: monsterController,
+        decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            hintText: 'Search Monster Journal...'
+          ),
+          onChanged: (searchText) {
+            mlb.filter(searchText);
+          } ,
+        ),
+        actions: <Widget>[
+
+        ],
       ),
 
-      body: new ListView.builder(
-        itemCount: monstersList.length-1,
-        itemBuilder: (context, index)
-          {
-            final int item = index+1;
-            return new Text(monstersList.elementAt(item).name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
-          }
-      ),
+
+      body: mlb = new MonsterListBody(),
 
 //
 //      body: new ListView(
@@ -99,6 +111,67 @@ class _MonsterJournalUpdatedState extends State<MonsterJournalUpdated> {
 //              height: 30.0,
 //              child: new Text(m.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),));
 //        }).toList(),
+//      ),
+    );
+  }
+}
+
+class MonsterListBody extends StatefulWidget {
+
+  static _MonsterListBodyState mlbs;
+
+  filter(String t)
+  {
+    mlbs.update(t);
+  }
+  
+  @override
+  _MonsterListBodyState createState() {
+    mlbs = new _MonsterListBodyState();
+    return mlbs;
+  }
+}
+
+class _MonsterListBodyState extends State<MonsterListBody> {
+  
+  String filter;
+  
+  update(String t)
+  {
+    setState(() {
+      filter = t;
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context)
+  {
+    return new Container(
+      
+      child: ListView(
+        children: monstersList.map(
+        (Monster m) {
+          if(filter==null || m.name.contains(filter))
+            return new Text(m.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
+          else
+            return Container();
+        }
+        ).toList(),
+      ),
+
+//      child: ListView.builder(
+//      itemCount: monstersList.length-1,
+//          itemBuilder: (context, index)
+//          {
+//            final Monster m = monstersList.elementAt(index);
+//
+//            if(filter==null || m.name.contains(filter))
+//              return new Text(m.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
+//            else
+//              return Container();
+//
+////            return new Text(monstersList.elementAt(item).name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
+//          }
 //      ),
     );
   }

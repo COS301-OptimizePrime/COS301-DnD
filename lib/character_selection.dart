@@ -158,8 +158,10 @@ class CharacterItem extends StatelessWidget {
                 children: <Widget>[
                   racePreview,
                   classPreview,
-                  new Text(char.charGender),
-                  new Text((char.sessionId == '') ? "" : "In Session"), //our text widget with our description
+                  new Column(children: <Widget>[
+                    new Text(char.charGender),
+                    new Text((char.sessionId == '') ? "" : "In Session"), //our text widget with our description
+                  ],)
                 ],
               )
             )
@@ -289,7 +291,7 @@ class CharacterItem extends StatelessWidget {
                             Navigator.push(
                                 context, new MaterialPageRoute<LocalCharacter>(
                               builder: (
-                                  BuildContext context) => new FullScreenDialog(char: char,),
+                                  BuildContext context) => new CreateCharacterDialog(char: char,),
                               fullscreenDialog: true,
                             )).then((val){if(val!=null)
                               //@TODO: implement update on return
@@ -545,7 +547,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
             onPressed: () {
               Navigator.push(
                   context, new MaterialPageRoute<DismissDialogAction>(
-                builder: (BuildContext context) => new FullScreenDialog(),
+                builder: (BuildContext context) => new CreateCharacterDialog(),
                 fullscreenDialog: true,
               )).then((val) {
                 if (val == DismissDialogAction.save) updateCharacters();

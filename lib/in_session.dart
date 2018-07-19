@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/character_creation.dart';
@@ -241,60 +242,79 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   
   AddCharDialogWidgetState(this.session);
 
-  setView(bool createChar) {
-    // TODO: get chars and see if in session
-    AppData.getUseCharacters().whenComplete((){setState(() {
-          //update characters
+  Future<Null> updateCharacters() async {
+    AppData.updateUserCharacters().whenComplete(
+            (){
           print('updating character list');
-        });}
+          setState(() {
+            //update list
+          });
+        }
     );
 
-    inSession = new List(characters.length);
+    return null;
+  }
 
-    List<Widget> characterSelects = new List(inSession.length);
+  setView(bool createChar) {
+    if (createChar) {
+      Navigator.push(
+          context, new MaterialPageRoute<DismissDialogAction>(
+        builder: (BuildContext context) => new CreateCharacterDialog(),
+        fullscreenDialog: true,
+      )).then((val) {
+        if (val == DismissDialogAction.save) updateCharacters();
+      });
+    }
+    else {
+      inSession = new List(characters.length);
+      List<Widget> characterSelects = new List(inSession.length);
 
-    for (int i = 0; i < characters.length; i++) {
-      inSession[i] = characters.elementAt(i).sessionId != session.sessionId;
-      characterSelects[i] = new CharacterSelectTile(
-        index: i,
-        value: inSession[i],
-        onChanged: (bool value) {
-          setState(() {
-            inSession[i] = value;
-          });
-        },
+      for (int i = 0; i < characters.length; i++) {
+        inSession[i] = (characters
+            .elementAt(i)
+            .sessionId == session.sessionId);
+        characterSelects[i] = new CharacterSelectTile(
+          name: characters.elementAt(i).title,
+          index: i,
+          value: inSession[i],
+          onChanged: (bool value) {
+            setState(() {
+              inSession[i] = !inSession[i];
+            });
+          },
+        );
+      }
+
+      this.createChar = createChar;
+
+      view = Form(
+        key: widget._formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            // characters
+            Container(
+              height: AppData.screenHeight / 2,
+              child: ListView(
+                children: characterSelects,
+              ),
+            ),
+
+            RaisedButton(
+              child: Text('Add Selected Characters.'),
+              color: Colors.deepOrange,
+              onPressed: () {
+                if (widget._formKey.currentState.validate()) {
+                  widget._formKey.currentState.save();
+                  updateCharacters();
+                  Navigator.pop(context);
+                }
+              },
+            )
+          ],
+        ),
       );
     }
-    
-    this.createChar = createChar;
-
-    view = Form(
-      key: widget._formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          // characters
-          Container(
-            height: AppData.screenHeight / 2,
-            child: ListView(
-              children: characterSelects,
-            ),
-          ),
-
-          RaisedButton(
-            child: Text('Add Selected Characters.'),
-            color: Colors.deepOrange,
-            onPressed: () {
-              if(widget._formKey.currentState.validate()){
-
-                widget._formKey.currentState.save();
-                Navigator.pop(context);
-              }
-            },
-          )
-        ],
-      ),
-    );
   }
 
   @override
@@ -314,7 +334,7 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
           ),
           onPressed: (){
             setState(() {
-              setView(true);
+              setView(false);
             });
           },
         ),
@@ -326,7 +346,7 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
           ),
           onPressed: (){
             setState(() {
-              setView(false);
+              setView(true);
             });
           },
         )
@@ -341,15 +361,21 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
 }
 
 class CharacterSelectTile extends StatelessWidget {
+  final String name;
   final int index;
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  CharacterSelectTile({@required this.index, @required this.value, @required this.onChanged});
+  CharacterSelectTile({@required this.name, @required this.index, @required this.value, @required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    return new CheckboxListTile(value: value, onChanged: onChanged);
+    return new CheckboxListTile(
+      value: value,
+      onChanged: onChanged,
+      selected: value,
+      title: Text(name),
+    );
   }
 }
 
@@ -365,7 +391,14 @@ class CharactersTab extends StatefulWidget {
 class CharactersTabState extends State<CharactersTab> {
   final Session session;
 
-  CharactersTabState(this.session);
+  CharactersTabState(this.session) {
+    AppData.getUseCharacters().whenComplete(
+            (){setState(() {
+          //update characters
+          print('updating character list');
+        });}
+    );
+  }
 
   addCharToSession(BuildContext context) async {
     await (showDialog(context: context,
@@ -414,7 +447,7 @@ class CharactersTabState extends State<CharactersTab> {
             int armorClass = 0;
 
             if (char.sessionId != session.sessionId) {
-              return null;
+              return Text('');
             }
 
             if (char.equipment != null) {

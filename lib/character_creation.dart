@@ -16,19 +16,19 @@ enum DismissDialogAction {
 
 bool _saveNeeded = false;
 
-class FullScreenDialog extends StatefulWidget {
+class CreateCharacterDialog extends StatefulWidget {
 
   LocalCharacter char;
 
-  FullScreenDialog({
+  CreateCharacterDialog({
     this.char
 });
 
   @override
-  FullScreenDialogState createState() => new FullScreenDialogState();
+  CreateCharacterDialogState createState() => new CreateCharacterDialogState();
 }
 
-class FullScreenDialogState extends State<FullScreenDialog> {
+class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final formKey = new GlobalKey<FormState>();
 
   Future<bool> _onWillPop() async {

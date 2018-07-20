@@ -114,11 +114,11 @@ class AppData{
   async {
     auth.signOut();
     if(googleUser!=null)
-      {
-        googleSignIn.signOut();
-        googleUser = null;
-        user_google_image=null;
-      }
+    {
+      googleSignIn.signOut();
+      googleUser = null;
+      user_google_image=null;
+    }
     user = null;
     characters.clear();
     charsLoaded = null;
@@ -135,13 +135,13 @@ class AppData{
   static Future<Session> createSession(String name, int maxPlayers)
   async {
 
-        if(channel==null)
-          connectToServer();
+    if(channel==null)
+      connectToServer();
 
-        if(stub==null)
-          stub = new SessionsManagerClient(channel);
+    if(stub==null)
+      stub = new SessionsManagerClient(channel);
 
-        NewSessionRequest nsr = new NewSessionRequest();
+    NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = name;
     nsr.authIdToken = token;
     nsr.maxPlayers = maxPlayers;
@@ -243,11 +243,11 @@ class AppData{
     print('adding ${chars.characters.length} characters');
 
     for (int i = 0; i < chars.characters.length;i++)
-      {
-        characters.add(
+    {
+      characters.add(
           convertToLocalChar(chars.characters.elementAt(i))
-        );
-      }
+      );
+    }
 
     print('characters added');
 
@@ -268,11 +268,11 @@ class AppData{
 
     print('adding character: ${ncr.character.name}');
 
-   final response = await charStub.createCharacter(ncr);
+    final response = await charStub.createCharacter(ncr);
 
-   print('added character: ${response.characterId}');
+    print('added character: ${response.characterId}');
 
-   characters.add(char);
+    characters.add(char);
 
   }
 
@@ -281,9 +281,9 @@ class AppData{
       characterId: netChar.characterId,
       sessionId: netChar.sessionId,
       title: netChar.name,
+      charGender: netChar.gender,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
-      charGender: 'unimplemented',
       strength: netChar.strength,
       dexterity: netChar.dexterity,
       charisma: netChar.charisma,
@@ -334,7 +334,7 @@ class AppData{
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;
-//    temp.gender
+    temp.gender = char.charGender;
     temp.strength = char.strength;
     temp.dexterity = char.dexterity;
     temp.charisma = char.charisma;

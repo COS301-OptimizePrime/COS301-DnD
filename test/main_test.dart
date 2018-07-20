@@ -5,6 +5,7 @@ import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:dnd_301_final/session_screen.dart';
 import 'package:dnd_301_final/race_viewer.dart';
@@ -123,8 +124,7 @@ main() {
     // CharacterSelection in real app downloads characters. Mock characters
     // are used for tests
     characters.clear();
-    characters.add(
-      new LocalCharacter(
+    LocalCharacter char = new LocalCharacter(
         title: 'James',
         charClass: RacesAndClasses.typeClasses.elementAt(2),
         charRace: RacesAndClasses.races.elementAt(22),
@@ -134,9 +134,11 @@ main() {
         constitution: 6,
         intelligence: 2,
         wisdom: 2,
-        charisma: 2
-      )
+        charisma: 2,
+        sessionId: ''
     );
+    char.equipment = new List<LocalEquipment>();
+    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
 
     // set up environment
     // Character Selection cannot run on its own
@@ -150,6 +152,12 @@ main() {
 
     // check if page is loaded correctly
     expect(find.text('Character Selection'), findsOneWidget);
+
+    characters.add(char);
+    await tester.dragFrom(Offset(88.0, 102.0), Offset(88.0, 202.0));
+    await tester.pump();
+    await tester.pump(Duration(seconds: 1));
+
     expect(find.text("James"), findsOneWidget);
     expect(find.text(RacesAndClasses.typeClasses.elementAt(2).name), findsOneWidget);
     expect(find.text(RacesAndClasses.races.elementAt(22).name), findsOneWidget);
@@ -161,20 +169,21 @@ main() {
     // CharacterSelection in real app downloads characters. Mock characters
     // are used for tests
     characters.clear();
-    characters.add(
-        new LocalCharacter(
-            title: 'James',
-            charClass: RacesAndClasses.typeClasses.elementAt(2),
-            charRace: RacesAndClasses.races.elementAt(22),
-            charGender: 'Female',
-            strength: 1,
-            dexterity: 2,
-            constitution: 3,
-            intelligence: 4,
-            wisdom: 5,
-            charisma: 6
-        )
+    LocalCharacter char = new LocalCharacter(
+        title: 'James',
+        charClass: RacesAndClasses.typeClasses.elementAt(2),
+        charRace: RacesAndClasses.races.elementAt(22),
+        charGender: 'Female',
+        strength: 6,
+        dexterity: 2,
+        constitution: 6,
+        intelligence: 2,
+        wisdom: 2,
+        charisma: 2,
+        sessionId: ''
     );
+    char.equipment = new List<LocalEquipment>();
+    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
 
     // set up environment
     // Character Selection cannot run on its own
@@ -185,6 +194,11 @@ main() {
     await tester.pumpWidget(new MaterialApp(
         home: new CharacterSelection()
     ));
+
+    characters.add(char);
+    await tester.dragFrom(Offset(88.0, 102.0), Offset(88.0, 202.0));
+    await tester.pump();
+    await tester.pump(Duration(seconds: 1));
 
     // go to character details
     Finder card = find.text("James");
@@ -212,20 +226,21 @@ main() {
     // CharacterSelection in real app downloads characters. Mock characters
     // are used for tests
     characters.clear();
-    characters.add(
-        new LocalCharacter(
-            title: 'James',
-            charClass: RacesAndClasses.typeClasses.elementAt(2),
-            charRace: RacesAndClasses.races.elementAt(22),
-            charGender: 'Female',
-            strength: 1,
-            dexterity: 2,
-            constitution: 3,
-            intelligence: 4,
-            wisdom: 5,
-            charisma: 6
-        )
+    LocalCharacter char = new LocalCharacter(
+        title: 'James',
+        charClass: typeClasses.elementAt(2),
+        charRace: races.elementAt(22),
+        charGender: 'Female',
+        strength: 6,
+        dexterity: 2,
+        constitution: 6,
+        intelligence: 2,
+        wisdom: 2,
+        charisma: 2
     );
+    char.equipment = new List<LocalEquipment>();
+    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
+    characters.add(char);
 
     // set up environment
     // Character Selection cannot run on its own

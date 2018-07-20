@@ -16,19 +16,19 @@ enum DismissDialogAction {
 
 bool _saveNeeded = false;
 
-class FullScreenDialog extends StatefulWidget {
+class CreateCharacterDialog extends StatefulWidget {
 
   LocalCharacter char;
 
-  FullScreenDialog({
+  CreateCharacterDialog({
     this.char
 });
 
   @override
-  FullScreenDialogState createState() => new FullScreenDialogState();
+  CreateCharacterDialogState createState() => new CreateCharacterDialogState();
 }
 
-class FullScreenDialogState extends State<FullScreenDialog> {
+class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final formKey = new GlobalKey<FormState>();
 
   Future<bool> _onWillPop() async {
@@ -86,6 +86,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
       bonds: lit.bonds,
       featuresTraits: lit.featuresTraits,
       equipment:  ListToArray(eit.equipment),
+      sessionId: ""
     );
 
     print("New Character ${bit.newCharName = ""} created.");
@@ -176,7 +177,7 @@ class FullScreenDialogState extends State<FullScreenDialog> {
                       child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: Colors.white)),
                       onPressed: () {
                         // validate that character has name
-                        if (bit.newCharName.length == 0) {
+                        if (bit.newCharName == null || bit.newCharName.length == 0) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
                             content: new Text("Character needs a name"),
                           ));
@@ -509,7 +510,7 @@ class EquipInfoTab extends StatefulWidget {
 }
 
 class _EquipInfoTabState extends State<EquipInfoTab> {
-
+  Shield shield;
   int armorClass;
 
   @override
@@ -524,6 +525,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
             armorClass+=item.val;
         }
     );
+    shield = new Shield(armorClass);
   }
 
   newItemDialog(BuildContext context) async
@@ -535,14 +537,15 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
           NewItemDialogWidget(),
         ],
       ),
-    )
-    );
+    ));
 
     if(newItem!=null) {
       widget.equipment.add(newItem);
 
-      if(!newItem.isWep)
-        armorClass+=newItem.val;
+      if(!newItem.isWep) {
+        armorClass += newItem.val;
+        shield = new Shield(armorClass);
+      }
     }
 
     setState(() {
@@ -565,18 +568,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
               child: new Container(
                 width: AppData.screenWidth/4,
                 height: AppData.screenHeight/8,
-                child: Stack(
-                  children: <Widget>[
-                    new Center(child: Image.asset('assets/shield.png',color: Colors.deepOrange,)),
-
-                    Center(
-                      child: Text(
-                        '$armorClass',
-                        style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
+                child: this.shield,
               ),
             ),
 
@@ -601,6 +593,16 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
                     // We also need to provide a function that will tell our app
                     // what to do after an item has been swiped away.
                     onDismissed: (direction) {
+                      setState(() {
+                        if (!widget.equipment
+                            .elementAt(index)
+                            .isWep) {
+                          this.armorClass -= widget.equipment
+                              .elementAt(index)
+                              .val;
+                          this.shield = new Shield(armorClass);
+                        }
+                      });
                       widget.equipment.removeAt(index);
 
                       Scaffold
@@ -615,6 +617,31 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Shield extends StatelessWidget {
+  final int armorClass;
+
+  Shield(this.armorClass);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: AppData.screenHeight / 8,
+      child: Stack(
+        children: <Widget>[
+          new Center(child: Image.asset('assets/shield.png',color: Colors.deepOrange,)),
+
+          Center(
+            child: Text(
+              '$armorClass',
+              style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
       ),
     );
   }

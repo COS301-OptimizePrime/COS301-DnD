@@ -37,7 +37,7 @@ class LocalCharacter {
 
   final String title;
   final String characterId;
-  final String sessionId;
+  String sessionId;
 
   final ClassType charClass;
   final Race charRace;
@@ -158,13 +158,29 @@ class CharacterItem extends StatelessWidget {
                 children: <Widget>[
                   racePreview,
                   classPreview,
-                  new Text(char.charGender), //our text widget with our description
+                  new Column(children: <Widget>[
+                    new Text(char.charGender),
+                    new Text((char.sessionId == '') ? "" : "In Session"), //our text widget with our description
+                  ],)
                 ],
               )
             )
           ]
       )),
     );
+
+    int armorClass = 0;
+
+    if (char.equipment != null) {
+      char.equipment.forEach((item) {
+            if (item != null && !item.isWep)
+              armorClass += item.val;
+          }
+      );
+    }
+    else {
+      armorClass = 0;
+    }
 
     // A detailed view of the character that is called when a character card is tapped
     ListView detailedView = new ListView(
@@ -236,7 +252,7 @@ class CharacterItem extends StatelessWidget {
 
           new Divider(),
 
-          (char.equipment != null) ? Text(char.equipment.length.toString())
+          (char.equipment != null) ? Shield(armorClass)//Text(char.equipment.length.toString())
               : Text("0"),
 
           Container(
@@ -275,7 +291,7 @@ class CharacterItem extends StatelessWidget {
                             Navigator.push(
                                 context, new MaterialPageRoute<LocalCharacter>(
                               builder: (
-                                  BuildContext context) => new FullScreenDialog(char: char,),
+                                  BuildContext context) => new CreateCharacterDialog(char: char,),
                               fullscreenDialog: true,
                             )).then((val){if(val!=null)
                               //@TODO: implement update on return
@@ -430,6 +446,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
 
   CharacterSelectionState()
   {
+    characters.clear();
     AppData.getUseCharacters().whenComplete(
         (){setState(() {
           //update characters
@@ -462,6 +479,8 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
         }
     );
 
+    setState(() {}); // for testing purposes
+
     return null;
   }
 
@@ -472,54 +491,65 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
     double swipeStart;
     double swipeEnd;
 
-
     return new Scaffold(
-            body: new Stack(
-              children: <Widget>[
-                new RefreshIndicator(
-                  onRefresh: updateCharacters,
-                  child: new ListView(
-                      itemExtent: CharacterItem.height,
-                      padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                      children: characters.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
-                        return new Container(       //this is our 'card'
-                            margin: const EdgeInsets.only(bottom: 8.0),
-                            child: new GestureDetector(
-                                onHorizontalDragStart: (start){swipeStart=start.globalPosition.dx;},
-                                onHorizontalDragUpdate: (update){swipeEnd=update.globalPosition.dx;},//open preview
-                                onHorizontalDragEnd: (end){
-                                                              print('Start: $swipeStart \nEnd: $swipeEnd');
-                                                              if( swipeEnd>swipeStart && sqrt(pow((swipeEnd-swipeStart),2)) < 300) {
-                                                                controller.forward();
-                                                                CharacterSelection.inPreviewState=true;
+        body: new Stack(
+          children: <Widget>[
+            new RefreshIndicator(
+              onRefresh: updateCharacters,
+              child: new ListView(
+                  itemExtent: CharacterItem.height,
+                  padding: const EdgeInsets.only(
+                      top: 8.0, left: 8.0, right: 8.0),
+                  //adds padding between cards and screen
+                  children: characters.map((
+                      LocalCharacter char) { //this goes through all our characters and makes a card for each
+                    return new Container( //this is our 'card'
+                        margin: const EdgeInsets.only(bottom: 8.0),
+                        child: new GestureDetector(
+                            onHorizontalDragStart: (start) {
+                              swipeStart = start.globalPosition.dx;
+                            },
+                            onHorizontalDragUpdate: (update) {
+                              swipeEnd = update.globalPosition.dx;
+                            }, //open preview
+                            onHorizontalDragEnd: (end) {
+                              print('Start: $swipeStart \nEnd: $swipeEnd');
+                              if (swipeEnd > swipeStart &&
+                                  sqrt(pow((swipeEnd - swipeStart), 2)) < 300) {
+                                controller.forward();
+                                CharacterSelection.inPreviewState = true;
 //                                                                CharacterSwipePreview.char = char;
-                                                                CharacterSwipePreview.setChar(char);
-                                                              }
-                                                              swipeStart = swipeEnd = 0.0;
-                                },
-                                child: new CharacterItem(char: char))  //give our card a character to use
-                        );
-                      }).toList()
-                  ),
-                ),
-                new CharacterSwipePreview(animation: animation,controller: controller, screenOffset: screenWidthOffset,),
-              ],
+                                CharacterSwipePreview.setChar(char);
+                              }
+                              swipeStart = swipeEnd = 0.0;
+                            },
+                            child: new CharacterItem(
+                                char: char)) //give our card a character to use
+                    );
+                  }).toList()
+              ),
             ),
-            drawer: new Menu(),
-            appBar: new AppBar( //AppBars are the bars on top of the view
-                title: const Text('Character Selection'),
-            ),
-            floatingActionButton: new FloatingActionButton(
-                child: new Icon(Icons.add),
-                onPressed: () {
-                  Navigator.push(
-                      context, new MaterialPageRoute<DismissDialogAction>(
-                    builder: (
-                        BuildContext context) => new FullScreenDialog(),
-                    fullscreenDialog: true,
-                  )).then((val){if(val==DismissDialogAction.save) updateCharacters();});
-                }
-            )
+            new CharacterSwipePreview(animation: animation,
+              controller: controller,
+              screenOffset: screenWidthOffset,),
+          ],
+        ),
+        drawer: new Menu(),
+        appBar: new AppBar( //AppBars are the bars on top of the view
+          title: const Text('Character Selection'),
+        ),
+        floatingActionButton: new FloatingActionButton(
+            child: new Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                  context, new MaterialPageRoute<DismissDialogAction>(
+                builder: (BuildContext context) => new CreateCharacterDialog(),
+                fullscreenDialog: true,
+              )).then((val) {
+                if (val == DismissDialogAction.save) updateCharacters();
+              });
+            }
+        )
     );
   }
 

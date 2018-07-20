@@ -15,6 +15,7 @@ class LocalCharacter {
 
   LocalCharacter({
     this.characterId,
+    this.sessionId,
     this.title,
     this.charClass,
     this.charRace,
@@ -36,6 +37,7 @@ class LocalCharacter {
 
   final String title;
   final String characterId;
+  final String sessionId;
 
   final ClassType charClass;
   final Race charRace;

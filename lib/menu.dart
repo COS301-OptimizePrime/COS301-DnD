@@ -1,6 +1,6 @@
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:flutter/material.dart';
-import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/monster_journal_new.dart';
 import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/race_viewer.dart';

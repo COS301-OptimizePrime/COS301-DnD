@@ -469,14 +469,6 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
   @override
   Widget build(BuildContext context) {
 
-    //setup for animation
-//    CharacterSwipePreview.screenOffset = MediaQuery.of(context).size.width*-0.75;
-//    controller = new AnimationController(
-//        duration: const Duration(milliseconds: 200), vsync: this);
-//    animation = new Tween(begin: 0.0, end: MediaQuery.of(context).size.width*0.75).animate(controller);
-////    controller.forward();
-
-
     double swipeStart;
     double swipeEnd;
 

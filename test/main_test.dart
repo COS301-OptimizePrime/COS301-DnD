@@ -314,7 +314,7 @@ main() {
   testWidgets('Monster Journal Page Test', (WidgetTester tester) async {
     // set up environment
     await tester.pumpWidget(new MaterialApp(
-        home: new MonsterJournal()
+        home: new MonsterJournalOld()
     ));
 
     expect(find.text('Monster Journal'), findsOneWidget);
@@ -375,7 +375,7 @@ main() {
     final routes = <String, WidgetBuilder>{
       LoginPage.tag: (context) => new LoginPage(),
       HomePage.tag: (context) => new HomePage(),
-      MonsterJournal.tag: (context) => new MonsterJournal(),
+      MonsterJournalOld.tag: (context) => new MonsterJournalOld(),
       CharacterSelection.tag: (context) => new CharacterSelection(),
       GameSessionDemo.tag: (context) => new GameSessionDemo(null),
       RaceViewer.tag: (context) => new RaceViewer()

@@ -134,11 +134,11 @@ main() {
         constitution: 6,
         intelligence: 2,
         wisdom: 2,
-        charisma: 2
+        charisma: 2,
+        sessionId: ''
     );
     char.equipment = new List<LocalEquipment>();
     char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
-    characters.add(char);
 
     // set up environment
     // Character Selection cannot run on its own
@@ -152,6 +152,12 @@ main() {
 
     // check if page is loaded correctly
     expect(find.text('Character Selection'), findsOneWidget);
+
+    characters.add(char);
+    await tester.dragFrom(Offset(88.0, 102.0), Offset(88.0, 202.0));
+    await tester.pump();
+    await tester.pump(Duration(seconds: 1));
+
     expect(find.text("James"), findsOneWidget);
     expect(find.text(RacesAndClasses.typeClasses.elementAt(2).name), findsOneWidget);
     expect(find.text(RacesAndClasses.races.elementAt(22).name), findsOneWidget);
@@ -173,11 +179,11 @@ main() {
         constitution: 6,
         intelligence: 2,
         wisdom: 2,
-        charisma: 2
+        charisma: 2,
+        sessionId: ''
     );
     char.equipment = new List<LocalEquipment>();
     char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
-    characters.add(char);
 
     // set up environment
     // Character Selection cannot run on its own
@@ -188,6 +194,11 @@ main() {
     await tester.pumpWidget(new MaterialApp(
         home: new CharacterSelection()
     ));
+
+    characters.add(char);
+    await tester.dragFrom(Offset(88.0, 102.0), Offset(88.0, 202.0));
+    await tester.pump();
+    await tester.pump(Duration(seconds: 1));
 
     // go to character details
     Finder card = find.text("James");

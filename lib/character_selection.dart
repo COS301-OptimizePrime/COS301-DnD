@@ -479,6 +479,8 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
         }
     );
 
+    setState(() {}); // for testing purposes
+
     return null;
   }
 

@@ -40,7 +40,8 @@ const GetCharactersReply$json = const {
   '1': 'GetCharactersReply',
   '2': const [
     const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
-    const {'1': 'characters', '3': 2, '4': 3, '5': 11, '6': '.session.Character', '10': 'characters'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'characters', '3': 3, '4': 3, '5': 11, '6': '.session.Character', '10': 'characters'},
   ],
 };
 
@@ -225,6 +226,9 @@ const Character$json = const {
     const {'1': 'status', '3': 33, '4': 1, '5': 9, '10': 'status'},
     const {'1': 'status_message', '3': 34, '4': 1, '5': 9, '10': 'statusMessage'},
     const {'1': 'equipment', '3': 35, '4': 3, '5': 11, '6': '.session.Equipment', '10': 'equipment'},
+    const {'1': 'session_id', '3': 36, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'features_and_traits', '3': 37, '4': 1, '5': 9, '10': 'featuresAndTraits'},
+    const {'1': 'online', '3': 38, '4': 1, '5': 8, '10': 'online'},
   ],
 };
 

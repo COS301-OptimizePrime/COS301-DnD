@@ -5,14 +5,16 @@ import 'package:flutter/services.dart';
 
 final List<Monster> monstersList = new List<Monster>();
 
-class MonsterJournalUpdated extends StatefulWidget {
+class MonsterJournal extends StatefulWidget {
+
+  static String tag = 'monster-journal';
 
   @override
   _MonsterJournalUpdatedState createState() => _MonsterJournalUpdatedState();
 }
 
 
-class _MonsterJournalUpdatedState extends State<MonsterJournalUpdated> {
+class _MonsterJournalUpdatedState extends State<MonsterJournal> {
 
   @override
   initState()
@@ -152,7 +154,7 @@ class _MonsterListBodyState extends State<MonsterListBody> {
         children: monstersList.map(
         (Monster m) {
           if(filter==null || m.name.contains(filter))
-            return new Text(m.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
+            return MonsterItem(myMon: m,);
           else
             return Container();
         }
@@ -191,7 +193,9 @@ enum monsterType
   UNDERDARK,
   UNDERWATER,
   URBAN
+
 }
+
 
 class Monster {
 
@@ -210,5 +214,112 @@ class Monster {
   Monster(this.name, this.type, this.alignment, this.size, this.cr, this.ac,
       this.hp, this.spellcasting, this.atk1, this.atk2, this.typing);
 
+//  List<String> getTypes()
+//  {
+//    return
+//  }
 
 }
+
+
+
+class MonsterItem extends StatelessWidget {
+
+  Monster myMon;
+
+  MonsterItem({
+    this.myMon
+});
+
+  void displayDetails(BuildContext context) async
+  {
+    await Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          //build a new widget
+          return new Scaffold( //new scaffold
+              appBar: new AppBar(
+                title: Text(myMon.name.toString()), //title of view
+                centerTitle: true,
+              ),
+             body: MonsterItemView(myMon),
+          );
+        }
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+//    return new Text(myMon.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red,),);
+
+    return new GestureDetector(
+      onTap: (){displayDetails(context);},
+      child: Container(
+        height: MediaQuery.of(context).size.height/14,
+        child: new Center(child: Text(myMon.name,softWrap: false,maxLines: 1,style: new TextStyle(color: Colors.red, fontSize: 20.0),)),
+      ),
+    );
+
+  }
+}
+
+class MonsterItemView extends StatelessWidget {
+
+  MonsterItemView(Monster m)
+  {
+    mivMon = m;
+  }
+
+  Monster mivMon;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return new SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: new Center(
+        child: new Column(
+          children: <Widget>[
+            Text(
+              'Type: ${mivMon.type}',
+            ),
+            Text(
+              'Allignment: ${mivMon.alignment}',
+            ),
+            Text(
+              'Size: ${mivMon.size}',
+            ),
+            Text(
+              'Challenge Rating: ${mivMon.cr}',
+            ),
+            Text(
+              'Armor Class: ${mivMon.ac}',
+            ),
+            Text(
+              'Hit Points: ${mivMon.hp}',
+            ),
+            Text(
+              'Spell Casting: ${mivMon.spellcasting}',
+            ),
+            Text(
+              'Attack 1: ${mivMon.atk1}',
+            ),
+            Text(
+              'Attack 2: ${mivMon.atk2}',
+            ),
+          new Expanded(
+            child: ListView(
+              children: mivMon.typing.map(
+                (monsterType mt){
+                  return new Center(child: Text(mt.toString()));
+                }
+              ).toList(),
+            ),
+          )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+

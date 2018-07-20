@@ -33,29 +33,29 @@ Beholder	Aberration	LE	Large	13	18	180	NO	4d6	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO
 Beholder Zombie	Undead	NE	Large	5	15	93	NO	4d6	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
 Berserker	Humanoid	C	Medium	2	13	67	NO	1d12+3	N/A	YES	YES	YES	YES	NO	YES	YES	NO	NO	NO	NO
 Black Bear	Beast	U	Medium	0.5	11	19	NO	1d6+2	2d4+2	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
-"Black Dragon, Adult"	Dragon	CE	Huge	14	19	195	NO	2d10+1d8+6	2d6+6	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
-"Black Dragon, Ancient"	Dragon	CE	Gargantuan	21	22	367	NO	2d10+2d8+8	2d6+8	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
-"Black Dragon, Wyrmling"	Dragon	CE	Medium	2	17	33	NO	1d10+1d4+2	5d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Black Dragon, Young"	Dragon	CE	Large	7	18	127	NO	2d10+1d8+4	2d6+4	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
+Black Dragon, Adult	Dragon	CE	Huge	14	19	195	NO	2d10+1d8+6	2d6+6	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
+Black Dragon, Ancient	Dragon	CE	Gargantuan	21	22	367	NO	2d10+2d8+8	2d6+8	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
+Black Dragon, Wyrmling	Dragon	CE	Medium	2	17	33	NO	1d10+1d4+2	5d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Black Dragon, Young	Dragon	CE	Large	7	18	127	NO	2d10+1d8+4	2d6+4	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO
 Black Pudding	Ooze	U	Large	4	7	85	NO	4d8+1d6+3	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
 Blink Dog	Fey	LG	Medium	0.25	13	22	NO	1d6+1	N/A	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
 Blood Hawk	Beast	U	Small	0.13	12	7	NO	1d4+2	N/A	YES	YES	NO	YES	YES	YES	YES	NO	NO	NO	NO
-"Blue Dragon, Adult"	Dragon	LE	Huge	16	19	225	NO	3d10+7	2d6+7	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
-"Blue Dragon, Ancient"	Dragon	LE	Gargantuan	23	22	481	NO	4d10+9	2d6+9	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
-"Blue Dragon, Wyrmling"	Dragon	LE	Medium	3	17	52	NO	1d10+1d6+3	4d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Blue Dragon, Young"	Dragon	LE	Large	9	18	152	NO	3d10+5	2d6+5	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Blue Dragon, Adult	Dragon	LE	Huge	16	19	225	NO	3d10+7	2d6+7	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Blue Dragon, Ancient	Dragon	LE	Gargantuan	23	22	481	NO	4d10+9	2d6+9	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Blue Dragon, Wyrmling	Dragon	LE	Medium	3	17	52	NO	1d10+1d6+3	4d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Blue Dragon, Young	Dragon	LE	Large	9	18	152	NO	3d10+5	2d6+5	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
 Blue Slaad	Aberration	CN	Large	7	15	123	NO	2d6+5	2d6+5	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Boar	Beast	U	Medium	0.25	11	11	NO	1d6+1	N/A	NO	NO	NO	YES	YES	YES	NO	NO	NO	NO	NO
 Bone Devil	Fiend (Devil)	LE	Large	9	19	142	NO	1d8+4	2d8+4	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Bone Naga	Undead	LE	Large	4	15	58	YES	5d6+3	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
-"Brass Dragon, Adult"	Dragon	CG	Huge	13	18	172	NO	2d10+6	2d6+6	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO
-"Brass Dragon, Ancient"	Dragon	CG	Gargantuan	20	20	297	NO	2d10+8	2d6+8	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO
-"Brass Dragon, Wyrmling"	Dragon	CG	Medium	1	16	16	NO	1d10+2	4d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Brass Dragon, Young"	Dragon	CG	Large	6	17	110	NO	2d10+4	2d6+4	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
-"Bronze Dragon, Adult"	Dragon	LG	Huge	15	19	212	NO	2d10+7	2d6+7	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Bronze Dragon, Ancient"	Dragon	LG	Gargantuan	22	22	444	NO	2d10+9	2d6+9	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Bronze Dragon, Wyrmling"	Dragon	LG	Medium	2	17	32	NO	1d10+3	3d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Bronze Dragon, Young"	Dragon	LG	Large	8	18	142	NO	2d10+5	2d6+5	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Brass Dragon, Adult	Dragon	CG	Huge	13	18	172	NO	2d10+6	2d6+6	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Brass Dragon, Ancient	Dragon	CG	Gargantuan	20	20	297	NO	2d10+8	2d6+8	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Brass Dragon, Wyrmling	Dragon	CG	Medium	1	16	16	NO	1d10+2	4d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Brass Dragon, Young	Dragon	CG	Large	6	17	110	NO	2d10+4	2d6+4	NO	YES	YES	NO	NO	NO	NO	NO	NO	NO	NO
+Bronze Dragon, Adult	Dragon	LG	Huge	15	19	212	NO	2d10+7	2d6+7	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Bronze Dragon, Ancient	Dragon	LG	Gargantuan	22	22	444	NO	2d10+9	2d6+9	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Bronze Dragon, Wyrmling	Dragon	LG	Medium	2	17	32	NO	1d10+3	3d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Bronze Dragon, Young	Dragon	LG	Large	8	18	142	NO	2d10+5	2d6+5	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Brown Bear	Beast	U	Large	1	11	34	NO	1d8+4	2d6+4	YES	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
 Bugbear	Humanoid	CE	Medium	1	16	27	NO	2d8+2	2d6+2	NO	NO	NO	YES	YES	NO	NO	NO	YES	NO	NO
 Bugbear Chief	Humanoid	CE	Medium	3	17	65	NO	2d8+3	2d6+3	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
@@ -76,10 +76,10 @@ Cloud Giant	Giant	N	Huge	9	14	200	YES	3d8+8	4d10+8	NO	NO	NO	NO	NO	NO	YES	NO	NO	N
 Cockatrice	Monstrosity	U	Small	0.5	11	27	NO	1d4+1	N/A	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO
 Commoner	Humanoid	ANY	Medium	0	10	4	NO	1d4	N/A	YES	YES	YES	YES	YES	YES	NO	NO	NO	NO	YES
 Constrictor Snake	Beast	U	large	0.25	12	13	NO	1d6+2	1d8+2	NO	NO	YES	YES	NO	NO	NO	YES	NO	YES	NO
-"Copper Dragon, Adult"	Dragon	CG	Huge	14	18	184	NO	2d10+6	2d6+6	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
-"Copper Dragon, Ancient"	Dragon	CG	Gargantuan	21	21	350	NO	2d10+8	2d6+8	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
-"Copper Dragon, Wyrmling"	Dragon	CG	Medium	1	16	22	NO	1d10+2	4d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Copper Dragon, Young"	Dragon	CG	Large	7	17	119	NO	2d10+4	2d6+4	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
+Copper Dragon, Adult	Dragon	CG	Huge	14	18	184	NO	2d10+6	2d6+6	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
+Copper Dragon, Ancient	Dragon	CG	Gargantuan	21	21	350	NO	2d10+8	2d6+8	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
+Copper Dragon, Wyrmling	Dragon	CG	Medium	1	16	22	NO	1d10+2	4d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Copper Dragon, Young	Dragon	CG	Large	7	17	119	NO	2d10+4	2d6+4	NO	NO	NO	NO	NO	YES	NO	NO	NO	NO	NO
 Couatl	Celestial	LG	Medium	4	19	97	YES	1d6+5	2d6+3	NO	NO	YES	NO	YES	NO	NO	NO	NO	NO	YES
 Crab	Beast	U	Tiny	0	11	2	NO	1	N/A	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Crawling Claw	Undead	NE	Tiny	0	12	2	NO	1d4+1	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
@@ -180,22 +180,22 @@ Gladiator	Humanoid	ANY	Medium	5	16	112	NO	2d8+4	2d4+4	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Gnoll	Humanoid	CE	Medium	0.5	15	22	NO	1d4+2	1d8+2	NO	NO	YES	YES	YES	NO	NO	NO	NO	NO	NO
 Gnoll Fang of Yeenoghu	Humanoid	CE	Medium	4	14	65	NO	1d6+3	1d8+3	NO	NO	YES	NO	YES	YES	NO	NO	NO	NO	NO
 Gnoll Pack Lord	Humanoid	CE	Medium	2	15	49	NO	1d4+3	1d10+3	NO	NO	YES	YES	YES	YES	NO	NO	NO	NO	NO
-"Gnome, Deep (Svirfneblin)"	Humanoid	NG	Small	0.5	15	16	YES	1d8+3	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Gnome, Deep (Svirfneblin)	Humanoid	NG	Small	0.5	15	16	YES	1d8+3	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Goat	Beast	U	Medium	0	10	4	NO	1d4+1	N/A	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	YES
 Goblin	Humanoid	NE	small	0.25	15	7	NO	1d6+2	1d6+2	NO	NO	NO	YES	YES	YES	NO	NO	YES	NO	NO
 Goblin Boss	Humanoid	NE	small	1	17	21	NO	1d6+2	1d6+2	NO	NO	NO	YES	YES	YES	NO	NO	YES	NO	NO
-"Gold Dragon, Adult"	Dragon	LG	Huge	17	19	256	NO	2d10+8	2d6+8	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
-"Gold Dragon, Ancient"	Dragon	LG	Gargantuan	24	22	546	NO	2d10+10	2d6+10	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
-"Gold Dragon, Wyrmling"	Dragon	LG	Medium	3	17	60	NO	1d10+4	4d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Gold Dragon, Young"	Dragon	LG	Large	10	18	178	NO	2d10+6	2d6+6	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
+Gold Dragon, Adult	Dragon	LG	Huge	17	19	256	NO	2d10+8	2d6+8	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
+Gold Dragon, Ancient	Dragon	LG	Gargantuan	24	22	546	NO	2d10+10	2d6+10	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
+Gold Dragon, Wyrmling	Dragon	LG	Medium	3	17	60	NO	1d10+4	4d10	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Gold Dragon, Young	Dragon	LG	Large	10	18	178	NO	2d10+6	2d6+6	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	NO
 Gorgon	Construct	U	Large	5	19	114	NO	2d12+5	2d10+5	NO	NO	NO	YES	YES	YES	NO	NO	NO	NO	NO
 Goristro	Fiend (Demon)	CE	Huge	17	19	310	NO	3d8+7	3d10+7	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Gray Ooze	Ooze	U	Medium	0.5	8	22	NO	3d6+1	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
 Gray Slaad	Aberration	CN	Medium	9	18	127	YES	1d6+3	1d10+3	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Green Dragon, Adult"	Dragon	LE	Huge	15	19	207	NO	2d10+2d6+6	2d6+6	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
-"Green Dragon, Ancient"	Dragon	LE	Gargantuan	22	21	385	NO	2d10+3d6+8	4d6+8	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
-"Green Dragon, Wyrmling"	Dragon	LE	Medium	2	17	38	NO	1d10+1d6+2	6d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Green Dragon, Young"	Dragon	LE	Large	8	18	136	NO	2d10+2d6+4	2d6+4	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
+Green Dragon, Adult	Dragon	LE	Huge	15	19	207	NO	2d10+2d6+6	2d6+6	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
+Green Dragon, Ancient	Dragon	LE	Gargantuan	22	21	385	NO	2d10+3d6+8	4d6+8	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
+Green Dragon, Wyrmling	Dragon	LE	Medium	2	17	38	NO	1d10+1d6+2	6d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Green Dragon, Young	Dragon	LE	Large	8	18	136	NO	2d10+2d6+4	2d6+4	NO	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO
 Green Hag	Fey	NE	Medium	3	17	82	YES	2d8+4	N/A	NO	NO	NO	YES	NO	YES	NO	YES	NO	NO	NO
 Green Slaad	Aberration	CN	Large	8	16	127	YES	2d6+4	1d6+4	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Grell	Aberration	NE	Medium	3	12	55	NO	1d10+2	2d4+2	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
@@ -317,10 +317,10 @@ Quipper	Beast	U	Tiny	0	13	1	NO	1	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO
 Rakshasa	Fiend	LE	Medium	13	16	110	YES	2d6+2	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES
 Rat	Beast	U	Tiny	0	10	1	NO	N/A	N/A	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO	YES
 Raven	Beast	U	Tiny	0	12	1	NO	1	N/A	NO	NO	NO	NO	NO	YES	NO	YES	NO	NO	YES
-"Red Dragon, Adult"	Dragon	CE	Huge	17	19	256	NO	2d10+2d6+8	2d6+8	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
-"Red Dragon, Ancient"	Dragon	CE	Gargantuan	24	22	546	NO	2d10+4d6+10	2d6+10	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
-"Red Dragon, Wyrmling"	Dragon	CE	Medium	4	17	75	NO	1d10+1d6+4	7d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Red Dragon, Young"	Dragon	CE	Large	10	18	178	NO	2d10+1d6+6	2d6+6	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
+Red Dragon, Adult	Dragon	CE	Huge	17	19	256	NO	2d10+2d6+8	2d6+8	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
+Red Dragon, Ancient	Dragon	CE	Gargantuan	24	22	546	NO	2d10+4d6+10	2d6+10	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
+Red Dragon, Wyrmling	Dragon	CE	Medium	4	17	75	NO	1d10+1d6+4	7d6	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Red Dragon, Young	Dragon	CE	Large	10	18	178	NO	2d10+1d6+6	2d6+6	NO	NO	NO	NO	NO	YES	YES	NO	NO	NO	NO
 Red Slaad	Aberration	CN	Large	5	14	93	NO	2d4+3	1d8+3	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Reef Shark	Beast	U	Medium	0.5	12	22	NO	1d8+2	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO
 Remorhaz	Monstrosity	U	Huge	11	17	195	NO	6d10+3d6+7	N/A	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
@@ -348,10 +348,10 @@ Shadow Dragon	Dragon	CE	VARIES	13	18	178	NO	2d10+1d6+6	2d6+6	NO	NO	NO	NO	NO	NO	N
 Shambling Mound	Plant	U	Large	5	15	136	NO	2d8+4	N/A	NO	NO	NO	YES	NO	NO	NO	YES	NO	NO	NO
 Shield Guardian	Construct	U	Large	7	17	142	NO	2d6+4	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES
 Shrieker	Plant	U	Medium	0	5	13	NO	N/A	N/A	NO	NO	NO	NO	NO	NO	NO	NO	YES	NO	NO
-"Silver Dragon, Adult"	Dragon	LG	Huge	16	19	243	NO	2d10+8	2d6+8	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
-"Silver Dragon, Ancient"	Dragon	LG	Gargantuan	23	22	487	NO	2d10+10	2d6+10	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
-"Silver Dragon, Wyrmling"	Dragon	LG	Medium	2	17	45	NO	1d10+4	4d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"Silver Dragon, Young"	Dragon	LG	Large	9	18	168	NO	2d10+6	2d6+6	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
+Silver Dragon, Adult	Dragon	LG	Huge	16	19	243	NO	2d10+8	2d6+8	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
+Silver Dragon, Ancient	Dragon	LG	Gargantuan	23	22	487	NO	2d10+10	2d6+10	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
+Silver Dragon, Wyrmling	Dragon	LG	Medium	2	17	45	NO	1d10+4	4d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+Silver Dragon, Young	Dragon	LG	Large	9	18	168	NO	2d10+6	2d6+6	NO	NO	NO	NO	NO	NO	YES	NO	NO	NO	YES
 Skeleton	Undead	LE	Medium	0.25	13	13	NO	1d6+2	1d6+2	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES
 Slaad Tadpole	Aberration	CN	Tiny	0.13	12	10	NO	1d4+2	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Smoke Mephit	Elemental	NE	Small	0.25	12	22	YES	1d4+2	N/A	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	YES
@@ -407,10 +407,10 @@ Wereboar	Humanoid	NE	Medium	4	11	78	NO	2d6+3	2d6+3	NO	NO	NO	NO	YES	YES	NO	NO	NO	
 Wererat	Humanoid	LE	Medium	2	12	35	NO	1d4+2	1d6+2	NO	NO	NO	YES	YES	NO	NO	NO	NO	NO	YES
 Weretiger	Humanoid	N	Medium	4	12	120	NO	1d10+3	1d8+3	NO	NO	YES	NO	NO	NO	NO	NO	NO	NO	NO
 Werewolf	Humanoid	CE	Medium	3	12	58	NO	1d8+2	2d4+2	NO	NO	NO	YES	NO	YES	NO	NO	NO	NO	NO
-"White Dragon, Adult"	Dragon	CE	Huge	13	18	200	NO	2d10+1d8+6	2d6+6	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"White Dragon, Ancient"	Dragon	CE	Gargantuan	20	20	333	NO	2d10+2d8+8	2d6+8	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"White Dragon, Wyrmling"	Dragon	CE	Medium	2	16	32	NO	1d10+1d4+2	5d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
-"White Dragon, Young"	Dragon	CE	Large	6	14	135	NO	2d10+1d8+4	2d6+4	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+White Dragon, Adult	Dragon	CE	Huge	13	18	200	NO	2d10+1d8+6	2d6+6	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+White Dragon, Ancient	Dragon	CE	Gargantuan	20	20	333	NO	2d10+2d8+8	2d6+8	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+White Dragon, Wyrmling	Dragon	CE	Medium	2	16	32	NO	1d10+1d4+2	5d8	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
+White Dragon, Young	Dragon	CE	Large	6	14	135	NO	2d10+1d8+4	2d6+4	YES	NO	NO	NO	NO	NO	NO	NO	NO	NO	NO
 Wight	Undead	NE	Medium	3	14	45	NO	1d6+2	1d10+2	NO	NO	YES	NO	NO	NO	NO	YES	YES	NO	YES
 Will-O'-Wisp	Undead	CE	Tiny	2	19	22	NO	2d8	N/A	NO	NO	NO	YES	NO	NO	NO	YES	NO	NO	YES
 Winged Kobold	Humanoid	LE	Small	0.25	13	7	NO	1d4+3	1d6+3	YES	YES	YES	YES	NO	YES	YES	YES	YES	NO	YES

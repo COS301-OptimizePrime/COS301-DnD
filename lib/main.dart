@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         textSelectionHandleColor: Colors.white,
         fontFamily: 'Nunito',
       ),
-      home: new MonsterJournalUpdated(),
+      home: new MonsterJournal(),
       routes: routes,
 
     );

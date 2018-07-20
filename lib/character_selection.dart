@@ -37,7 +37,7 @@ class LocalCharacter {
 
   final String title;
   final String characterId;
-  final String sessionId;
+  String sessionId;
 
   final ClassType charClass;
   final Race charRace;
@@ -446,6 +446,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
 
   CharacterSelectionState()
   {
+    characters.clear();
     AppData.getUseCharacters().whenComplete(
         (){setState(() {
           //update characters

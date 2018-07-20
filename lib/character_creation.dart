@@ -86,6 +86,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       bonds: lit.bonds,
       featuresTraits: lit.featuresTraits,
       equipment:  ListToArray(eit.equipment),
+      sessionId: ""
     );
 
     print("New Character ${bit.newCharName = ""} created.");

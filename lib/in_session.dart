@@ -414,7 +414,7 @@ class CharactersTab extends StatefulWidget {
 
 class CharactersTabState extends State<CharactersTab> {
   final Session session;
-  List<Widget> sessionChars;
+  List<Widget> sessionChars = new List();
 
   CharactersTabState(this.session) {
     characters.clear();
@@ -423,33 +423,31 @@ class CharactersTabState extends State<CharactersTab> {
     AppData.getUseCharacters().whenComplete(
             () {
           setState(() {
+            sessionChars = new List();
+            characters.forEach((char) {
+              int armorClass = 0;
+              if (char.sessionId == session.sessionId) {
+                if (char.equipment != null) {
+                  char.equipment.forEach(
+                          (item) {
+                        if (item != null && !item.isWep)
+                          armorClass += item.val;
+                      }
+                  );
+                }
+                // all our characters and makes a card for each
+                sessionChars.add(new Container( //this is our 'card'
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    child: new SessionCharacterItem(char: char,
+                        armorClass: armorClass) //give our card a character to use
+                ));
+              }
+            });
             //update characters
             print('updating character list');
           });
         }
     );
-
-    sessionChars = new List();
-    characters.forEach((char) {
-      int armorClass = 0;
-
-      if (char.sessionId == session.sessionId) {
-        if (char.equipment != null) {
-          char.equipment.forEach(
-                  (item) {
-                if (item != null && !item.isWep)
-                  armorClass += item.val;
-              }
-          );
-        }
-        // all our characters and makes a card for each
-        sessionChars.add(new Container( //this is our 'card'
-            margin: const EdgeInsets.only(bottom: 8.0),
-            child: new SessionCharacterItem(char: char,
-                armorClass: armorClass) //give our card a character to use
-        ));
-      }
-    });
   }
 
   addCharToSession(BuildContext context) async {

@@ -439,22 +439,6 @@ main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
-    // go to monster journal
-    tile = find.byKey(new Key("monster_journal_page_tile"));
-    expect(tile, findsOneWidget);
-    await tester.tap(tile);
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-
-    // check if monster journal is loaded
-    expect(find.text('Monster Journal'), findsOneWidget);
-
-    // Character Selection
-    state = tester.firstState(find.byType(Scaffold));
-    state.openDrawer();
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-
     // go to character selection
     tile = find.byKey(new Key("character_selection_page_tile"));
     expect(tile, findsOneWidget);

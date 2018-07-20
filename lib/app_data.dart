@@ -279,6 +279,7 @@ class AppData{
   static LocalCharacter convertToLocalChar(Character netChar) {
     return new LocalCharacter(
       characterId: netChar.characterId,
+      sessionId: netChar.sessionId,
       title: netChar.name,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
@@ -329,6 +330,7 @@ class AppData{
   static Character convertToNetChar(LocalCharacter char) {
     Character temp = new Character();
     if (char.characterId!=null) temp.characterId = char.characterId;
+    if(char.sessionId!=null) temp.sessionId = char.sessionId;
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;

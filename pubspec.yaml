@@ -104,9 +104,11 @@ flutter:
     - assets/icon_assets/Intelligence.png
     - assets/icon_assets/Strength.png
     - assets/icon_assets/Wisdom.png
+    #dm icon
+    - assets/icon_assets/dm_icon.png
 
     #monster list file
-    #- assets/dad_5e_monster_manual.txt
+    - assets/dad_5e_monster_manual.txt
 
     #shield (ac) - sword - armor icons
     - assets/shield.png

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -278,6 +279,7 @@ class AppData{
   static LocalCharacter convertToLocalChar(Character netChar) {
     return new LocalCharacter(
       characterId: netChar.characterId,
+      sessionId: netChar.sessionId,
       title: netChar.name,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
@@ -293,16 +295,46 @@ class AppData{
       ideals: netChar.ideals,
       bonds: netChar.bonds,
       flaws: netChar.flaws,
-      featuresTraits: 'unimplemented',
+      featuresTraits: netChar.featuresAndTraits,
+      equipment: convertToLocalEquip(netChar.equipment),
     );
+  }
+
+  static List<LocalEquipment> convertToLocalEquip(List<Equipment> netList)
+  {
+    List<LocalEquipment> newList = new List();
+
+    netList.forEach((item){
+      List<String> splitName = item.name.split('日本');
+      newList.add(LocalEquipment(splitName[0], splitName[1], item.value,isWep: splitName[2]=='y'));
+    });
+
+    return newList;
+  }
+
+  static convertToNetEquip(List<Equipment> netList ,List<LocalEquipment> localList)
+  {
+    localList.forEach((item){
+      var isWep = 'n';
+      if(item.isWep)
+        isWep='y';
+
+      Equipment temp = new Equipment();
+      temp.name=item.name+'日本'+item.type+'日本'+isWep.toString();
+      temp.value = item.val;
+      netList.add(temp);
+
+    });
   }
 
   static Character convertToNetChar(LocalCharacter char) {
     Character temp = new Character();
+    if (char.characterId!=null) temp.characterId = char.characterId;
+    if(char.sessionId!=null) temp.sessionId = char.sessionId;
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;
-//    temp.gender
+//    temp.gender = char.charGender;
     temp.strength = char.strength;
     temp.dexterity = char.dexterity;
     temp.charisma = char.charisma;
@@ -314,7 +346,9 @@ class AppData{
     temp.ideals = char.ideals;
     temp.bonds = char.bonds;
     temp.flaws = char.flaws;
-//    temp.features
+    temp.featuresAndTraits = char.featuresTraits;
+    temp.sessionId = char.sessionId;
+    convertToNetEquip(temp.equipment ,char.equipment);
 
     return temp;
   }
@@ -336,6 +370,49 @@ class AppData{
     final response = await charStub.deleteCharacter(dcr);
 
     print('deleted character ${response.status}');
+  }
+
+  static void removeEquipment(LocalCharacter char, int index) async{
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    UpdateCharacterRequest ucr = new UpdateCharacterRequest();
+    ucr.authIdToken = token;
+
+    final netChar = convertToNetChar(char);
+
+    ucr.character = netChar;
+
+    print("deleting equipment: $index from character: ${char.characterId}");
+
+    final response = await charStub.updateCharacter(ucr);
+
+    print('deleted equipment: ${response.status}');
+    print(response.statusMessage);
+  }
+
+  static void updateCharacter(LocalCharacter localChar) async {
+
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    UpdateCharacterRequest ucr = new UpdateCharacterRequest();
+    ucr.authIdToken = token;
+    ucr.character = convertToNetChar(localChar);
+
+    print("Updating charcter with id: ${localChar.characterId}");
+
+    final response = await charStub.updateCharacter(ucr);
+
+    print('Update: ${response.status}');
+    print(response.statusMessage);
+
   }
 
 }

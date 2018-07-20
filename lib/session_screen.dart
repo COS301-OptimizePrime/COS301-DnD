@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/in_session.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -98,6 +99,8 @@ class GameSessionState extends State<GameSessionDemo> {
 
   @override
   Widget build(BuildContext context) {
+    AppData appData = AppData.instance();
+
     return new Scaffold(
       drawer: new Menu(),
       appBar: new AppBar( //AppBars are the bars on top of the view
@@ -171,8 +174,46 @@ class GameSessionState extends State<GameSessionDemo> {
                 new ListView.builder(
                     shrinkWrap: true,
                     padding: kMaterialListPadding,
-                    itemCount: _items.length,
+                    itemCount: _items.length + 1,
                     itemBuilder: (BuildContext context, int index) {
+                      if (index == _items.length) {
+                        return new Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: new Material(
+                              borderRadius: new BorderRadius.circular(30.0),
+                              elevation: 5.0,
+                              child: new MaterialButton(
+                                minWidth: 200.0,
+                                height: 42.0,
+                                onPressed: () {
+                                  if (this.session.dungeonMaster.name ==
+                                      appData.user.email) {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => InSession(this.session, true)),
+                                    );
+                                  }
+                                  else {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => InSession(this.session, false)),
+                                    );
+                                  }
+                                },
+                                color: Colors.deepOrange,
+                                child: (this.session.dungeonMaster.name ==
+                                    appData.user.email)
+                                  ? new Text(
+                                    "Start Session",
+                                    style: new TextStyle(color: Colors.white))
+                                  : new Text("Ready Up",
+                                    style: new TextStyle(color: Colors.white)),
+                              ),
+                            )
+                        );
+                      }
                       final String item = _items[index];
                       return new ListTile(
                         leading: new CircleAvatar(

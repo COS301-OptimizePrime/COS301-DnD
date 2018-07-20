@@ -190,8 +190,11 @@ class PartyTab extends StatefulWidget {
 // Normal player Tabs:
 class PartyTabState extends State<PartyTab> {
   final Session session;
+  List<LocalCharacter> partyChars;
 
-  PartyTabState(this.session);
+  PartyTabState(this.session) {
+    //TODO:get party chars
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,13 +210,41 @@ class PartyTabState extends State<PartyTab> {
         itemCount: _items.length,
         itemBuilder: (BuildContext context, int index) {
           final String item = _items[index];
-          return new ListTile(
-            leading: new CircleAvatar(
-              backgroundImage: new AssetImage('assets/placeholder.jpg'),
-            ),
-            title: new Text('$item'),
-            subtitle: const Text(
-                ''),
+          return Column(
+            children: [
+              new ListTile(
+                leading: new CircleAvatar(
+                  backgroundImage: new AssetImage('assets/placeholder.jpg'),
+                ),
+                title: new Text('$item'),
+                subtitle: const Text(''),
+              ),
+              // users chars
+              Column(
+                children: characters.map((LocalCharacter char) {
+                  int armorClass = 0;
+
+                  //TODO: get a way of determining who character belongs to
+                  if (char.sessionId != session.sessionId) {
+                    return Text('');
+                  }
+
+                  if (char.equipment != null) {
+                    char.equipment.forEach(
+                            (item) {
+                          if (item != null && !item.isWep)
+                            armorClass += item.val;
+                        }
+                    );
+                  }
+                  // all our characters and makes a card for each
+                  return new Container(       //this is our 'card'
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
+                  );
+                }).toList()
+              )
+            ]
           );
         });
   }
@@ -243,6 +274,7 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   AddCharDialogWidgetState(this.session);
 
   Future<Null> updateCharacters() async {
+    characters.clear();
     AppData.updateUserCharacters().whenComplete(
             (){
           print('updating character list');
@@ -267,19 +299,18 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
     }
     else {
       inSession = new List(characters.length);
-      List<Widget> characterSelects = new List(inSession.length);
+      List<Widget> characterSelects = new List(characters.length);
 
       for (int i = 0; i < characters.length; i++) {
         inSession[i] = (characters
             .elementAt(i)
             .sessionId == session.sessionId);
-        characterSelects[i] = new CharacterSelectTile(
-          name: characters.elementAt(i).title,
-          index: i,
+        characterSelects[i] = new  CheckboxListTile(
+          title: Text(characters.elementAt(i).title),
           value: inSession[i],
           onChanged: (bool value) {
             setState(() {
-              inSession[i] = !inSession[i];
+              inSession[i] = value;
             });
           },
         );
@@ -306,7 +337,17 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
               onPressed: () {
                 if (widget._formKey.currentState.validate()) {
                   widget._formKey.currentState.save();
-                  updateCharacters();
+
+                  if(characters != null) {
+                    for (int i = 0; i < characters.length; i++) {
+                      if (inSession[i]) {
+                        characters[i].sessionId = session.sessionId;
+                        print("adding ${characters[i].title} to session ${session.sessionId}");
+                        AppData.updateCharacter(characters[i]);
+                      }
+                    }
+                  }
+
                   Navigator.pop(context);
                 }
               },
@@ -360,25 +401,6 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   }
 }
 
-class CharacterSelectTile extends StatelessWidget {
-  final String name;
-  final int index;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  CharacterSelectTile({@required this.name, @required this.index, @required this.value, @required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return new CheckboxListTile(
-      value: value,
-      onChanged: onChanged,
-      selected: value,
-      title: Text(name),
-    );
-  }
-}
-
 class CharactersTab extends StatefulWidget {
   final Session session;
 
@@ -392,6 +414,9 @@ class CharactersTabState extends State<CharactersTab> {
   final Session session;
 
   CharactersTabState(this.session) {
+    characters.clear();
+
+    // get user chars
     AppData.getUseCharacters().whenComplete(
             (){setState(() {
           //update characters
@@ -409,13 +434,6 @@ class CharactersTabState extends State<CharactersTab> {
       ),
     ));
 
-    if(characters != null) {
-      characters.forEach((char) {
-        char.sessionId = session.sessionId;
-        AppData.updateCharacter(char);
-      });
-    }
-
     setState(() {
       //show new item
     });
@@ -423,22 +441,6 @@ class CharactersTabState extends State<CharactersTab> {
 
   @override
   Widget build(BuildContext context) {
-//    LocalCharacter char = new LocalCharacter(
-//        title: 'James',
-//        charClass: typeClasses.elementAt(2),
-//        charRace: races.elementAt(22),
-//        charGender: 'Female',
-//        strength: 6,
-//        dexterity: 2,
-//        constitution: 6,
-//        intelligence: 2,
-//        wisdom: 2,
-//        charisma: 2
-//    );
-//    char.equipment = new List<LocalEquipment>();
-//    char.equipment.add(LocalEquipment("Blocker", "Shield", 2));
-//    sessionChars.add(char);
-
     return Scaffold(
       body: new ListView(
           itemExtent: SessionCharacterItem.height,

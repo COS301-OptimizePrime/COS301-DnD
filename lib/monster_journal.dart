@@ -203,10 +203,10 @@ class MonsterItem extends StatelessWidget {
 //main build function of our Monster Journal Page
 //all 'build' functions are called when fast reload is used
 //responisble for populating our page with Cards
-class MonsterJournal extends StatelessWidget {
+class MonsterJournalOld extends StatelessWidget {
   static const String routeName = '/material/cards';//honestly i've removed this and it didnt do anyhting - lit no idea what it does
 
-  static String tag = 'monster-journal';
+  static String tag = 'monster-journal-old';
 
   @override
   Widget build(BuildContext context) {

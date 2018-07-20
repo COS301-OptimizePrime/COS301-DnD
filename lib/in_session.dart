@@ -190,10 +190,33 @@ class PartyTab extends StatefulWidget {
 // Normal player Tabs:
 class PartyTabState extends State<PartyTab> {
   final Session session;
-  List<LocalCharacter> partyChars;
+  List<Widget> sessionChars;
 
   PartyTabState(this.session) {
     //TODO:get party chars
+
+
+    sessionChars = new List();
+    characters.forEach((char) {
+      int armorClass = 0;
+
+      if (char.sessionId == session.sessionId) {
+        if (char.equipment != null) {
+          char.equipment.forEach(
+                  (item) {
+                if (item != null && !item.isWep)
+                  armorClass += item.val;
+              }
+          );
+        }
+        // all our characters and makes a card for each
+        sessionChars.add(new Container( //this is our 'card'
+            margin: const EdgeInsets.only(bottom: 8.0),
+            child: new SessionCharacterItem(char: char,
+                armorClass: armorClass) //give our card a character to use
+        ));
+      }
+    });
   }
 
   @override
@@ -221,28 +244,7 @@ class PartyTabState extends State<PartyTab> {
               ),
               // users chars
               Column(
-                children: characters.map((LocalCharacter char) {
-                  int armorClass = 0;
-
-                  //TODO: get a way of determining who character belongs to
-                  if (char.sessionId != session.sessionId) {
-                    return Text('');
-                  }
-
-                  if (char.equipment != null) {
-                    char.equipment.forEach(
-                            (item) {
-                          if (item != null && !item.isWep)
-                            armorClass += item.val;
-                        }
-                    );
-                  }
-                  // all our characters and makes a card for each
-                  return new Container(       //this is our 'card'
-                      margin: const EdgeInsets.only(bottom: 8.0),
-                      child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
-                  );
-                }).toList()
+                children: sessionChars
               )
             ]
           );
@@ -412,17 +414,42 @@ class CharactersTab extends StatefulWidget {
 
 class CharactersTabState extends State<CharactersTab> {
   final Session session;
+  List<Widget> sessionChars;
 
   CharactersTabState(this.session) {
     characters.clear();
 
     // get user chars
     AppData.getUseCharacters().whenComplete(
-            (){setState(() {
-          //update characters
-          print('updating character list');
-        });}
+            () {
+          setState(() {
+            //update characters
+            print('updating character list');
+          });
+        }
     );
+
+    sessionChars = new List();
+    characters.forEach((char) {
+      int armorClass = 0;
+
+      if (char.sessionId == session.sessionId) {
+        if (char.equipment != null) {
+          char.equipment.forEach(
+                  (item) {
+                if (item != null && !item.isWep)
+                  armorClass += item.val;
+              }
+          );
+        }
+        // all our characters and makes a card for each
+        sessionChars.add(new Container( //this is our 'card'
+            margin: const EdgeInsets.only(bottom: 8.0),
+            child: new SessionCharacterItem(char: char,
+                armorClass: armorClass) //give our card a character to use
+        ));
+      }
+    });
   }
 
   addCharToSession(BuildContext context) async {
@@ -435,7 +462,27 @@ class CharactersTabState extends State<CharactersTab> {
     ));
 
     setState(() {
-      //show new item
+      sessionChars = new List();
+      characters.forEach((char) {
+        int armorClass = 0;
+
+        if (char.sessionId == session.sessionId) {
+          if (char.equipment != null) {
+            char.equipment.forEach(
+                    (item) {
+                  if (item != null && !item.isWep)
+                    armorClass += item.val;
+                }
+            );
+          }
+          // all our characters and makes a card for each
+          sessionChars.add(new Container( //this is our 'card'
+              margin: const EdgeInsets.only(bottom: 8.0),
+              child: new SessionCharacterItem(char: char,
+                  armorClass: armorClass) //give our card a character to use
+          ));
+        }
+      });
     });
   }
 
@@ -445,27 +492,7 @@ class CharactersTabState extends State<CharactersTab> {
       body: new ListView(
           itemExtent: SessionCharacterItem.height,
           padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-          children: characters.map((LocalCharacter char) {
-            int armorClass = 0;
-
-            if (char.sessionId != session.sessionId) {
-              return Text('');
-            }
-
-            if (char.equipment != null) {
-              char.equipment.forEach(
-                      (item) {
-                    if (item != null && !item.isWep)
-                      armorClass += item.val;
-                  }
-              );
-            }
-            // all our characters and makes a card for each
-            return new Container(       //this is our 'card'
-                margin: const EdgeInsets.only(bottom: 8.0),
-                child: new SessionCharacterItem(char: char, armorClass: armorClass)  //give our card a character to use
-            );
-          }).toList()
+          children: sessionChars
       ),
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.add),
@@ -487,25 +514,62 @@ class AllCharactersTab extends StatefulWidget {
 
 class AllCharactersTabState extends State<AllCharactersTab> {
   final Session session;
+  List<Widget> sessionChars;
 
-  AllCharactersTabState(this.session);
+  AllCharactersTabState(this.session) {
+    sessionChars = new List();
+    characters.forEach((char) {
+      int armorClass = 0;
+
+      if (char.sessionId == session.sessionId) {
+        if (char.equipment != null) {
+          char.equipment.forEach(
+                  (item) {
+                if (item != null && !item.isWep)
+                  armorClass += item.val;
+              }
+          );
+        }
+        // all our characters and makes a card for each
+        sessionChars.add(new Container( //this is our 'card'
+            margin: const EdgeInsets.only(bottom: 8.0),
+            child: new SessionCharacterItem(char: char,
+                armorClass: armorClass) //give our card a character to use
+        ));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<LocalCharacter> sessionChars = new List();
+    List<String> _items = <String>[];
 
-    // TODO: get session chars
+    for (User user in session.users) {
+      _items.add(user.name);
+    }
 
-    return new ListView(
-        itemExtent: SessionCharacterItem.height,
-        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-        children: sessionChars.map((LocalCharacter char) {  //this goes through all our characters and makes a card for each
-          return new Container(       //this is our 'card'
-              margin: const EdgeInsets.only(bottom: 8.0),
-              child: new SessionCharacterItem(char: char)  //give our card a character to use
+    return new ListView.builder(
+        shrinkWrap: true,
+        padding: kMaterialListPadding,
+        itemCount: _items.length,
+        itemBuilder: (BuildContext context, int index) {
+          final String item = _items[index];
+          return Column(
+              children: [
+                new ListTile(
+                  leading: new CircleAvatar(
+                    backgroundImage: new AssetImage('assets/placeholder.jpg'),
+                  ),
+                  title: new Text('$item'),
+                  subtitle: const Text(''),
+                ),
+                // users chars
+                Column(
+                    children: sessionChars
+                )
+              ]
           );
-        }).toList()
-    );
+        });
   }
 }
 

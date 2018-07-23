@@ -202,7 +202,7 @@ class AppData{
       charStub = new CharactersManagerClient(channel);
 
     if(charsLoaded==null)
-      return getUseCharacters();
+      return getUserCharacters();
 
     GetCharactersRequest gcr = new GetCharactersRequest();
     gcr.authIdToken = token;
@@ -223,7 +223,7 @@ class AppData{
     print('characters added');
   }
 
-  static Future getUseCharacters()
+  static Future getUserCharacters()
   async
   {
     if(channel==null)

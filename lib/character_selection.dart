@@ -447,7 +447,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
   CharacterSelectionState()
   {
     characters.clear();
-    AppData.getUseCharacters().whenComplete(
+    AppData.getUserCharacters().whenComplete(
         (){setState(() {
           //update characters
           print('updating character list');

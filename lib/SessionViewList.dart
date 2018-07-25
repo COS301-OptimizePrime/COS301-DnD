@@ -41,7 +41,6 @@ class _SessionViewListState extends State<SessionViewList> {
                 child: new ListTile(
                   title: new Text('$item.'),
                   onTap: (){
-                    Navigator.pop(context);
                     Navigator.push(context, new MaterialPageRoute(
                       builder: (BuildContext context) => new GameSessionDemo(AppData.activeSessions.elementAt(index)),
                     ));

@@ -172,33 +172,6 @@ class HomePage extends StatelessWidget {
       ),
     );
 
-
-//    final main_page = new Scaffold(
-//      drawer: new Menu(),
-//      appBar: new AppBar( //AppBars are the bars on top of the view
-//        title: const Text('Home Page'),
-//      ),
-//      body: new Center(
-//        child: new ListView(
-//            controller: new ScrollController(),
-//            shrinkWrap: true,
-//            padding: new EdgeInsets.only(left: 24.0, right: 24.0,top: 50.0),
-//            children: <Widget>[
-//              logo,
-//              new SizedBox(height: 48.0),
-//              new Container(child : new Text(flava_text,overflow: TextOverflow.ellipsis,maxLines: 7,textAlign: TextAlign.center,)),
-//              new SizedBox(height: 70.0),
-//              join_button,
-//              new SizedBox(height: 8.0),
-//              create_button,
-//              new SizedBox(height: 24.0),
-//            ],
-//          ),
-//
-//        ),
-//
-//    );
-
     return main_page;
   }
 }

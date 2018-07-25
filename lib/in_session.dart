@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:dnd_301_final/backend/server.pb.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/monster_journal.dart';
+
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
+import 'package:dnd_301_final/character_creation.dart';
+import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/monster_journal.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class SessionCharacterItem extends StatelessWidget {
@@ -22,10 +23,10 @@ class SessionCharacterItem extends StatelessWidget {
     final ThemeData theme = Theme.of(context); //copy theme data from parent
     final TextStyle titleStyle = theme.textTheme.headline.copyWith(
         color: Colors.white); //make our titl
-    SizedBox title;
+    Container title;
 
-    title = new SizedBox(
-        height: 60.0,
+    title = new Container(
+//        height: AppData.screenHeight/6,
         child: new Padding(
           padding: new EdgeInsets.only(left: 16.0),
           child: new FittedBox( //new box, fitted to remaining space
@@ -271,7 +272,7 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   List<bool> inSession;
   String type;
   String value;
-  bool createChar = false;
+  bool createChar;
   final Session session;
 
   AddCharDialogWidgetState(this.session);
@@ -290,10 +291,6 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
     return null;
   }
 
-  setView(bool createChar) {
-
-  }
-
   @override
   void initState() {
     super.initState();
@@ -301,75 +298,89 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
     print('init state');
     inSession = new List(characters.length);
 
-    view = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        FlatButton(
-          child: Container(
-              width: AppData.screenWidth/5,
-              height: AppData.screenHeight/5,
-              child: Icon(Icons.file_upload)
+    view = Container(
+      height: AppData.screenHeight/3,
+      width: AppData.screenWidth/2,
+
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            child: FlatButton(
+              child: Container(
+//              width: AppData.screenWidth/5,
+//              height: AppData.screenHeight/5,
+                  child: Icon(Icons.file_upload,size: AppData.screenWidth/4,color: Colors.deepOrange,)
+              ),
+              onPressed: (){
+                setState(() {
+                  createChar = false;
+                });
+              },
+            ),
           ),
-          onPressed: (){
-            setState(() {
-              createChar = false;
-            });
-          },
-        ),
-        FlatButton(
-          child: Container(
-              width: AppData.screenWidth/5,
-              height: AppData.screenHeight/5,
-              child: Icon(Icons.add_circle_outline)
-          ),
-          onPressed: (){
-            setState(() {
-              createChar = true;
-            });
-          },
-        )
-      ],
+          Expanded(
+            child: FlatButton(
+              child: Container(
+//              width: AppData.screenWidth/5,
+//              height: AppData.screenHeight/5,
+                  child: Icon(Icons.add_circle_outline,size: AppData.screenWidth/4,color: Colors.red,)
+              ),
+              onPressed: (){
+                setState(() {
+                  createChar = true;
+                  Navigator.push(
+                      context, new MaterialPageRoute<DismissDialogAction>(
+                    builder: (BuildContext context) => new CreateCharacterDialog(),
+                    fullscreenDialog: true,
+                  )).then((val) {
+                    if (val == DismissDialogAction.save) updateCharacters();
+                    Navigator.pop(context);
+                  });
+                });
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-//    return view;
-
-    if (createChar) {
-      Navigator.push(
-          context, new MaterialPageRoute<DismissDialogAction>(
-        builder: (BuildContext context) => new CreateCharacterDialog(),
-        fullscreenDialog: true,
-      )).then((val) {
-        if (val == DismissDialogAction.save) updateCharacters();
-      });
+    if(createChar==null)
       return view;
-    }
-    else {
-//      inSession = new List(characters.length);
-      List<Widget> characterSelects = new List(characters.length);
 
-      for (int i = 0; i < characters.length; i++) {
-        if(inSession[i]==null)
-          inSession[i] = (characters
-            .elementAt(i)
-            .sessionId == session.sessionId);
-        characterSelects[i] = new  CheckboxListTile(
+
+//      inSession = new List(characters.length);
+    List<Widget> characterSelects = new List(characters.length);
+
+    for (int i = 0; i < characters.length; i++) {
+      if(inSession[i]==null)
+        inSession[i] = (characters
+          .elementAt(i)
+          .sessionId == session.sessionId);
+      characterSelects[i] = Container(
+//        height: AppData.screenHeight/10,
+        child: new  CheckboxListTile(
           title: Text(characters.elementAt(i).title),
+          selected: inSession[i],
           value: inSession[i],
+
           onChanged: (bool value) {
             setState(() {
               inSession[i] = value;
-//              setView(createChar);
-//              print(inSession[i].toString());
             });
           },
-        );
-      }
+        ),
+      );
+    }
 
 
-      return Form(
+    return Container(
+      height: AppData.screenHeight/1.75,
+      child: Form(
         key: widget._formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -377,7 +388,9 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
             // characters
             Container(
               height: AppData.screenHeight / 2,
+              width: AppData.screenWidth/1.75,
               child: ListView(
+                shrinkWrap: true,
                 children: characterSelects,
               ),
             ),
@@ -395,7 +408,7 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
                         characters[i].sessionId = session.sessionId;
                         print("adding ${characters[i].title} to session ${session.sessionId}");
                       }
-                      else
+                      else if(inSession[i]==false && characters[i].sessionId==session.sessionId)
                       {
                         characters[i].sessionId = "";
                         print('removing ${characters[i].title} from session ${session.sessionId}');
@@ -410,8 +423,9 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
             )
           ],
         ),
-      );
-    }
+      ),
+    );
+
   }
 }
 

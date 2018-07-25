@@ -73,11 +73,11 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       charClass: BasicInfoTab.selectedClass,
       charRace: BasicInfoTab.selectedRace,
       charGender: bit.newCharGender,
-      strength: bit.stats.intel,
+      strength: bit.stats.str,
       dexterity: bit.stats.dex,
       constitution: bit.stats.con,
       intelligence: bit.stats.intel,
-      wisdom: bit.stats.intel,
+      wisdom: bit.stats.wis,
       charisma: bit.stats.chr,
       background: lit.background,
       personality: lit.personality,
@@ -105,11 +105,11 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       charClass: BasicInfoTab.selectedClass,
       charRace: BasicInfoTab.selectedRace,
       charGender: bit.newCharGender,
-      strength: bit.stats.intel,
+      strength: bit.stats.str,
       dexterity: bit.stats.dex,
       constitution: bit.stats.con,
       intelligence: bit.stats.intel,
-      wisdom: bit.stats.intel,
+      wisdom: bit.stats.wis,
       charisma: bit.stats.chr,
       background: lit.background,
       personality: lit.personality,
@@ -286,7 +286,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       onSubmitted: (val){widget.newCharName = val; print('saving name $val'); setState(() {
 
                       });},
-                      autofocus: true,
+//                      autofocus: true,
                       decoration: new InputDecoration(
                         hintText: 'Type name here',
                       )
@@ -1043,7 +1043,6 @@ class ClassPreview extends StatelessWidget {
                       text: 'd${classType.hitDie.toString()}',
                       style: traitsStyle,
                     ),
-
                   ]
               ),
             ),
@@ -1110,7 +1109,6 @@ class StatsWidgets extends StatelessWidget {
               ],
             ),
           ),
-
         ],
       ),
     );

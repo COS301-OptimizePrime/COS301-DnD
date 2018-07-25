@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/in_session.dart';
+import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -53,7 +53,7 @@ class GameSessionState extends State<GameSessionDemo> {
       gsr.sessionId = this.session.sessionId;
       gsr.authIdToken = AppData.token;
 
-      final response = await AppData.stub.getSessionById(gsr);
+      final response = await AppData.sessionStub.getSessionById(gsr);
       print('Status: ${response.status}');
       print('Status Message: ${response.statusMessage}');
       print('Number of users: ${response.users}');
@@ -81,7 +81,7 @@ class GameSessionState extends State<GameSessionDemo> {
     gsr.sessionId = this.session.sessionId;
     gsr.authIdToken = AppData.token;
 
-    final response = await AppData.stub.getSessionById(gsr);
+    final response = await AppData.sessionStub.getSessionById(gsr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
     responseSession = response;

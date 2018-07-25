@@ -26,7 +26,7 @@ class AppData{
   static String sessionId;
   static List<Session> activeSessions;
   static ClientChannel channel;
-  static SessionsManagerClient stub;
+  static SessionsManagerClient sessionStub;
 
   ///characters
   static CharactersManagerClient charStub;
@@ -103,7 +103,7 @@ class AppData{
     jr.sessionId = sid;
     jr.authIdToken = token;
 
-    final response = await stub.leave(jr);
+    final response = await sessionStub.leave(jr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
 
@@ -138,14 +138,14 @@ class AppData{
         if(channel==null)
           connectToServer();
 
-        if(stub==null)
-          stub = new SessionsManagerClient(channel);
+        if(sessionStub==null)
+          sessionStub = new SessionsManagerClient(channel);
 
         NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = name;
     nsr.authIdToken = token;
     nsr.maxPlayers = maxPlayers;
-    final response = await stub.create(nsr);
+    final response = await sessionStub.create(nsr);
     print('Client received: ${response.status}');
 
     temp_session = response;
@@ -158,14 +158,14 @@ class AppData{
     if(channel==null)
       connectToServer();
 
-    if(stub==null)
-      stub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
     JoinRequest jr = new JoinRequest();
     jr.sessionId = sid;
     jr.authIdToken = token;
 
-    final response = await stub.join(jr);
+    final response = await sessionStub.join(jr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
 
@@ -177,14 +177,14 @@ class AppData{
     if(channel==null)
       connectToServer();
 
-    if(stub==null)
-      stub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
     GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
     gsur.limit = 10;
     gsur.authIdToken = token;
 
-    final response = await stub.getSessionsOfUser(gsur);
+    final response = await sessionStub.getSessionsOfUser(gsur);
     activeSessions = response.sessions;
     print('Status: ${response.status}');
     print('Status Message: ${response.status}');
@@ -413,5 +413,29 @@ class AppData{
     print(response.statusMessage);
 
   }
+
+  static Future<Session> getSessionById(String id) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+    GetSessionRequest gsr = new GetSessionRequest();
+    gsr.authIdToken = token;
+    gsr.sessionId = id;
+
+    final response = await (sessionStub.getSessionById(gsr));
+
+    print('Retrieved session: \'${response.name}\' with id: ${response.sessionId}');
+
+    if(response.status!="FAILED")
+      return response;
+    else
+      return null;
+
+  }
+
 
 }

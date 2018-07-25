@@ -38,6 +38,7 @@ class LocalCharacter {
   final String title;
   final String characterId;
   String sessionId;
+  String sessionName;
 
   final ClassType charClass;
   final Race charRace;
@@ -72,7 +73,16 @@ final List<LocalCharacter> characters = new List();
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
       : assert(char !=null), //if it receives a null character object to populate the card, fatal error
-        super(key: key);
+        super(key: key)
+  {
+//    char.sessionName = "No Session";
+//    if(char.sessionId!="")
+//      (AppData.getSessionById(char.sessionId)).then((s){
+//        if(s!=null)
+//          char.sessionName = s.name;
+//      });
+  }
+
 
   static const double height = 160.0; // original value was 366.0
   LocalCharacter char;
@@ -160,7 +170,7 @@ class CharacterItem extends StatelessWidget {
                   classPreview,
                   new Column(children: <Widget>[
                     new Text(char.charGender),
-                    new Text((char.sessionId == '') ? "" : "In Session"), //our text widget with our description
+                    new Text((char.sessionName==null)? "No Session" : char.sessionName), //our text widget with our description
                   ],)
                 ],
               )
@@ -311,6 +321,7 @@ class CharacterItem extends StatelessWidget {
         )
     );
   }
+
 }
 
 class EquipmentList extends StatefulWidget {
@@ -452,7 +463,8 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
           //update characters
           print('updating character list');
         });}
-    );
+    )
+    ;
   }
 
   AnimationController controller;

@@ -9,6 +9,198 @@ import 'dart:core' show int, bool, double, String, List, override;
 
 import 'package:protobuf/protobuf.dart';
 
+class ChangeReadyUpExpiryTimeRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('ChangeReadyUpExpiryTimeRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..a<int>(3, 'readyUpExpiryTime', PbFieldType.OU3)
+    ..hasRequiredFields = false
+  ;
+
+  ChangeReadyUpExpiryTimeRequest() : super();
+  ChangeReadyUpExpiryTimeRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  ChangeReadyUpExpiryTimeRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  ChangeReadyUpExpiryTimeRequest clone() => new ChangeReadyUpExpiryTimeRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static ChangeReadyUpExpiryTimeRequest create() => new ChangeReadyUpExpiryTimeRequest();
+  static PbList<ChangeReadyUpExpiryTimeRequest> createRepeated() => new PbList<ChangeReadyUpExpiryTimeRequest>();
+  static ChangeReadyUpExpiryTimeRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeReadyUpExpiryTimeRequest();
+    return _defaultInstance;
+  }
+  static ChangeReadyUpExpiryTimeRequest _defaultInstance;
+  static void $checkItem(ChangeReadyUpExpiryTimeRequest v) {
+    if (v is! ChangeReadyUpExpiryTimeRequest) checkItemFailed(v, 'ChangeReadyUpExpiryTimeRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  int get readyUpExpiryTime => $_get(2, 0);
+  set readyUpExpiryTime(int v) { $_setUnsignedInt32(2, v); }
+  bool hasReadyUpExpiryTime() => $_has(2);
+  void clearReadyUpExpiryTime() => clearField(3);
+}
+
+class _ReadonlyChangeReadyUpExpiryTimeRequest extends ChangeReadyUpExpiryTimeRequest with ReadonlyMessageMixin {}
+
+class ChangeReadyUpExpiryTimeResponse extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('ChangeReadyUpExpiryTimeResponse')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..hasRequiredFields = false
+  ;
+
+  ChangeReadyUpExpiryTimeResponse() : super();
+  ChangeReadyUpExpiryTimeResponse.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  ChangeReadyUpExpiryTimeResponse.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  ChangeReadyUpExpiryTimeResponse clone() => new ChangeReadyUpExpiryTimeResponse()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static ChangeReadyUpExpiryTimeResponse create() => new ChangeReadyUpExpiryTimeResponse();
+  static PbList<ChangeReadyUpExpiryTimeResponse> createRepeated() => new PbList<ChangeReadyUpExpiryTimeResponse>();
+  static ChangeReadyUpExpiryTimeResponse getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeReadyUpExpiryTimeResponse();
+    return _defaultInstance;
+  }
+  static ChangeReadyUpExpiryTimeResponse _defaultInstance;
+  static void $checkItem(ChangeReadyUpExpiryTimeResponse v) {
+    if (v is! ChangeReadyUpExpiryTimeResponse) checkItemFailed(v, 'ChangeReadyUpExpiryTimeResponse');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+}
+
+class _ReadonlyChangeReadyUpExpiryTimeResponse extends ChangeReadyUpExpiryTimeResponse with ReadonlyMessageMixin {}
+
+class ChangeStateRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('ChangeStateRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..aOS(3, 'state')
+    ..hasRequiredFields = false
+  ;
+
+  ChangeStateRequest() : super();
+  ChangeStateRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  ChangeStateRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  ChangeStateRequest clone() => new ChangeStateRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static ChangeStateRequest create() => new ChangeStateRequest();
+  static PbList<ChangeStateRequest> createRepeated() => new PbList<ChangeStateRequest>();
+  static ChangeStateRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeStateRequest();
+    return _defaultInstance;
+  }
+  static ChangeStateRequest _defaultInstance;
+  static void $checkItem(ChangeStateRequest v) {
+    if (v is! ChangeStateRequest) checkItemFailed(v, 'ChangeStateRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  String get state => $_getS(2, '');
+  set state(String v) { $_setString(2, v); }
+  bool hasState() => $_has(2);
+  void clearState() => clearField(3);
+}
+
+class _ReadonlyChangeStateRequest extends ChangeStateRequest with ReadonlyMessageMixin {}
+
+class ReadyUpRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('ReadyUpRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..hasRequiredFields = false
+  ;
+
+  ReadyUpRequest() : super();
+  ReadyUpRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  ReadyUpRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  ReadyUpRequest clone() => new ReadyUpRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static ReadyUpRequest create() => new ReadyUpRequest();
+  static PbList<ReadyUpRequest> createRepeated() => new PbList<ReadyUpRequest>();
+  static ReadyUpRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyReadyUpRequest();
+    return _defaultInstance;
+  }
+  static ReadyUpRequest _defaultInstance;
+  static void $checkItem(ReadyUpRequest v) {
+    if (v is! ReadyUpRequest) checkItemFailed(v, 'ReadyUpRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+}
+
+class _ReadonlyReadyUpRequest extends ReadyUpRequest with ReadonlyMessageMixin {}
+
+class ReadyUpReply extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('ReadyUpReply')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..hasRequiredFields = false
+  ;
+
+  ReadyUpReply() : super();
+  ReadyUpReply.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  ReadyUpReply.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  ReadyUpReply clone() => new ReadyUpReply()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static ReadyUpReply create() => new ReadyUpReply();
+  static PbList<ReadyUpReply> createRepeated() => new PbList<ReadyUpReply>();
+  static ReadyUpReply getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyReadyUpReply();
+    return _defaultInstance;
+  }
+  static ReadyUpReply _defaultInstance;
+  static void $checkItem(ReadyUpReply v) {
+    if (v is! ReadyUpReply) checkItemFailed(v, 'ReadyUpReply');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+}
+
+class _ReadonlyReadyUpReply extends ReadyUpReply with ReadonlyMessageMixin {}
+
 class GetCharacterByIdRequest extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('GetCharacterByIdRequest')
     ..aOS(1, 'authIdToken')
@@ -675,6 +867,12 @@ class Session extends GeneratedMessage {
     ..pp<User>(8, 'users', PbFieldType.PM, User.$checkItem, User.create)
     ..aOB(9, 'private')
     ..aOB(10, 'full')
+    ..aOS(11, 'state')
+    ..a<int>(12, 'stateMeta', PbFieldType.OU3)
+    ..aOS(13, 'stateReadyStartTime')
+    ..pp<User>(14, 'readyUsers', PbFieldType.PM, User.$checkItem, User.create)
+    ..aOS(15, 'lastUpdated')
+    ..a<int>(16, 'readyUpExpiryTime', PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -740,6 +938,33 @@ class Session extends GeneratedMessage {
   set full(bool v) { $_setBool(9, v); }
   bool hasFull() => $_has(9);
   void clearFull() => clearField(10);
+
+  String get state => $_getS(10, '');
+  set state(String v) { $_setString(10, v); }
+  bool hasState() => $_has(10);
+  void clearState() => clearField(11);
+
+  int get stateMeta => $_get(11, 0);
+  set stateMeta(int v) { $_setUnsignedInt32(11, v); }
+  bool hasStateMeta() => $_has(11);
+  void clearStateMeta() => clearField(12);
+
+  String get stateReadyStartTime => $_getS(12, '');
+  set stateReadyStartTime(String v) { $_setString(12, v); }
+  bool hasStateReadyStartTime() => $_has(12);
+  void clearStateReadyStartTime() => clearField(13);
+
+  List<User> get readyUsers => $_getList(13);
+
+  String get lastUpdated => $_getS(14, '');
+  set lastUpdated(String v) { $_setString(14, v); }
+  bool hasLastUpdated() => $_has(14);
+  void clearLastUpdated() => clearField(15);
+
+  int get readyUpExpiryTime => $_get(15, 0);
+  set readyUpExpiryTime(int v) { $_setUnsignedInt32(15, v); }
+  bool hasReadyUpExpiryTime() => $_has(15);
+  void clearReadyUpExpiryTime() => clearField(16);
 }
 
 class _ReadonlySession extends Session with ReadonlyMessageMixin {}
@@ -748,6 +973,7 @@ class User extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('User')
     ..aOS(1, 'uid')
     ..aOS(2, 'name')
+    ..aOB(3, 'readyInThisSession')
     ..hasRequiredFields = false
   ;
 
@@ -776,6 +1002,11 @@ class User extends GeneratedMessage {
   set name(String v) { $_setString(1, v); }
   bool hasName() => $_has(1);
   void clearName() => clearField(2);
+
+  bool get readyInThisSession => $_get(2, false);
+  set readyInThisSession(bool v) { $_setBool(2, v); }
+  bool hasReadyInThisSession() => $_has(2);
+  void clearReadyInThisSession() => clearField(3);
 }
 
 class _ReadonlyUser extends User with ReadonlyMessageMixin {}
@@ -892,6 +1123,8 @@ class Character extends GeneratedMessage {
     ..aOS(36, 'sessionId')
     ..aOS(37, 'featuresAndTraits')
     ..aOB(38, 'online')
+    ..a<int>(39, 'level', PbFieldType.OU3)
+    ..aOS(40, 'gender')
     ..hasRequiredFields = false
   ;
 
@@ -1097,6 +1330,16 @@ class Character extends GeneratedMessage {
   set online(bool v) { $_setBool(37, v); }
   bool hasOnline() => $_has(37);
   void clearOnline() => clearField(38);
+
+  int get level => $_get(38, 0);
+  set level(int v) { $_setUnsignedInt32(38, v); }
+  bool hasLevel() => $_has(38);
+  void clearLevel() => clearField(39);
+
+  String get gender => $_getS(39, '');
+  set gender(String v) { $_setString(39, v); }
+  bool hasGender() => $_has(39);
+  void clearGender() => clearField(40);
 }
 
 class _ReadonlyCharacter extends Character with ReadonlyMessageMixin {}

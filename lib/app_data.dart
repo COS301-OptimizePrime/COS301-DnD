@@ -283,7 +283,7 @@ class AppData{
       title: netChar.name,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
-      charGender: 'unimplemented',
+      charGender: netChar.gender,
       strength: netChar.strength,
       dexterity: netChar.dexterity,
       charisma: netChar.charisma,
@@ -334,7 +334,7 @@ class AppData{
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;
-//    temp.gender = char.charGender;
+    temp.gender = char.charGender;
     temp.strength = char.strength;
     temp.dexterity = char.dexterity;
     temp.charisma = char.charisma;
@@ -347,7 +347,6 @@ class AppData{
     temp.bonds = char.bonds;
     temp.flaws = char.flaws;
     temp.featuresAndTraits = char.featuresTraits;
-    temp.sessionId = char.sessionId;
     convertToNetEquip(temp.equipment ,char.equipment);
 
     return temp;

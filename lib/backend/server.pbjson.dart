@@ -4,6 +4,48 @@
 // ignore_for_file: non_constant_identifier_names,library_prefixes
 library session_server_pbjson;
 
+const ChangeReadyUpExpiryTimeRequest$json = const {
+  '1': 'ChangeReadyUpExpiryTimeRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'ready_up_expiry_time', '3': 3, '4': 1, '5': 13, '10': 'readyUpExpiryTime'},
+  ],
+};
+
+const ChangeReadyUpExpiryTimeResponse$json = const {
+  '1': 'ChangeReadyUpExpiryTimeResponse',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+  ],
+};
+
+const ChangeStateRequest$json = const {
+  '1': 'ChangeStateRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'state', '3': 3, '4': 1, '5': 9, '10': 'state'},
+  ],
+};
+
+const ReadyUpRequest$json = const {
+  '1': 'ReadyUpRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+  ],
+};
+
+const ReadyUpReply$json = const {
+  '1': 'ReadyUpReply',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+  ],
+};
+
 const GetCharacterByIdRequest$json = const {
   '1': 'GetCharacterByIdRequest',
   '2': const [
@@ -161,6 +203,12 @@ const Session$json = const {
     const {'1': 'users', '3': 8, '4': 3, '5': 11, '6': '.session.User', '10': 'users'},
     const {'1': 'private', '3': 9, '4': 1, '5': 8, '10': 'private'},
     const {'1': 'full', '3': 10, '4': 1, '5': 8, '10': 'full'},
+    const {'1': 'state', '3': 11, '4': 1, '5': 9, '10': 'state'},
+    const {'1': 'state_meta', '3': 12, '4': 1, '5': 13, '10': 'stateMeta'},
+    const {'1': 'state_ready_start_time', '3': 13, '4': 1, '5': 9, '10': 'stateReadyStartTime'},
+    const {'1': 'ready_users', '3': 14, '4': 3, '5': 11, '6': '.session.User', '10': 'readyUsers'},
+    const {'1': 'last_updated', '3': 15, '4': 1, '5': 9, '10': 'lastUpdated'},
+    const {'1': 'ready_up_expiry_time', '3': 16, '4': 1, '5': 13, '10': 'readyUpExpiryTime'},
   ],
 };
 
@@ -169,6 +217,7 @@ const User$json = const {
   '2': const [
     const {'1': 'uid', '3': 1, '4': 1, '5': 9, '10': 'uid'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'ready_in_this_session', '3': 3, '4': 1, '5': 8, '10': 'readyInThisSession'},
   ],
 };
 
@@ -229,6 +278,8 @@ const Character$json = const {
     const {'1': 'session_id', '3': 36, '4': 1, '5': 9, '10': 'sessionId'},
     const {'1': 'features_and_traits', '3': 37, '4': 1, '5': 9, '10': 'featuresAndTraits'},
     const {'1': 'online', '3': 38, '4': 1, '5': 8, '10': 'online'},
+    const {'1': 'level', '3': 39, '4': 1, '5': 13, '10': 'level'},
+    const {'1': 'gender', '3': 40, '4': 1, '5': 9, '10': 'gender'},
   ],
 };
 

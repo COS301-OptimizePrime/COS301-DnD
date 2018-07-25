@@ -5,6 +5,7 @@ import 'package:dnd_301_final/character_selection.dart';
 import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/monster_journal.dart';
 import 'package:dnd_301_final/app_data.dart';
+import 'package:meta/meta.dart';
 
 class SessionCharacterItem extends StatelessWidget {
   SessionCharacterItem({ Key key, @required this.char , this.armorClass})
@@ -270,9 +271,9 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   List<bool> inSession;
   String type;
   String value;
-  bool createChar;
+  bool createChar = false;
   final Session session;
-  
+
   AddCharDialogWidgetState(this.session);
 
   Future<Null> updateCharacters() async {
@@ -290,6 +291,51 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
   }
 
   setView(bool createChar) {
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('init state');
+    inSession = new List(characters.length);
+
+    view = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Icon(Icons.file_upload)
+          ),
+          onPressed: (){
+            setState(() {
+              createChar = false;
+            });
+          },
+        ),
+        FlatButton(
+          child: Container(
+              width: AppData.screenWidth/5,
+              height: AppData.screenHeight/5,
+              child: Icon(Icons.add_circle_outline)
+          ),
+          onPressed: (){
+            setState(() {
+              createChar = true;
+            });
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+//    return view;
+
     if (createChar) {
       Navigator.push(
           context, new MaterialPageRoute<DismissDialogAction>(
@@ -298,13 +344,15 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
       )).then((val) {
         if (val == DismissDialogAction.save) updateCharacters();
       });
+      return view;
     }
     else {
-      inSession = new List(characters.length);
+//      inSession = new List(characters.length);
       List<Widget> characterSelects = new List(characters.length);
 
       for (int i = 0; i < characters.length; i++) {
-        inSession[i] = (characters
+        if(inSession[i]==null)
+          inSession[i] = (characters
             .elementAt(i)
             .sessionId == session.sessionId);
         characterSelects[i] = new  CheckboxListTile(
@@ -313,14 +361,15 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
           onChanged: (bool value) {
             setState(() {
               inSession[i] = value;
+//              setView(createChar);
+//              print(inSession[i].toString());
             });
           },
         );
       }
 
-      this.createChar = createChar;
 
-      view = Form(
+      return Form(
         key: widget._formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -342,15 +391,20 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
 
                   if(characters != null) {
                     for (int i = 0; i < characters.length; i++) {
-                      if (inSession[i]) {
+                      if (inSession[i] && characters[i].sessionId =="") {
                         characters[i].sessionId = session.sessionId;
                         print("adding ${characters[i].title} to session ${session.sessionId}");
-                        AppData.updateCharacter(characters[i]);
                       }
+                      else
+                      {
+                        characters[i].sessionId = "";
+                        print('removing ${characters[i].title} from session ${session.sessionId}');
+                      }
+                      AppData.updateCharacter(characters[i]);
                     }
                   }
 
-                  Navigator.pop(context);
+                  Navigator.pop(context,inSession);
                 }
               },
             )
@@ -358,48 +412,6 @@ class AddCharDialogWidgetState extends State<AddCharDialogWidget> {
         ),
       );
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    print('init state');
-
-    view = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        FlatButton(
-          child: Container(
-              width: AppData.screenWidth/5,
-              height: AppData.screenHeight/5,
-              child: Icon(Icons.file_upload)
-          ),
-          onPressed: (){
-            setState(() {
-              setView(false);
-            });
-          },
-        ),
-        FlatButton(
-          child: Container(
-              width: AppData.screenWidth/5,
-              height: AppData.screenHeight/5,
-              child: Icon(Icons.add_circle_outline)
-          ),
-          onPressed: (){
-            setState(() {
-              setView(true);
-            });
-          },
-        )
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return view;
   }
 }
 
@@ -420,7 +432,7 @@ class CharactersTabState extends State<CharactersTab> {
     characters.clear();
 
     // get user chars
-    AppData.getUseCharacters().whenComplete(
+    AppData.getUserCharacters().whenComplete(
             () {
           setState(() {
             sessionChars = new List();
@@ -451,7 +463,7 @@ class CharactersTabState extends State<CharactersTab> {
   }
 
   addCharToSession(BuildContext context) async {
-    await (showDialog(context: context,
+    List inSessionResults = await (showDialog(context: context,
       builder: (_) => new SimpleDialog(
         children: <Widget>[
           AddCharDialogWidget(session),
@@ -515,7 +527,7 @@ class AllCharactersTabState extends State<AllCharactersTab> {
   List<Widget> sessionChars;
 
   AllCharactersTabState(this.session) {
-    sessionChars = new List();
+//    sessionChars = new List();
     characters.forEach((char) {
       int armorClass = 0;
 

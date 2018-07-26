@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:dnd_301_final/home_page.dart';
-import 'package:flutter/material.dart';
+
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/home_page.dart';
+import 'package:dnd_301_final/menu.dart';
+import 'package:flutter/material.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -45,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.pop(context); //pop dialog
     Navigator.of(context).pushNamed(HomePage.tag);
+    Menu.currentPage = HomePage.tag;
 
 //    googleSignedIn = true;
     print('This user is signed in: '+ appData.user.toString());
@@ -95,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
           {
             Navigator.pop(context); //pop dialog
             Navigator.of(context).pushNamed(HomePage.tag);
+            Menu.currentPage = HomePage.tag;
           }
           else
           {

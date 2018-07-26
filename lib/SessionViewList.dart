@@ -33,6 +33,7 @@ class _SessionViewListState extends State<SessionViewList> {
         child: new ListView.builder(
             padding: kTabLabelPadding,
             itemCount: AppData.activeSessions.length,
+//            itemExtent: AppData.screenHeight/4/4,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               final item = AppData.activeSessions.elementAt(index);

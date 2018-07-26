@@ -35,11 +35,12 @@ class _SessionViewListState extends State<SessionViewList> {
             itemCount: AppData.activeSessions.length,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
-              final String item = AppData.activeSessions.elementAt(index).name;
+              final item = AppData.activeSessions.elementAt(index);
               return new DecoratedBox(
                 decoration: new BoxDecoration(border: new Border(bottom: new BorderSide(color: Colors.deepOrange))),
                 child: new ListTile(
-                  title: new Text('$item.'),
+                  title: new Text('${item.name}'),
+                  trailing: (item.dungeonMaster.uid==AppData.instance().user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
                   onTap: (){
                     Navigator.push(context, new MaterialPageRoute(
                       builder: (BuildContext context) => new GameSessionDemo(AppData.activeSessions.elementAt(index)),

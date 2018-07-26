@@ -245,9 +245,12 @@ class PartyTabState extends State<PartyTab> {
                 subtitle: const Text(''),
               ),
               // users chars
-              Column(
-                children: sessionChars
-              )
+              //@TODO: implement party functionality
+//              Column(
+//                children: sessionChars.map((){
+//
+//                }).toList()
+//              )
             ]
           );
         });

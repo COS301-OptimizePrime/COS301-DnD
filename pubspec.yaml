@@ -106,6 +106,7 @@ flutter:
     - assets/icon_assets/Wisdom.png
     #dm icon
     - assets/icon_assets/dm_icon.png
+    - assets/icon_assets/dm_icon_trans.png
 
     #monster list file
     - assets/dad_5e_monster_manual.txt

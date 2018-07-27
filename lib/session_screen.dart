@@ -13,9 +13,11 @@ import 'backend/server.pbgrpc.dart';
 class GameSessionDemo extends StatefulWidget {
   static String tag = "game-session";
 
+//  final LightSession lightSession;
   final Session session;
 
   GameSessionDemo(this.session) {
+//    session = AppData.getSessionById(lightSession.sessionId);
   }
   @override
   GameSessionState createState() => new GameSessionState(this.session);

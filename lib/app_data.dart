@@ -24,7 +24,7 @@ class AppData{
   static Session temp_session;
   // This should change we should not have a global session as there can be multiple
   static String sessionId;
-  static List<Session> activeSessions;
+  static List<LightSession> activeSessions;
   static ClientChannel channel;
   static SessionsManagerClient sessionStub;
 
@@ -135,16 +135,17 @@ class AppData{
   static Future<Session> createSession(String name, int maxPlayers)
   async {
 
-        if(channel==null)
-          connectToServer();
+    if(channel==null)
+      connectToServer();
 
-        if(sessionStub==null)
-          sessionStub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
-        NewSessionRequest nsr = new NewSessionRequest();
+    NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = name;
     nsr.authIdToken = token;
     nsr.maxPlayers = maxPlayers;
+
     final response = await sessionStub.create(nsr);
     print('Client received: ${response.status}');
 
@@ -185,7 +186,7 @@ class AppData{
     gsur.authIdToken = token;
 
     final response = await sessionStub.getSessionsOfUser(gsur);
-    activeSessions = response.sessions;
+    activeSessions = response.lightSessions;
     print('Status: ${response.status}');
     print('Status Message: ${response.status}');
 
@@ -209,17 +210,20 @@ class AppData{
 
     final chars = await charStub.getCharacters(gcr);
 
-    print('adding ${chars.characters.length - charsLoaded} characters');
+    print('adding ${chars.lightCharacters.length - charsLoaded} characters');
 
 //    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
     characters.clear();
-    for (int i = 0; i>=0 && i < chars.characters.length;i++)
-    {
-      characters.add(
-          convertToLocalChar(chars.characters.elementAt(i))
-      );
-      charsLoaded++;
-    }
+
+    lightCharacters.clear();
+    lightCharacters.addAll(chars.lightCharacters);
+//    for (int i = 0; i>=0 && i < chars.lightCharacters.length;i++)
+//    {
+////      characters.add(
+////          convertToLocalChar(chars.lightCharacters.elementAt(i))
+////      );
+//      charsLoaded++;
+//    }
     print('characters added');
   }
 
@@ -239,15 +243,17 @@ class AppData{
 
     final chars = await charStub.getCharacters(gcr);
 
-    charsLoaded = chars.characters.length;
-    print('adding ${chars.characters.length} characters');
+//    charsLoaded = chars.characters.length;
+    print('adding ${chars.lightCharacters.length} characters');
 
-    for (int i = 0; i < chars.characters.length;i++)
-      {
-        characters.add(
-          convertToLocalChar(chars.characters.elementAt(i))
-        );
-      }
+//    for (int i = 0; i < chars.characters.length;i++)
+//      {
+//        characters.add(
+//          convertToLocalChar(chars.characters.elementAt(i))
+//        );
+//      }
+
+    lightCharacters.addAll(chars.lightCharacters);
 
     print('characters added');
 
@@ -435,6 +441,41 @@ class AppData{
     else
       return null;
 
+  }
+
+  static updateUserLightCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    if(charsLoaded==null)
+      return getUserCharacters();
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    int updatedChars = 0;
+    int addedChars = 0;
+
+    for(int i = 0; i < chars.lightCharacters.length;i++)
+      {
+        if(lightCharacters.length-1<i)
+          lightCharacters.add(chars.lightCharacters.elementAt(i));
+
+
+        if(lightCharacters.firstWhere((c) => c.sessionId==chars.lightCharacters.elementAt(i).sessionId)!=null)
+          ;
+      }
+
+    print('Updating User Light Characters:\n');
+    print('\tadding $addedChars characters\n');
+    print('\tupdating $updatedChars characters\n');
   }
 
 

@@ -1,4 +1,5 @@
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/session_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -42,9 +43,10 @@ class _SessionViewListState extends State<SessionViewList> {
                 child: new ListTile(
                   title: new Text('${item.name}'),
                   trailing: (item.dungeonMaster.uid==AppData.instance().user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
-                  onTap: (){
+                  onTap: () async {
+                    Session fullSession = await AppData.getSessionById(AppData.activeSessions.elementAt(index).sessionId);
                     Navigator.push(context, new MaterialPageRoute(
-                      builder: (BuildContext context) => new GameSessionDemo(AppData.activeSessions.elementAt(index)),
+                      builder: (BuildContext context) => new GameSessionDemo(fullSession),
                     ));
                   },
                 ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:dnd_301_final/app_data.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character_creation.dart';
 import 'package:dnd_301_final/character_preview.dart';
 import 'package:dnd_301_final/menu.dart';
@@ -69,18 +70,14 @@ class LocalCharacter {
 }
 
 final List<LocalCharacter> characters = new List();
+final List<LightCharacter> lightCharacters = new List();
 
 class CharacterItem extends StatelessWidget {
   CharacterItem({ Key key, @required this.char })
       : assert(char !=null), //if it receives a null character object to populate the card, fatal error
         super(key: key)
   {
-//    char.sessionName = "No Session";
-//    if(char.sessionId!="")
-//      (AppData.getSessionById(char.sessionId)).then((s){
-//        if(s!=null)
-//          char.sessionName = s.name;
-//      });
+
   }
 
 
@@ -482,7 +479,7 @@ class CharacterSelectionState extends State<CharacterSelection> with SingleTicke
 
   Future<Null> updateCharacters() async
   {
-    AppData.updateUserCharacters().whenComplete(
+    AppData.updateUserLightCharacters().whenComplete(
         (){
           print('updating character list');
           setState(() {

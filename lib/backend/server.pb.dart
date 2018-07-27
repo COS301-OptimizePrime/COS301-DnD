@@ -9,6 +9,165 @@ import 'dart:core' show int, bool, double, String, List, override;
 
 import 'package:protobuf/protobuf.dart';
 
+class AddCharacterToSessionRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('AddCharacterToSessionRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..aOS(3, 'characterId')
+    ..hasRequiredFields = false
+  ;
+
+  AddCharacterToSessionRequest() : super();
+  AddCharacterToSessionRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  AddCharacterToSessionRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  AddCharacterToSessionRequest clone() => new AddCharacterToSessionRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static AddCharacterToSessionRequest create() => new AddCharacterToSessionRequest();
+  static PbList<AddCharacterToSessionRequest> createRepeated() => new PbList<AddCharacterToSessionRequest>();
+  static AddCharacterToSessionRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyAddCharacterToSessionRequest();
+    return _defaultInstance;
+  }
+  static AddCharacterToSessionRequest _defaultInstance;
+  static void $checkItem(AddCharacterToSessionRequest v) {
+    if (v is! AddCharacterToSessionRequest) checkItemFailed(v, 'AddCharacterToSessionRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  String get characterId => $_getS(2, '');
+  set characterId(String v) { $_setString(2, v); }
+  bool hasCharacterId() => $_has(2);
+  void clearCharacterId() => clearField(3);
+}
+
+class _ReadonlyAddCharacterToSessionRequest extends AddCharacterToSessionRequest with ReadonlyMessageMixin {}
+
+class RemoveCharacterFromSessionRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('RemoveCharacterFromSessionRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..aOS(3, 'characterId')
+    ..hasRequiredFields = false
+  ;
+
+  RemoveCharacterFromSessionRequest() : super();
+  RemoveCharacterFromSessionRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  RemoveCharacterFromSessionRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  RemoveCharacterFromSessionRequest clone() => new RemoveCharacterFromSessionRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static RemoveCharacterFromSessionRequest create() => new RemoveCharacterFromSessionRequest();
+  static PbList<RemoveCharacterFromSessionRequest> createRepeated() => new PbList<RemoveCharacterFromSessionRequest>();
+  static RemoveCharacterFromSessionRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyRemoveCharacterFromSessionRequest();
+    return _defaultInstance;
+  }
+  static RemoveCharacterFromSessionRequest _defaultInstance;
+  static void $checkItem(RemoveCharacterFromSessionRequest v) {
+    if (v is! RemoveCharacterFromSessionRequest) checkItemFailed(v, 'RemoveCharacterFromSessionRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  String get characterId => $_getS(2, '');
+  set characterId(String v) { $_setString(2, v); }
+  bool hasCharacterId() => $_has(2);
+  void clearCharacterId() => clearField(3);
+}
+
+class _ReadonlyRemoveCharacterFromSessionRequest extends RemoveCharacterFromSessionRequest with ReadonlyMessageMixin {}
+
+class GetCharactersInSessionRequest extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('GetCharactersInSessionRequest')
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..hasRequiredFields = false
+  ;
+
+  GetCharactersInSessionRequest() : super();
+  GetCharactersInSessionRequest.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GetCharactersInSessionRequest.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GetCharactersInSessionRequest clone() => new GetCharactersInSessionRequest()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static GetCharactersInSessionRequest create() => new GetCharactersInSessionRequest();
+  static PbList<GetCharactersInSessionRequest> createRepeated() => new PbList<GetCharactersInSessionRequest>();
+  static GetCharactersInSessionRequest getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersInSessionRequest();
+    return _defaultInstance;
+  }
+  static GetCharactersInSessionRequest _defaultInstance;
+  static void $checkItem(GetCharactersInSessionRequest v) {
+    if (v is! GetCharactersInSessionRequest) checkItemFailed(v, 'GetCharactersInSessionRequest');
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+}
+
+class _ReadonlyGetCharactersInSessionRequest extends GetCharactersInSessionRequest with ReadonlyMessageMixin {}
+
+class GetCharactersInSessionResponse extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('GetCharactersInSessionResponse')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..pp<LightCharacter>(3, 'lightCharacters', PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
+    ..hasRequiredFields = false
+  ;
+
+  GetCharactersInSessionResponse() : super();
+  GetCharactersInSessionResponse.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GetCharactersInSessionResponse.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GetCharactersInSessionResponse clone() => new GetCharactersInSessionResponse()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static GetCharactersInSessionResponse create() => new GetCharactersInSessionResponse();
+  static PbList<GetCharactersInSessionResponse> createRepeated() => new PbList<GetCharactersInSessionResponse>();
+  static GetCharactersInSessionResponse getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersInSessionResponse();
+    return _defaultInstance;
+  }
+  static GetCharactersInSessionResponse _defaultInstance;
+  static void $checkItem(GetCharactersInSessionResponse v) {
+    if (v is! GetCharactersInSessionResponse) checkItemFailed(v, 'GetCharactersInSessionResponse');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+
+  List<LightCharacter> get lightCharacters => $_getList(2);
+}
+
+class _ReadonlyGetCharactersInSessionResponse extends GetCharactersInSessionResponse with ReadonlyMessageMixin {}
+
 class ChangeReadyUpExpiryTimeRequest extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('ChangeReadyUpExpiryTimeRequest')
     ..aOS(1, 'authIdToken')
@@ -349,7 +508,7 @@ class GetCharactersReply extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('GetCharactersReply')
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
-    ..pp<Character>(3, 'characters', PbFieldType.PM, Character.$checkItem, Character.create)
+    ..pp<LightCharacter>(3, 'lightCharacters', PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
     ..hasRequiredFields = false
   ;
 
@@ -379,7 +538,7 @@ class GetCharactersReply extends GeneratedMessage {
   bool hasStatusMessage() => $_has(1);
   void clearStatusMessage() => clearField(2);
 
-  List<Character> get characters => $_getList(2);
+  List<LightCharacter> get lightCharacters => $_getList(2);
 }
 
 class _ReadonlyGetCharactersReply extends GetCharactersReply with ReadonlyMessageMixin {}
@@ -419,6 +578,45 @@ class GetSessionsOfUserRequest extends GeneratedMessage {
 }
 
 class _ReadonlyGetSessionsOfUserRequest extends GetSessionsOfUserRequest with ReadonlyMessageMixin {}
+
+class GetSessionsOfUserReply extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('GetSessionsOfUserReply')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..pp<LightSession>(3, 'lightSessions', PbFieldType.PM, LightSession.$checkItem, LightSession.create)
+    ..hasRequiredFields = false
+  ;
+
+  GetSessionsOfUserReply() : super();
+  GetSessionsOfUserReply.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GetSessionsOfUserReply.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GetSessionsOfUserReply clone() => new GetSessionsOfUserReply()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static GetSessionsOfUserReply create() => new GetSessionsOfUserReply();
+  static PbList<GetSessionsOfUserReply> createRepeated() => new PbList<GetSessionsOfUserReply>();
+  static GetSessionsOfUserReply getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetSessionsOfUserReply();
+    return _defaultInstance;
+  }
+  static GetSessionsOfUserReply _defaultInstance;
+  static void $checkItem(GetSessionsOfUserReply v) {
+    if (v is! GetSessionsOfUserReply) checkItemFailed(v, 'GetSessionsOfUserReply');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+
+  List<LightSession> get lightSessions => $_getList(2);
+}
+
+class _ReadonlyGetSessionsOfUserReply extends GetSessionsOfUserReply with ReadonlyMessageMixin {}
 
 class GetSessionRequest extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('GetSessionRequest')
@@ -790,6 +988,7 @@ class ListReply extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('ListReply')
     ..pp<Session>(1, 'sessions', PbFieldType.PM, Session.$checkItem, Session.create)
     ..aOS(2, 'status')
+    ..aOS(3, 'statusMessage')
     ..hasRequiredFields = false
   ;
 
@@ -815,6 +1014,11 @@ class ListReply extends GeneratedMessage {
   set status(String v) { $_setString(1, v); }
   bool hasStatus() => $_has(1);
   void clearStatus() => clearField(2);
+
+  String get statusMessage => $_getS(2, '');
+  set statusMessage(String v) { $_setString(2, v); }
+  bool hasStatusMessage() => $_has(2);
+  void clearStatusMessage() => clearField(3);
 }
 
 class _ReadonlyListReply extends ListReply with ReadonlyMessageMixin {}
@@ -854,120 +1058,6 @@ class LeaveReply extends GeneratedMessage {
 }
 
 class _ReadonlyLeaveReply extends LeaveReply with ReadonlyMessageMixin {}
-
-class Session extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('Session')
-    ..aOS(1, 'status')
-    ..aOS(2, 'statusMessage')
-    ..aOS(3, 'sessionId')
-    ..aOS(4, 'name')
-    ..a<User>(5, 'dungeonMaster', PbFieldType.OM, User.getDefault, User.create)
-    ..aOS(6, 'dateCreated')
-    ..a<int>(7, 'maxPlayers', PbFieldType.OU3)
-    ..pp<User>(8, 'users', PbFieldType.PM, User.$checkItem, User.create)
-    ..aOB(9, 'private')
-    ..aOB(10, 'full')
-    ..aOS(11, 'state')
-    ..a<int>(12, 'stateMeta', PbFieldType.OU3)
-    ..aOS(13, 'stateReadyStartTime')
-    ..pp<User>(14, 'readyUsers', PbFieldType.PM, User.$checkItem, User.create)
-    ..aOS(15, 'lastUpdated')
-    ..a<int>(16, 'readyUpExpiryTime', PbFieldType.OU3)
-    ..hasRequiredFields = false
-  ;
-
-  Session() : super();
-  Session.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Session.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  Session clone() => new Session()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
-  static Session create() => new Session();
-  static PbList<Session> createRepeated() => new PbList<Session>();
-  static Session getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySession();
-    return _defaultInstance;
-  }
-  static Session _defaultInstance;
-  static void $checkItem(Session v) {
-    if (v is! Session) checkItemFailed(v, 'Session');
-  }
-
-  String get status => $_getS(0, '');
-  set status(String v) { $_setString(0, v); }
-  bool hasStatus() => $_has(0);
-  void clearStatus() => clearField(1);
-
-  String get statusMessage => $_getS(1, '');
-  set statusMessage(String v) { $_setString(1, v); }
-  bool hasStatusMessage() => $_has(1);
-  void clearStatusMessage() => clearField(2);
-
-  String get sessionId => $_getS(2, '');
-  set sessionId(String v) { $_setString(2, v); }
-  bool hasSessionId() => $_has(2);
-  void clearSessionId() => clearField(3);
-
-  String get name => $_getS(3, '');
-  set name(String v) { $_setString(3, v); }
-  bool hasName() => $_has(3);
-  void clearName() => clearField(4);
-
-  User get dungeonMaster => $_getN(4);
-  set dungeonMaster(User v) { setField(5, v); }
-  bool hasDungeonMaster() => $_has(4);
-  void clearDungeonMaster() => clearField(5);
-
-  String get dateCreated => $_getS(5, '');
-  set dateCreated(String v) { $_setString(5, v); }
-  bool hasDateCreated() => $_has(5);
-  void clearDateCreated() => clearField(6);
-
-  int get maxPlayers => $_get(6, 0);
-  set maxPlayers(int v) { $_setUnsignedInt32(6, v); }
-  bool hasMaxPlayers() => $_has(6);
-  void clearMaxPlayers() => clearField(7);
-
-  List<User> get users => $_getList(7);
-
-  bool get private => $_get(8, false);
-  set private(bool v) { $_setBool(8, v); }
-  bool hasPrivate() => $_has(8);
-  void clearPrivate() => clearField(9);
-
-  bool get full => $_get(9, false);
-  set full(bool v) { $_setBool(9, v); }
-  bool hasFull() => $_has(9);
-  void clearFull() => clearField(10);
-
-  String get state => $_getS(10, '');
-  set state(String v) { $_setString(10, v); }
-  bool hasState() => $_has(10);
-  void clearState() => clearField(11);
-
-  int get stateMeta => $_get(11, 0);
-  set stateMeta(int v) { $_setUnsignedInt32(11, v); }
-  bool hasStateMeta() => $_has(11);
-  void clearStateMeta() => clearField(12);
-
-  String get stateReadyStartTime => $_getS(12, '');
-  set stateReadyStartTime(String v) { $_setString(12, v); }
-  bool hasStateReadyStartTime() => $_has(12);
-  void clearStateReadyStartTime() => clearField(13);
-
-  List<User> get readyUsers => $_getList(13);
-
-  String get lastUpdated => $_getS(14, '');
-  set lastUpdated(String v) { $_setString(14, v); }
-  bool hasLastUpdated() => $_has(14);
-  void clearLastUpdated() => clearField(15);
-
-  int get readyUpExpiryTime => $_get(15, 0);
-  set readyUpExpiryTime(int v) { $_setUnsignedInt32(15, v); }
-  bool hasReadyUpExpiryTime() => $_has(15);
-  void clearReadyUpExpiryTime() => clearField(16);
-}
-
-class _ReadonlySession extends Session with ReadonlyMessageMixin {}
 
 class User extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('User')
@@ -1083,6 +1173,273 @@ class DeleteCharacterReply extends GeneratedMessage {
 
 class _ReadonlyDeleteCharacterReply extends DeleteCharacterReply with ReadonlyMessageMixin {}
 
+class LightSession extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('LightSession')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..aOS(3, 'sessionId')
+    ..aOS(4, 'name')
+    ..a<User>(5, 'dungeonMaster', PbFieldType.OM, User.getDefault, User.create)
+    ..aOS(6, 'lastUpdated')
+    ..aOS(7, 'state')
+    ..hasRequiredFields = false
+  ;
+
+  LightSession() : super();
+  LightSession.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  LightSession.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  LightSession clone() => new LightSession()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static LightSession create() => new LightSession();
+  static PbList<LightSession> createRepeated() => new PbList<LightSession>();
+  static LightSession getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLightSession();
+    return _defaultInstance;
+  }
+  static LightSession _defaultInstance;
+  static void $checkItem(LightSession v) {
+    if (v is! LightSession) checkItemFailed(v, 'LightSession');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+
+  String get sessionId => $_getS(2, '');
+  set sessionId(String v) { $_setString(2, v); }
+  bool hasSessionId() => $_has(2);
+  void clearSessionId() => clearField(3);
+
+  String get name => $_getS(3, '');
+  set name(String v) { $_setString(3, v); }
+  bool hasName() => $_has(3);
+  void clearName() => clearField(4);
+
+  User get dungeonMaster => $_getN(4);
+  set dungeonMaster(User v) { setField(5, v); }
+  bool hasDungeonMaster() => $_has(4);
+  void clearDungeonMaster() => clearField(5);
+
+  String get lastUpdated => $_getS(5, '');
+  set lastUpdated(String v) { $_setString(5, v); }
+  bool hasLastUpdated() => $_has(5);
+  void clearLastUpdated() => clearField(6);
+
+  String get state => $_getS(6, '');
+  set state(String v) { $_setString(6, v); }
+  bool hasState() => $_has(6);
+  void clearState() => clearField(7);
+}
+
+class _ReadonlyLightSession extends LightSession with ReadonlyMessageMixin {}
+
+class Session extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('Session')
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..aOS(3, 'sessionId')
+    ..aOS(4, 'name')
+    ..a<User>(5, 'dungeonMaster', PbFieldType.OM, User.getDefault, User.create)
+    ..aOS(6, 'dateCreated')
+    ..a<int>(7, 'maxPlayers', PbFieldType.OU3)
+    ..pp<User>(8, 'users', PbFieldType.PM, User.$checkItem, User.create)
+    ..aOB(9, 'private')
+    ..aOB(10, 'full')
+    ..aOS(11, 'state')
+    ..a<int>(12, 'stateMeta', PbFieldType.OU3)
+    ..aOS(13, 'stateReadyStartTime')
+    ..pp<User>(14, 'readyUsers', PbFieldType.PM, User.$checkItem, User.create)
+    ..aOS(15, 'lastUpdated')
+    ..a<int>(16, 'readyUpExpiryTime', PbFieldType.OU3)
+    ..pp<LightCharacter>(17, 'charactersInSession', PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
+    ..hasRequiredFields = false
+  ;
+
+  Session() : super();
+  Session.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Session.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Session clone() => new Session()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static Session create() => new Session();
+  static PbList<Session> createRepeated() => new PbList<Session>();
+  static Session getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlySession();
+    return _defaultInstance;
+  }
+  static Session _defaultInstance;
+  static void $checkItem(Session v) {
+    if (v is! Session) checkItemFailed(v, 'Session');
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+
+  String get sessionId => $_getS(2, '');
+  set sessionId(String v) { $_setString(2, v); }
+  bool hasSessionId() => $_has(2);
+  void clearSessionId() => clearField(3);
+
+  String get name => $_getS(3, '');
+  set name(String v) { $_setString(3, v); }
+  bool hasName() => $_has(3);
+  void clearName() => clearField(4);
+
+  User get dungeonMaster => $_getN(4);
+  set dungeonMaster(User v) { setField(5, v); }
+  bool hasDungeonMaster() => $_has(4);
+  void clearDungeonMaster() => clearField(5);
+
+  String get dateCreated => $_getS(5, '');
+  set dateCreated(String v) { $_setString(5, v); }
+  bool hasDateCreated() => $_has(5);
+  void clearDateCreated() => clearField(6);
+
+  int get maxPlayers => $_get(6, 0);
+  set maxPlayers(int v) { $_setUnsignedInt32(6, v); }
+  bool hasMaxPlayers() => $_has(6);
+  void clearMaxPlayers() => clearField(7);
+
+  List<User> get users => $_getList(7);
+
+  bool get private => $_get(8, false);
+  set private(bool v) { $_setBool(8, v); }
+  bool hasPrivate() => $_has(8);
+  void clearPrivate() => clearField(9);
+
+  bool get full => $_get(9, false);
+  set full(bool v) { $_setBool(9, v); }
+  bool hasFull() => $_has(9);
+  void clearFull() => clearField(10);
+
+  String get state => $_getS(10, '');
+  set state(String v) { $_setString(10, v); }
+  bool hasState() => $_has(10);
+  void clearState() => clearField(11);
+
+  int get stateMeta => $_get(11, 0);
+  set stateMeta(int v) { $_setUnsignedInt32(11, v); }
+  bool hasStateMeta() => $_has(11);
+  void clearStateMeta() => clearField(12);
+
+  String get stateReadyStartTime => $_getS(12, '');
+  set stateReadyStartTime(String v) { $_setString(12, v); }
+  bool hasStateReadyStartTime() => $_has(12);
+  void clearStateReadyStartTime() => clearField(13);
+
+  List<User> get readyUsers => $_getList(13);
+
+  String get lastUpdated => $_getS(14, '');
+  set lastUpdated(String v) { $_setString(14, v); }
+  bool hasLastUpdated() => $_has(14);
+  void clearLastUpdated() => clearField(15);
+
+  int get readyUpExpiryTime => $_get(15, 0);
+  set readyUpExpiryTime(int v) { $_setUnsignedInt32(15, v); }
+  bool hasReadyUpExpiryTime() => $_has(15);
+  void clearReadyUpExpiryTime() => clearField(16);
+
+  List<LightCharacter> get charactersInSession => $_getList(16);
+}
+
+class _ReadonlySession extends Session with ReadonlyMessageMixin {}
+
+class LightCharacter extends GeneratedMessage {
+  static final BuilderInfo _i = new BuilderInfo('LightCharacter')
+    ..aOS(1, 'characterId')
+    ..aOS(2, 'creatorId')
+    ..aOS(3, 'name')
+    ..a<int>(4, 'xp', PbFieldType.OS3)
+    ..aOS(5, 'gender')
+    ..aOS(6, 'race')
+    ..aOS(7, 'characterClass')
+    ..a<Hitpoints>(8, 'hitpoints', PbFieldType.OM, Hitpoints.getDefault, Hitpoints.create)
+    ..aOS(9, 'lastUpdated')
+    ..aOS(10, 'sessionId')
+    ..hasRequiredFields = false
+  ;
+
+  LightCharacter() : super();
+  LightCharacter.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  LightCharacter.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  LightCharacter clone() => new LightCharacter()..mergeFromMessage(this);
+  BuilderInfo get info_ => _i;
+  static LightCharacter create() => new LightCharacter();
+  static PbList<LightCharacter> createRepeated() => new PbList<LightCharacter>();
+  static LightCharacter getDefault() {
+    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLightCharacter();
+    return _defaultInstance;
+  }
+  static LightCharacter _defaultInstance;
+  static void $checkItem(LightCharacter v) {
+    if (v is! LightCharacter) checkItemFailed(v, 'LightCharacter');
+  }
+
+  String get characterId => $_getS(0, '');
+  set characterId(String v) { $_setString(0, v); }
+  bool hasCharacterId() => $_has(0);
+  void clearCharacterId() => clearField(1);
+
+  String get creatorId => $_getS(1, '');
+  set creatorId(String v) { $_setString(1, v); }
+  bool hasCreatorId() => $_has(1);
+  void clearCreatorId() => clearField(2);
+
+  String get name => $_getS(2, '');
+  set name(String v) { $_setString(2, v); }
+  bool hasName() => $_has(2);
+  void clearName() => clearField(3);
+
+  int get xp => $_get(3, 0);
+  set xp(int v) { $_setSignedInt32(3, v); }
+  bool hasXp() => $_has(3);
+  void clearXp() => clearField(4);
+
+  String get gender => $_getS(4, '');
+  set gender(String v) { $_setString(4, v); }
+  bool hasGender() => $_has(4);
+  void clearGender() => clearField(5);
+
+  String get race => $_getS(5, '');
+  set race(String v) { $_setString(5, v); }
+  bool hasRace() => $_has(5);
+  void clearRace() => clearField(6);
+
+  String get characterClass => $_getS(6, '');
+  set characterClass(String v) { $_setString(6, v); }
+  bool hasCharacterClass() => $_has(6);
+  void clearCharacterClass() => clearField(7);
+
+  Hitpoints get hitpoints => $_getN(7);
+  set hitpoints(Hitpoints v) { setField(8, v); }
+  bool hasHitpoints() => $_has(7);
+  void clearHitpoints() => clearField(8);
+
+  String get lastUpdated => $_getS(8, '');
+  set lastUpdated(String v) { $_setString(8, v); }
+  bool hasLastUpdated() => $_has(8);
+  void clearLastUpdated() => clearField(9);
+
+  String get sessionId => $_getS(9, '');
+  set sessionId(String v) { $_setString(9, v); }
+  bool hasSessionId() => $_has(9);
+  void clearSessionId() => clearField(10);
+}
+
+class _ReadonlyLightCharacter extends LightCharacter with ReadonlyMessageMixin {}
+
 class Character extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('Character')
     ..aOS(1, 'characterId')
@@ -1107,24 +1464,23 @@ class Character extends GeneratedMessage {
     ..aOS(20, 'background')
     ..a<int>(21, 'inspiration', PbFieldType.OS3)
     ..a<int>(22, 'proficiencyBonus', PbFieldType.OS3)
-    ..a<SavingThrows>(23, 'savingThrows', PbFieldType.OM, SavingThrows.getDefault, SavingThrows.create)
-    ..a<Skills>(24, 'skills', PbFieldType.OM, Skills.getDefault, Skills.create)
-    ..a<int>(25, 'passiveWisdom', PbFieldType.OS3)
-    ..a<Attacks_Spellcasting>(26, 'attacksSpellcasting', PbFieldType.OM, Attacks_Spellcasting.getDefault, Attacks_Spellcasting.create)
-    ..a<Hitpoints>(27, 'hitpoints', PbFieldType.OM, Hitpoints.getDefault, Hitpoints.create)
-    ..aOS(28, 'personalityTraits')
-    ..aOS(29, 'ideals')
-    ..aOS(30, 'bonds')
-    ..aOS(31, 'flaws')
-    ..aOS(32, 'dateCreated')
-    ..aOS(33, 'status')
-    ..aOS(34, 'statusMessage')
-    ..pp<Equipment>(35, 'equipment', PbFieldType.PM, Equipment.$checkItem, Equipment.create)
-    ..aOS(36, 'sessionId')
-    ..aOS(37, 'featuresAndTraits')
-    ..aOB(38, 'online')
-    ..a<int>(39, 'level', PbFieldType.OU3)
-    ..aOS(40, 'gender')
+    ..a<Skills>(23, 'skills', PbFieldType.OM, Skills.getDefault, Skills.create)
+    ..a<int>(24, 'passiveWisdom', PbFieldType.OS3)
+    ..a<Attacks_Spellcasting>(25, 'attacksSpellcasting', PbFieldType.OM, Attacks_Spellcasting.getDefault, Attacks_Spellcasting.create)
+    ..a<Hitpoints>(26, 'hitpoints', PbFieldType.OM, Hitpoints.getDefault, Hitpoints.create)
+    ..aOS(27, 'personalityTraits')
+    ..aOS(28, 'ideals')
+    ..aOS(29, 'bonds')
+    ..aOS(30, 'flaws')
+    ..aOS(31, 'dateCreated')
+    ..aOS(32, 'status')
+    ..aOS(33, 'statusMessage')
+    ..pp<Equipment>(34, 'equipment', PbFieldType.PM, Equipment.$checkItem, Equipment.create)
+    ..aOS(35, 'sessionId')
+    ..aOS(36, 'featuresAndTraits')
+    ..a<int>(37, 'level', PbFieldType.OU3)
+    ..aOS(38, 'gender')
+    ..aOS(39, 'lastUpdated')
     ..hasRequiredFields = false
   ;
 
@@ -1254,191 +1610,90 @@ class Character extends GeneratedMessage {
   bool hasProficiencyBonus() => $_has(21);
   void clearProficiencyBonus() => clearField(22);
 
-  SavingThrows get savingThrows => $_getN(22);
-  set savingThrows(SavingThrows v) { setField(23, v); }
-  bool hasSavingThrows() => $_has(22);
-  void clearSavingThrows() => clearField(23);
+  Skills get skills => $_getN(22);
+  set skills(Skills v) { setField(23, v); }
+  bool hasSkills() => $_has(22);
+  void clearSkills() => clearField(23);
 
-  Skills get skills => $_getN(23);
-  set skills(Skills v) { setField(24, v); }
-  bool hasSkills() => $_has(23);
-  void clearSkills() => clearField(24);
+  int get passiveWisdom => $_get(23, 0);
+  set passiveWisdom(int v) { $_setSignedInt32(23, v); }
+  bool hasPassiveWisdom() => $_has(23);
+  void clearPassiveWisdom() => clearField(24);
 
-  int get passiveWisdom => $_get(24, 0);
-  set passiveWisdom(int v) { $_setSignedInt32(24, v); }
-  bool hasPassiveWisdom() => $_has(24);
-  void clearPassiveWisdom() => clearField(25);
+  Attacks_Spellcasting get attacksSpellcasting => $_getN(24);
+  set attacksSpellcasting(Attacks_Spellcasting v) { setField(25, v); }
+  bool hasAttacksSpellcasting() => $_has(24);
+  void clearAttacksSpellcasting() => clearField(25);
 
-  Attacks_Spellcasting get attacksSpellcasting => $_getN(25);
-  set attacksSpellcasting(Attacks_Spellcasting v) { setField(26, v); }
-  bool hasAttacksSpellcasting() => $_has(25);
-  void clearAttacksSpellcasting() => clearField(26);
+  Hitpoints get hitpoints => $_getN(25);
+  set hitpoints(Hitpoints v) { setField(26, v); }
+  bool hasHitpoints() => $_has(25);
+  void clearHitpoints() => clearField(26);
 
-  Hitpoints get hitpoints => $_getN(26);
-  set hitpoints(Hitpoints v) { setField(27, v); }
-  bool hasHitpoints() => $_has(26);
-  void clearHitpoints() => clearField(27);
+  String get personalityTraits => $_getS(26, '');
+  set personalityTraits(String v) { $_setString(26, v); }
+  bool hasPersonalityTraits() => $_has(26);
+  void clearPersonalityTraits() => clearField(27);
 
-  String get personalityTraits => $_getS(27, '');
-  set personalityTraits(String v) { $_setString(27, v); }
-  bool hasPersonalityTraits() => $_has(27);
-  void clearPersonalityTraits() => clearField(28);
+  String get ideals => $_getS(27, '');
+  set ideals(String v) { $_setString(27, v); }
+  bool hasIdeals() => $_has(27);
+  void clearIdeals() => clearField(28);
 
-  String get ideals => $_getS(28, '');
-  set ideals(String v) { $_setString(28, v); }
-  bool hasIdeals() => $_has(28);
-  void clearIdeals() => clearField(29);
+  String get bonds => $_getS(28, '');
+  set bonds(String v) { $_setString(28, v); }
+  bool hasBonds() => $_has(28);
+  void clearBonds() => clearField(29);
 
-  String get bonds => $_getS(29, '');
-  set bonds(String v) { $_setString(29, v); }
-  bool hasBonds() => $_has(29);
-  void clearBonds() => clearField(30);
+  String get flaws => $_getS(29, '');
+  set flaws(String v) { $_setString(29, v); }
+  bool hasFlaws() => $_has(29);
+  void clearFlaws() => clearField(30);
 
-  String get flaws => $_getS(30, '');
-  set flaws(String v) { $_setString(30, v); }
-  bool hasFlaws() => $_has(30);
-  void clearFlaws() => clearField(31);
+  String get dateCreated => $_getS(30, '');
+  set dateCreated(String v) { $_setString(30, v); }
+  bool hasDateCreated() => $_has(30);
+  void clearDateCreated() => clearField(31);
 
-  String get dateCreated => $_getS(31, '');
-  set dateCreated(String v) { $_setString(31, v); }
-  bool hasDateCreated() => $_has(31);
-  void clearDateCreated() => clearField(32);
+  String get status => $_getS(31, '');
+  set status(String v) { $_setString(31, v); }
+  bool hasStatus() => $_has(31);
+  void clearStatus() => clearField(32);
 
-  String get status => $_getS(32, '');
-  set status(String v) { $_setString(32, v); }
-  bool hasStatus() => $_has(32);
-  void clearStatus() => clearField(33);
+  String get statusMessage => $_getS(32, '');
+  set statusMessage(String v) { $_setString(32, v); }
+  bool hasStatusMessage() => $_has(32);
+  void clearStatusMessage() => clearField(33);
 
-  String get statusMessage => $_getS(33, '');
-  set statusMessage(String v) { $_setString(33, v); }
-  bool hasStatusMessage() => $_has(33);
-  void clearStatusMessage() => clearField(34);
+  List<Equipment> get equipment => $_getList(33);
 
-  List<Equipment> get equipment => $_getList(34);
+  String get sessionId => $_getS(34, '');
+  set sessionId(String v) { $_setString(34, v); }
+  bool hasSessionId() => $_has(34);
+  void clearSessionId() => clearField(35);
 
-  String get sessionId => $_getS(35, '');
-  set sessionId(String v) { $_setString(35, v); }
-  bool hasSessionId() => $_has(35);
-  void clearSessionId() => clearField(36);
+  String get featuresAndTraits => $_getS(35, '');
+  set featuresAndTraits(String v) { $_setString(35, v); }
+  bool hasFeaturesAndTraits() => $_has(35);
+  void clearFeaturesAndTraits() => clearField(36);
 
-  String get featuresAndTraits => $_getS(36, '');
-  set featuresAndTraits(String v) { $_setString(36, v); }
-  bool hasFeaturesAndTraits() => $_has(36);
-  void clearFeaturesAndTraits() => clearField(37);
+  int get level => $_get(36, 0);
+  set level(int v) { $_setUnsignedInt32(36, v); }
+  bool hasLevel() => $_has(36);
+  void clearLevel() => clearField(37);
 
-  bool get online => $_get(37, false);
-  set online(bool v) { $_setBool(37, v); }
-  bool hasOnline() => $_has(37);
-  void clearOnline() => clearField(38);
+  String get gender => $_getS(37, '');
+  set gender(String v) { $_setString(37, v); }
+  bool hasGender() => $_has(37);
+  void clearGender() => clearField(38);
 
-  int get level => $_get(38, 0);
-  set level(int v) { $_setUnsignedInt32(38, v); }
-  bool hasLevel() => $_has(38);
-  void clearLevel() => clearField(39);
-
-  String get gender => $_getS(39, '');
-  set gender(String v) { $_setString(39, v); }
-  bool hasGender() => $_has(39);
-  void clearGender() => clearField(40);
+  String get lastUpdated => $_getS(38, '');
+  set lastUpdated(String v) { $_setString(38, v); }
+  bool hasLastUpdated() => $_has(38);
+  void clearLastUpdated() => clearField(39);
 }
 
 class _ReadonlyCharacter extends Character with ReadonlyMessageMixin {}
-
-class SavingThrows extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('SavingThrows')
-    ..a<int>(1, 'strength', PbFieldType.OS3)
-    ..aOB(2, 'strengthProficient')
-    ..a<int>(3, 'dexterity', PbFieldType.OS3)
-    ..aOB(4, 'dexterityProficient')
-    ..a<int>(5, 'constitution', PbFieldType.OS3)
-    ..aOB(6, 'constitutionProficient')
-    ..a<int>(7, 'intelligence', PbFieldType.OS3)
-    ..aOB(8, 'intelligenceProficient')
-    ..a<int>(9, 'wisdom', PbFieldType.OS3)
-    ..aOB(10, 'wisdomProficient')
-    ..a<int>(11, 'charisma', PbFieldType.OS3)
-    ..aOB(12, 'charismaSubscript')
-    ..hasRequiredFields = false
-  ;
-
-  SavingThrows() : super();
-  SavingThrows.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  SavingThrows.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  SavingThrows clone() => new SavingThrows()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
-  static SavingThrows create() => new SavingThrows();
-  static PbList<SavingThrows> createRepeated() => new PbList<SavingThrows>();
-  static SavingThrows getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySavingThrows();
-    return _defaultInstance;
-  }
-  static SavingThrows _defaultInstance;
-  static void $checkItem(SavingThrows v) {
-    if (v is! SavingThrows) checkItemFailed(v, 'SavingThrows');
-  }
-
-  int get strength => $_get(0, 0);
-  set strength(int v) { $_setSignedInt32(0, v); }
-  bool hasStrength() => $_has(0);
-  void clearStrength() => clearField(1);
-
-  bool get strengthProficient => $_get(1, false);
-  set strengthProficient(bool v) { $_setBool(1, v); }
-  bool hasStrengthProficient() => $_has(1);
-  void clearStrengthProficient() => clearField(2);
-
-  int get dexterity => $_get(2, 0);
-  set dexterity(int v) { $_setSignedInt32(2, v); }
-  bool hasDexterity() => $_has(2);
-  void clearDexterity() => clearField(3);
-
-  bool get dexterityProficient => $_get(3, false);
-  set dexterityProficient(bool v) { $_setBool(3, v); }
-  bool hasDexterityProficient() => $_has(3);
-  void clearDexterityProficient() => clearField(4);
-
-  int get constitution => $_get(4, 0);
-  set constitution(int v) { $_setSignedInt32(4, v); }
-  bool hasConstitution() => $_has(4);
-  void clearConstitution() => clearField(5);
-
-  bool get constitutionProficient => $_get(5, false);
-  set constitutionProficient(bool v) { $_setBool(5, v); }
-  bool hasConstitutionProficient() => $_has(5);
-  void clearConstitutionProficient() => clearField(6);
-
-  int get intelligence => $_get(6, 0);
-  set intelligence(int v) { $_setSignedInt32(6, v); }
-  bool hasIntelligence() => $_has(6);
-  void clearIntelligence() => clearField(7);
-
-  bool get intelligenceProficient => $_get(7, false);
-  set intelligenceProficient(bool v) { $_setBool(7, v); }
-  bool hasIntelligenceProficient() => $_has(7);
-  void clearIntelligenceProficient() => clearField(8);
-
-  int get wisdom => $_get(8, 0);
-  set wisdom(int v) { $_setSignedInt32(8, v); }
-  bool hasWisdom() => $_has(8);
-  void clearWisdom() => clearField(9);
-
-  bool get wisdomProficient => $_get(9, false);
-  set wisdomProficient(bool v) { $_setBool(9, v); }
-  bool hasWisdomProficient() => $_has(9);
-  void clearWisdomProficient() => clearField(10);
-
-  int get charisma => $_get(10, 0);
-  set charisma(int v) { $_setSignedInt32(10, v); }
-  bool hasCharisma() => $_has(10);
-  void clearCharisma() => clearField(11);
-
-  bool get charismaSubscript => $_get(11, false);
-  set charismaSubscript(bool v) { $_setBool(11, v); }
-  bool hasCharismaSubscript() => $_has(11);
-  void clearCharismaSubscript() => clearField(12);
-}
-
-class _ReadonlySavingThrows extends SavingThrows with ReadonlyMessageMixin {}
 
 class Skills extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('Skills')
@@ -1761,18 +2016,10 @@ class _ReadonlyAttacks_Spellcasting extends Attacks_Spellcasting with ReadonlyMe
 class Hitpoints extends GeneratedMessage {
   static final BuilderInfo _i = new BuilderInfo('Hitpoints')
     ..a<int>(1, 'armorClass', PbFieldType.OS3)
-    ..a<int>(2, 'initiative', PbFieldType.OS3)
-    ..a<int>(3, 'speed', PbFieldType.OS3)
-    ..a<int>(4, 'currentHitpoints', PbFieldType.OS3)
-    ..a<int>(5, 'maxHitpoints', PbFieldType.OS3)
-    ..a<int>(6, 'temporaryHitpoints', PbFieldType.OS3)
-    ..aOS(7, 'hitdice')
-    ..aOB(8, 'deathsavesSuccess1')
-    ..aOB(9, 'deathsavesSuccess2')
-    ..aOB(10, 'deathsavesSuccess3')
-    ..aOB(11, 'deathsavesFailures1')
-    ..aOB(12, 'deathsavesFailures2')
-    ..aOB(13, 'deathsavesFailures3')
+    ..a<int>(2, 'currentHitpoints', PbFieldType.OS3)
+    ..a<int>(3, 'maxHitpoints', PbFieldType.OS3)
+    ..a<int>(4, 'temporaryHitpoints', PbFieldType.OS3)
+    ..aOS(5, 'hitdice')
     ..hasRequiredFields = false
   ;
 
@@ -1797,65 +2044,25 @@ class Hitpoints extends GeneratedMessage {
   bool hasArmorClass() => $_has(0);
   void clearArmorClass() => clearField(1);
 
-  int get initiative => $_get(1, 0);
-  set initiative(int v) { $_setSignedInt32(1, v); }
-  bool hasInitiative() => $_has(1);
-  void clearInitiative() => clearField(2);
+  int get currentHitpoints => $_get(1, 0);
+  set currentHitpoints(int v) { $_setSignedInt32(1, v); }
+  bool hasCurrentHitpoints() => $_has(1);
+  void clearCurrentHitpoints() => clearField(2);
 
-  int get speed => $_get(2, 0);
-  set speed(int v) { $_setSignedInt32(2, v); }
-  bool hasSpeed() => $_has(2);
-  void clearSpeed() => clearField(3);
+  int get maxHitpoints => $_get(2, 0);
+  set maxHitpoints(int v) { $_setSignedInt32(2, v); }
+  bool hasMaxHitpoints() => $_has(2);
+  void clearMaxHitpoints() => clearField(3);
 
-  int get currentHitpoints => $_get(3, 0);
-  set currentHitpoints(int v) { $_setSignedInt32(3, v); }
-  bool hasCurrentHitpoints() => $_has(3);
-  void clearCurrentHitpoints() => clearField(4);
+  int get temporaryHitpoints => $_get(3, 0);
+  set temporaryHitpoints(int v) { $_setSignedInt32(3, v); }
+  bool hasTemporaryHitpoints() => $_has(3);
+  void clearTemporaryHitpoints() => clearField(4);
 
-  int get maxHitpoints => $_get(4, 0);
-  set maxHitpoints(int v) { $_setSignedInt32(4, v); }
-  bool hasMaxHitpoints() => $_has(4);
-  void clearMaxHitpoints() => clearField(5);
-
-  int get temporaryHitpoints => $_get(5, 0);
-  set temporaryHitpoints(int v) { $_setSignedInt32(5, v); }
-  bool hasTemporaryHitpoints() => $_has(5);
-  void clearTemporaryHitpoints() => clearField(6);
-
-  String get hitdice => $_getS(6, '');
-  set hitdice(String v) { $_setString(6, v); }
-  bool hasHitdice() => $_has(6);
-  void clearHitdice() => clearField(7);
-
-  bool get deathsavesSuccess1 => $_get(7, false);
-  set deathsavesSuccess1(bool v) { $_setBool(7, v); }
-  bool hasDeathsavesSuccess1() => $_has(7);
-  void clearDeathsavesSuccess1() => clearField(8);
-
-  bool get deathsavesSuccess2 => $_get(8, false);
-  set deathsavesSuccess2(bool v) { $_setBool(8, v); }
-  bool hasDeathsavesSuccess2() => $_has(8);
-  void clearDeathsavesSuccess2() => clearField(9);
-
-  bool get deathsavesSuccess3 => $_get(9, false);
-  set deathsavesSuccess3(bool v) { $_setBool(9, v); }
-  bool hasDeathsavesSuccess3() => $_has(9);
-  void clearDeathsavesSuccess3() => clearField(10);
-
-  bool get deathsavesFailures1 => $_get(10, false);
-  set deathsavesFailures1(bool v) { $_setBool(10, v); }
-  bool hasDeathsavesFailures1() => $_has(10);
-  void clearDeathsavesFailures1() => clearField(11);
-
-  bool get deathsavesFailures2 => $_get(11, false);
-  set deathsavesFailures2(bool v) { $_setBool(11, v); }
-  bool hasDeathsavesFailures2() => $_has(11);
-  void clearDeathsavesFailures2() => clearField(12);
-
-  bool get deathsavesFailures3 => $_get(12, false);
-  set deathsavesFailures3(bool v) { $_setBool(12, v); }
-  bool hasDeathsavesFailures3() => $_has(12);
-  void clearDeathsavesFailures3() => clearField(13);
+  String get hitdice => $_getS(4, '');
+  set hitdice(String v) { $_setString(4, v); }
+  bool hasHitdice() => $_has(4);
+  void clearHitdice() => clearField(5);
 }
 
 class _ReadonlyHitpoints extends Hitpoints with ReadonlyMessageMixin {}

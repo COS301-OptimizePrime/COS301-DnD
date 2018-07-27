@@ -4,6 +4,41 @@
 // ignore_for_file: non_constant_identifier_names,library_prefixes
 library session_server_pbjson;
 
+const AddCharacterToSessionRequest$json = const {
+  '1': 'AddCharacterToSessionRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'character_id', '3': 3, '4': 1, '5': 9, '10': 'characterId'},
+  ],
+};
+
+const RemoveCharacterFromSessionRequest$json = const {
+  '1': 'RemoveCharacterFromSessionRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'character_id', '3': 3, '4': 1, '5': 9, '10': 'characterId'},
+  ],
+};
+
+const GetCharactersInSessionRequest$json = const {
+  '1': 'GetCharactersInSessionRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+  ],
+};
+
+const GetCharactersInSessionResponse$json = const {
+  '1': 'GetCharactersInSessionResponse',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'light_characters', '3': 3, '4': 3, '5': 11, '6': '.session.LightCharacter', '10': 'lightCharacters'},
+  ],
+};
+
 const ChangeReadyUpExpiryTimeRequest$json = const {
   '1': 'ChangeReadyUpExpiryTimeRequest',
   '2': const [
@@ -83,7 +118,7 @@ const GetCharactersReply$json = const {
   '2': const [
     const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
     const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
-    const {'1': 'characters', '3': 3, '4': 3, '5': 11, '6': '.session.Character', '10': 'characters'},
+    const {'1': 'light_characters', '3': 3, '4': 3, '5': 11, '6': '.session.LightCharacter', '10': 'lightCharacters'},
   ],
 };
 
@@ -92,6 +127,15 @@ const GetSessionsOfUserRequest$json = const {
   '2': const [
     const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
     const {'1': 'limit', '3': 2, '4': 1, '5': 13, '10': 'limit'},
+  ],
+};
+
+const GetSessionsOfUserReply$json = const {
+  '1': 'GetSessionsOfUserReply',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'light_sessions', '3': 3, '4': 3, '5': 11, '6': '.session.LightSession', '10': 'lightSessions'},
   ],
 };
 
@@ -179,6 +223,7 @@ const ListReply$json = const {
   '2': const [
     const {'1': 'sessions', '3': 1, '4': 3, '5': 11, '6': '.session.Session', '10': 'sessions'},
     const {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 3, '4': 1, '5': 9, '10': 'statusMessage'},
   ],
 };
 
@@ -187,28 +232,6 @@ const LeaveReply$json = const {
   '2': const [
     const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
     const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
-  ],
-};
-
-const Session$json = const {
-  '1': 'Session',
-  '2': const [
-    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
-    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
-    const {'1': 'session_id', '3': 3, '4': 1, '5': 9, '10': 'sessionId'},
-    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'dungeon_master', '3': 5, '4': 1, '5': 11, '6': '.session.User', '10': 'dungeonMaster'},
-    const {'1': 'date_created', '3': 6, '4': 1, '5': 9, '10': 'dateCreated'},
-    const {'1': 'max_players', '3': 7, '4': 1, '5': 13, '10': 'maxPlayers'},
-    const {'1': 'users', '3': 8, '4': 3, '5': 11, '6': '.session.User', '10': 'users'},
-    const {'1': 'private', '3': 9, '4': 1, '5': 8, '10': 'private'},
-    const {'1': 'full', '3': 10, '4': 1, '5': 8, '10': 'full'},
-    const {'1': 'state', '3': 11, '4': 1, '5': 9, '10': 'state'},
-    const {'1': 'state_meta', '3': 12, '4': 1, '5': 13, '10': 'stateMeta'},
-    const {'1': 'state_ready_start_time', '3': 13, '4': 1, '5': 9, '10': 'stateReadyStartTime'},
-    const {'1': 'ready_users', '3': 14, '4': 3, '5': 11, '6': '.session.User', '10': 'readyUsers'},
-    const {'1': 'last_updated', '3': 15, '4': 1, '5': 9, '10': 'lastUpdated'},
-    const {'1': 'ready_up_expiry_time', '3': 16, '4': 1, '5': 13, '10': 'readyUpExpiryTime'},
   ],
 };
 
@@ -237,6 +260,58 @@ const DeleteCharacterReply$json = const {
   ],
 };
 
+const LightSession$json = const {
+  '1': 'LightSession',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'session_id', '3': 3, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'dungeon_master', '3': 5, '4': 1, '5': 11, '6': '.session.User', '10': 'dungeonMaster'},
+    const {'1': 'last_updated', '3': 6, '4': 1, '5': 9, '10': 'lastUpdated'},
+    const {'1': 'state', '3': 7, '4': 1, '5': 9, '10': 'state'},
+  ],
+};
+
+const Session$json = const {
+  '1': 'Session',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'session_id', '3': 3, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'dungeon_master', '3': 5, '4': 1, '5': 11, '6': '.session.User', '10': 'dungeonMaster'},
+    const {'1': 'date_created', '3': 6, '4': 1, '5': 9, '10': 'dateCreated'},
+    const {'1': 'max_players', '3': 7, '4': 1, '5': 13, '10': 'maxPlayers'},
+    const {'1': 'users', '3': 8, '4': 3, '5': 11, '6': '.session.User', '10': 'users'},
+    const {'1': 'private', '3': 9, '4': 1, '5': 8, '10': 'private'},
+    const {'1': 'full', '3': 10, '4': 1, '5': 8, '10': 'full'},
+    const {'1': 'state', '3': 11, '4': 1, '5': 9, '10': 'state'},
+    const {'1': 'state_meta', '3': 12, '4': 1, '5': 13, '10': 'stateMeta'},
+    const {'1': 'state_ready_start_time', '3': 13, '4': 1, '5': 9, '10': 'stateReadyStartTime'},
+    const {'1': 'ready_users', '3': 14, '4': 3, '5': 11, '6': '.session.User', '10': 'readyUsers'},
+    const {'1': 'last_updated', '3': 15, '4': 1, '5': 9, '10': 'lastUpdated'},
+    const {'1': 'ready_up_expiry_time', '3': 16, '4': 1, '5': 13, '10': 'readyUpExpiryTime'},
+    const {'1': 'charactersInSession', '3': 17, '4': 3, '5': 11, '6': '.session.LightCharacter', '10': 'charactersInSession'},
+  ],
+};
+
+const LightCharacter$json = const {
+  '1': 'LightCharacter',
+  '2': const [
+    const {'1': 'character_id', '3': 1, '4': 1, '5': 9, '10': 'characterId'},
+    const {'1': 'creator_id', '3': 2, '4': 1, '5': 9, '10': 'creatorId'},
+    const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'xp', '3': 4, '4': 1, '5': 17, '10': 'xp'},
+    const {'1': 'gender', '3': 5, '4': 1, '5': 9, '10': 'gender'},
+    const {'1': 'race', '3': 6, '4': 1, '5': 9, '10': 'race'},
+    const {'1': 'character_class', '3': 7, '4': 1, '5': 9, '10': 'characterClass'},
+    const {'1': 'hitpoints', '3': 8, '4': 1, '5': 11, '6': '.session.Hitpoints', '10': 'hitpoints'},
+    const {'1': 'last_updated', '3': 9, '4': 1, '5': 9, '10': 'lastUpdated'},
+    const {'1': 'session_id', '3': 10, '4': 1, '5': 9, '10': 'sessionId'},
+  ],
+};
+
 const Character$json = const {
   '1': 'Character',
   '2': const [
@@ -262,42 +337,23 @@ const Character$json = const {
     const {'1': 'background', '3': 20, '4': 1, '5': 9, '10': 'background'},
     const {'1': 'inspiration', '3': 21, '4': 1, '5': 17, '10': 'inspiration'},
     const {'1': 'proficiency_bonus', '3': 22, '4': 1, '5': 17, '10': 'proficiencyBonus'},
-    const {'1': 'saving_throws', '3': 23, '4': 1, '5': 11, '6': '.session.SavingThrows', '10': 'savingThrows'},
-    const {'1': 'skills', '3': 24, '4': 1, '5': 11, '6': '.session.Skills', '10': 'skills'},
-    const {'1': 'passive_wisdom', '3': 25, '4': 1, '5': 17, '10': 'passiveWisdom'},
-    const {'1': 'attacks_spellcasting', '3': 26, '4': 1, '5': 11, '6': '.session.Attacks_Spellcasting', '10': 'attacksSpellcasting'},
-    const {'1': 'hitpoints', '3': 27, '4': 1, '5': 11, '6': '.session.Hitpoints', '10': 'hitpoints'},
-    const {'1': 'personality_traits', '3': 28, '4': 1, '5': 9, '10': 'personalityTraits'},
-    const {'1': 'ideals', '3': 29, '4': 1, '5': 9, '10': 'ideals'},
-    const {'1': 'bonds', '3': 30, '4': 1, '5': 9, '10': 'bonds'},
-    const {'1': 'flaws', '3': 31, '4': 1, '5': 9, '10': 'flaws'},
-    const {'1': 'date_created', '3': 32, '4': 1, '5': 9, '10': 'dateCreated'},
-    const {'1': 'status', '3': 33, '4': 1, '5': 9, '10': 'status'},
-    const {'1': 'status_message', '3': 34, '4': 1, '5': 9, '10': 'statusMessage'},
-    const {'1': 'equipment', '3': 35, '4': 3, '5': 11, '6': '.session.Equipment', '10': 'equipment'},
-    const {'1': 'session_id', '3': 36, '4': 1, '5': 9, '10': 'sessionId'},
-    const {'1': 'features_and_traits', '3': 37, '4': 1, '5': 9, '10': 'featuresAndTraits'},
-    const {'1': 'online', '3': 38, '4': 1, '5': 8, '10': 'online'},
-    const {'1': 'level', '3': 39, '4': 1, '5': 13, '10': 'level'},
-    const {'1': 'gender', '3': 40, '4': 1, '5': 9, '10': 'gender'},
-  ],
-};
-
-const SavingThrows$json = const {
-  '1': 'SavingThrows',
-  '2': const [
-    const {'1': 'strength', '3': 1, '4': 1, '5': 17, '10': 'strength'},
-    const {'1': 'strength_proficient', '3': 2, '4': 1, '5': 8, '10': 'strengthProficient'},
-    const {'1': 'dexterity', '3': 3, '4': 1, '5': 17, '10': 'dexterity'},
-    const {'1': 'dexterity_proficient', '3': 4, '4': 1, '5': 8, '10': 'dexterityProficient'},
-    const {'1': 'constitution', '3': 5, '4': 1, '5': 17, '10': 'constitution'},
-    const {'1': 'constitution_proficient', '3': 6, '4': 1, '5': 8, '10': 'constitutionProficient'},
-    const {'1': 'intelligence', '3': 7, '4': 1, '5': 17, '10': 'intelligence'},
-    const {'1': 'intelligence_proficient', '3': 8, '4': 1, '5': 8, '10': 'intelligenceProficient'},
-    const {'1': 'wisdom', '3': 9, '4': 1, '5': 17, '10': 'wisdom'},
-    const {'1': 'wisdom_proficient', '3': 10, '4': 1, '5': 8, '10': 'wisdomProficient'},
-    const {'1': 'charisma', '3': 11, '4': 1, '5': 17, '10': 'charisma'},
-    const {'1': 'charisma_subscript', '3': 12, '4': 1, '5': 8, '10': 'charismaSubscript'},
+    const {'1': 'skills', '3': 23, '4': 1, '5': 11, '6': '.session.Skills', '10': 'skills'},
+    const {'1': 'passive_wisdom', '3': 24, '4': 1, '5': 17, '10': 'passiveWisdom'},
+    const {'1': 'attacks_spellcasting', '3': 25, '4': 1, '5': 11, '6': '.session.Attacks_Spellcasting', '10': 'attacksSpellcasting'},
+    const {'1': 'hitpoints', '3': 26, '4': 1, '5': 11, '6': '.session.Hitpoints', '10': 'hitpoints'},
+    const {'1': 'personality_traits', '3': 27, '4': 1, '5': 9, '10': 'personalityTraits'},
+    const {'1': 'ideals', '3': 28, '4': 1, '5': 9, '10': 'ideals'},
+    const {'1': 'bonds', '3': 29, '4': 1, '5': 9, '10': 'bonds'},
+    const {'1': 'flaws', '3': 30, '4': 1, '5': 9, '10': 'flaws'},
+    const {'1': 'date_created', '3': 31, '4': 1, '5': 9, '10': 'dateCreated'},
+    const {'1': 'status', '3': 32, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 33, '4': 1, '5': 9, '10': 'statusMessage'},
+    const {'1': 'equipment', '3': 34, '4': 3, '5': 11, '6': '.session.Equipment', '10': 'equipment'},
+    const {'1': 'session_id', '3': 35, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'features_and_traits', '3': 36, '4': 1, '5': 9, '10': 'featuresAndTraits'},
+    const {'1': 'level', '3': 37, '4': 1, '5': 13, '10': 'level'},
+    const {'1': 'gender', '3': 38, '4': 1, '5': 9, '10': 'gender'},
+    const {'1': 'last_updated', '3': 39, '4': 1, '5': 9, '10': 'lastUpdated'},
   ],
 };
 
@@ -362,18 +418,10 @@ const Hitpoints$json = const {
   '1': 'Hitpoints',
   '2': const [
     const {'1': 'armor_class', '3': 1, '4': 1, '5': 17, '10': 'armorClass'},
-    const {'1': 'initiative', '3': 2, '4': 1, '5': 17, '10': 'initiative'},
-    const {'1': 'speed', '3': 3, '4': 1, '5': 17, '10': 'speed'},
-    const {'1': 'current_hitpoints', '3': 4, '4': 1, '5': 17, '10': 'currentHitpoints'},
-    const {'1': 'max_hitpoints', '3': 5, '4': 1, '5': 17, '10': 'maxHitpoints'},
-    const {'1': 'temporary_hitpoints', '3': 6, '4': 1, '5': 17, '10': 'temporaryHitpoints'},
-    const {'1': 'hitdice', '3': 7, '4': 1, '5': 9, '10': 'hitdice'},
-    const {'1': 'deathsaves_success1', '3': 8, '4': 1, '5': 8, '10': 'deathsavesSuccess1'},
-    const {'1': 'deathsaves_success2', '3': 9, '4': 1, '5': 8, '10': 'deathsavesSuccess2'},
-    const {'1': 'deathsaves_success3', '3': 10, '4': 1, '5': 8, '10': 'deathsavesSuccess3'},
-    const {'1': 'deathsaves_failures1', '3': 11, '4': 1, '5': 8, '10': 'deathsavesFailures1'},
-    const {'1': 'deathsaves_failures2', '3': 12, '4': 1, '5': 8, '10': 'deathsavesFailures2'},
-    const {'1': 'deathsaves_failures3', '3': 13, '4': 1, '5': 8, '10': 'deathsavesFailures3'},
+    const {'1': 'current_hitpoints', '3': 2, '4': 1, '5': 17, '10': 'currentHitpoints'},
+    const {'1': 'max_hitpoints', '3': 3, '4': 1, '5': 17, '10': 'maxHitpoints'},
+    const {'1': 'temporary_hitpoints', '3': 4, '4': 1, '5': 17, '10': 'temporaryHitpoints'},
+    const {'1': 'hitdice', '3': 5, '4': 1, '5': 9, '10': 'hitdice'},
   ],
 };
 

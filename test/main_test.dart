@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
+import 'package:dnd_301_final/character/races_and_classes.dart' as RacesAndClasses;
+import 'package:dnd_301_final/home_page.dart';
+import 'package:dnd_301_final/journals/monster_journal.dart';
+import 'package:dnd_301_final/journals/race_viewer.dart';
+import 'package:dnd_301_final/login_page.dart';
 import 'package:dnd_301_final/main.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:dnd_301_final/login_page.dart';
-import 'package:dnd_301_final/home_page.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/monster_journal.dart';
-import 'package:dnd_301_final/session_screen.dart';
-import 'package:dnd_301_final/race_viewer.dart';
-import 'package:dnd_301_final/races_and_classes.dart' as RacesAndClasses;
+import 'package:dnd_301_final/session/lobby_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 main() {
   // Tests if app opens
@@ -392,7 +392,7 @@ main() {
       HomePage.tag: (context) => new HomePage(),
       MonsterJournalOld.tag: (context) => new MonsterJournalOld(),
       CharacterSelection.tag: (context) => new CharacterSelection(),
-      GameSessionDemo.tag: (context) => new GameSessionDemo(null),
+      GameSession.tag: (context) => new GameSession(null),
       RaceViewer.tag: (context) => new RaceViewer()
     };
 

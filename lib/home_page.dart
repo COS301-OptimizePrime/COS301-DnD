@@ -1,8 +1,8 @@
-import 'package:dnd_301_final/SessionViewList.dart';
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:dnd_301_final/qr_handler.dart';
-import 'package:dnd_301_final/session_screen.dart';
+import 'package:dnd_301_final/plugins/qr_handler.dart';
+import 'package:dnd_301_final/session/SessionViewList.dart';
+import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
 
@@ -77,7 +77,7 @@ class HomePage extends StatelessWidget {
 
                       Session s = await AppData.joinSession(sid);
 
-                      if (s.status == "FAILED") {
+                      if (s.status != "SUCCESS") {
                         //snackBar.content = new Text(s.statusMessage);
                         Navigator.of(context).pop();
                         Scaffold.of(context).showSnackBar(
@@ -85,7 +85,7 @@ class HomePage extends StatelessWidget {
                       } else {
                         Navigator.pop(context);
                         Navigator.push(context, new MaterialPageRoute(
-                          builder: (BuildContext context) => new GameSessionDemo(s),
+                          builder: (BuildContext context) => new GameSession(s),
                         ));
                       }
                     }

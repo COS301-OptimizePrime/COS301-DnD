@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/races_and_classes.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
+import 'package:dnd_301_final/character/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:grpc/grpc.dart";
@@ -14,7 +14,7 @@ class AppData{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-  FirebaseUser user;
+  static FirebaseUser user;
   GoogleSignInAccount googleUser;
   GoogleUserCircleAvatar user_google_image;
 
@@ -122,6 +122,12 @@ class AppData{
     user = null;
     characters.clear();
     charsLoaded = null;
+    lightCharacters.clear();
+    sessionStub = null;
+    charStub = null;
+    activeSessions = null;
+    sessionId = null;
+    user = null;
   }
 
   static void connectToServer()
@@ -186,9 +192,15 @@ class AppData{
     gsur.authIdToken = token;
 
     final response = await sessionStub.getSessionsOfUser(gsur);
-    activeSessions = response.lightSessions;
+
     print('Status: ${response.status}');
     print('Status Message: ${response.status}');
+
+    if(activeSessions==null || activeSessions.length!=response.lightSessions.length) {
+      activeSessions = response.lightSessions;
+      print('updating ActiveSessions list');
+    }
+    else print('not updating ActiveSessions list');
 
     return response;
   }
@@ -202,8 +214,8 @@ class AppData{
     if(charStub==null)
       charStub = new CharactersManagerClient(channel);
 
-    if(charsLoaded==null)
-      return getUserCharacters();
+//    if(charsLoaded==null)
+//      return getUserCharacters();
 
     GetCharactersRequest gcr = new GetCharactersRequest();
     gcr.authIdToken = token;
@@ -358,7 +370,7 @@ class AppData{
     return temp;
   }
 
-  static deleteCharacter(String id) async{
+  static Future deleteCharacter(String id) async{
 
     if(channel==null)
       connectToServer();
@@ -371,6 +383,7 @@ class AppData{
     dcr.authIdToken=token;
 
     print("deleting character $id");
+    lightCharacters.removeWhere((c)=>c.characterId==id);
 
     final response = await charStub.deleteCharacter(dcr);
 
@@ -399,7 +412,7 @@ class AppData{
     print(response.statusMessage);
   }
 
-  static void updateCharacter(LocalCharacter localChar) async {
+  static Future updateCharacter(LocalCharacter localChar) async {
 
     if(channel==null)
       connectToServer();
@@ -452,8 +465,8 @@ class AppData{
     if(charStub==null)
       charStub = new CharactersManagerClient(channel);
 
-    if(charsLoaded==null)
-      return getUserCharacters();
+//    if(charsLoaded==null)
+//      return getUserCharacters();
 
     GetCharactersRequest gcr = new GetCharactersRequest();
     gcr.authIdToken = token;
@@ -465,17 +478,44 @@ class AppData{
 
     for(int i = 0; i < chars.lightCharacters.length;i++)
       {
-        if(lightCharacters.length-1<i)
-          lightCharacters.add(chars.lightCharacters.elementAt(i));
+        LightCharacter tempNet = chars.lightCharacters.elementAt(i);
+        LightCharacter tempLoc = lightCharacters.firstWhere((c) => c.characterId==tempNet.characterId,orElse: (){return null;});
 
+        if(tempLoc!=null)//match found - do not re-add
+          continue;//@todo: implement checking for updates
+//          if(tempnet.hasLastUpdated())
+//            checkForChanges(tempLoc,tempNet);
 
-        if(lightCharacters.firstWhere((c) => c.sessionId==chars.lightCharacters.elementAt(i).sessionId)!=null)
-          ;
+        addedChars++;
+        lightCharacters.add(tempNet);
       }
 
     print('Updating User Light Characters:\n');
     print('\tadding $addedChars characters\n');
     print('\tupdating $updatedChars characters\n');
+  }
+
+  static Future<LocalCharacter> getCharacterById(String id) async {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    GetCharacterByIdRequest gcrId = new GetCharacterByIdRequest();
+    gcrId.characterId = id;
+    gcrId.authIdToken = token;
+
+    final charResponse = await charStub.getCharacterById(gcrId);
+
+    if(charResponse.status=='SUCCESS') {
+      print("Fetched character <${charResponse.name}> with id [${charResponse.characterId}]");
+      return convertToLocalChar(charResponse);
+    }
+     else {
+      print("Failed to fetch character with id [$id]");
+      return null;
+    }
   }
 
 

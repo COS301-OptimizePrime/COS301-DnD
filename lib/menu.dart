@@ -1,8 +1,8 @@
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:dnd_301_final/home_page.dart';
-import 'package:dnd_301_final/monster_journal_new.dart';
-import 'package:dnd_301_final/race_viewer.dart';
+import 'package:dnd_301_final/journals/monster_journal_new.dart';
+import 'package:dnd_301_final/journals/race_viewer.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatelessWidget {

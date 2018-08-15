@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     Menu.currentPage = HomePage.tag;
 
 //    googleSignedIn = true;
-    print('This user is signed in: '+ appData.user.toString());
+    print('This user is signed in: '+ AppData.user.toString());
   }
 
 //  Future <LoginPage> _signOut()  async{

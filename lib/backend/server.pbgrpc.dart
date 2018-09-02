@@ -2,7 +2,6 @@
 //  Generated code. Do not modify.
 ///
 // ignore_for_file: non_constant_identifier_names,library_prefixes
-library session_server_pbgrpc;
 
 import 'dart:async';
 
@@ -11,6 +10,10 @@ import 'package:grpc/grpc.dart';
 import 'server.pb.dart';
 
 export 'server.pb.dart';
+//  Generated code. Do not modify.
+///
+// ignore_for_file: non_constant_identifier_names,library_prefixes
+
 
 class SessionsManagerClient extends Client {
   static final _$create = new ClientMethod<NewSessionRequest, Session>(
@@ -49,6 +52,11 @@ class SessionsManagerClient extends Client {
       '/session.SessionsManager/GetSessionById',
       (GetSessionRequest value) => value.writeToBuffer(),
       (List<int> value) => new Session.fromBuffer(value));
+  static final _$getLightSessionById =
+      new ClientMethod<GetSessionRequest, LightSession>(
+          '/session.SessionsManager/GetLightSessionById',
+          (GetSessionRequest value) => value.writeToBuffer(),
+          (List<int> value) => new LightSession.fromBuffer(value));
   static final _$getSessionsOfUser =
       new ClientMethod<GetSessionsOfUserRequest, GetSessionsOfUserReply>(
           '/session.SessionsManager/GetSessionsOfUser',
@@ -146,6 +154,14 @@ class SessionsManagerClient extends Client {
       {CallOptions options}) {
     final call = $createCall(
         _$getSessionById, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<LightSession> getLightSessionById(GetSessionRequest request,
+      {CallOptions options}) {
+    final call = $createCall(
+        _$getLightSessionById, new Stream.fromIterable([request]),
         options: options);
     return new ResponseFuture(call);
   }
@@ -277,6 +293,13 @@ abstract class SessionsManagerServiceBase extends Service {
         false,
         (List<int> value) => new GetSessionRequest.fromBuffer(value),
         (Session value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<GetSessionRequest, LightSession>(
+        'GetLightSessionById',
+        getLightSessionById_Pre,
+        false,
+        false,
+        (List<int> value) => new GetSessionRequest.fromBuffer(value),
+        (LightSession value) => value.writeToBuffer()));
     $addMethod(
         new ServiceMethod<GetSessionsOfUserRequest, GetSessionsOfUserReply>(
             'GetSessionsOfUser',
@@ -370,6 +393,11 @@ abstract class SessionsManagerServiceBase extends Service {
     return getSessionById(call, await request);
   }
 
+  Future<LightSession> getLightSessionById_Pre(
+      ServiceCall call, Future request) async {
+    return getLightSessionById(call, await request);
+  }
+
   Future<GetSessionsOfUserReply> getSessionsOfUser_Pre(
       ServiceCall call, Future request) async {
     return getSessionsOfUser(call, await request);
@@ -412,6 +440,8 @@ abstract class SessionsManagerServiceBase extends Service {
   Future<Session> setPrivate(ServiceCall call, SetPrivateRequest request);
   Future<ListReply> list(ServiceCall call, ListRequest request);
   Future<Session> getSessionById(ServiceCall call, GetSessionRequest request);
+  Future<LightSession> getLightSessionById(
+      ServiceCall call, GetSessionRequest request);
   Future<GetSessionsOfUserReply> getSessionsOfUser(
       ServiceCall call, GetSessionsOfUserRequest request);
   Future<ReadyUpReply> ready(ServiceCall call, ReadyUpRequest request);

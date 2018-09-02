@@ -2,7 +2,6 @@
 //  Generated code. Do not modify.
 ///
 // ignore_for_file: non_constant_identifier_names,library_prefixes
-library session_server_pbjson;
 
 const AddCharacterToSessionRequest$json = const {
   '1': 'AddCharacterToSessionRequest',
@@ -241,6 +240,7 @@ const User$json = const {
     const {'1': 'uid', '3': 1, '4': 1, '5': 9, '10': 'uid'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'ready_in_this_session', '3': 3, '4': 1, '5': 8, '10': 'readyInThisSession'},
+    const {'1': 'online', '3': 4, '4': 1, '5': 8, '10': 'online'},
   ],
 };
 

@@ -99,7 +99,6 @@ class LocalCharacter {
 }
 
 final List<LocalCharacter> characters = new List();
-final List<LightCharacter> lightCharacters = new List();
 
 ///the list item that shows all a users characters in character selection
 class CharacterItem extends StatelessWidget {
@@ -109,7 +108,7 @@ class CharacterItem extends StatelessWidget {
 
   static const double height = 160.0; // original value was 366.0
 //  LocalCharacter char;
-  LightCharacter lightChar;
+  final LightCharacter lightChar;
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context); //copy theme data from parent
@@ -174,38 +173,108 @@ class CharacterLightView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int level;
     return new Column(
         //move to crossaxis (aka horizontal as we are vertical)'s start (left)
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-      new Text(
-        lightChar.name, //place a Text widget inside - aka our title - which is above our image on the stack
-        style: titleStyle,
-      ),
+          ///@todo: add rich text
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RichText(text: TextSpan(
+                style: TextStyle(
+                  color: ClassType.getClass(lightChar.characterClass).color,
+                  fontSize: 23.0
+                ),
+                text: '${lightChar.name}\n',
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '     ${lightChar.race}   - ',
+                    style: TextStyle(color: Colors.white70,fontSize: 13.0),
+                  ),
+                  TextSpan(
+                    text: '  ${lightChar.characterClass}',
+                    style: traitsTitleStyle,
+                  )
+                ]
+            )),
+          ),
       new Padding(
           padding: new EdgeInsets.only(left: 16.0, right: 16.0),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              RacePreview(
-                race: Race.getRace(lightChar.race),
+
+              Container(
+                height: 45.0,
+                child: ClassIcon.str(lightChar.characterClass)
               ),
-              ClassPreview(
-                charClass: ClassType.getClass(lightChar.characterClass),
+              Container(
+                  height: 20.0,
+                  child: GenderIcon.str(lightChar.gender)
               ),
+//              RacePreview(
+//                race: Race.getRace(lightChar.race),
+//              ),
+//              ClassPreview(
+//                charClass: ClassType.getClass(lightChar.characterClass),
+//              ),
               new Column(
                 children: <Widget>[
-                  new Text(lightChar.gender),
-                  ///@TODO: implement dynamic session name loading
-                  new Text((lightChar.sessionId != null)
-                      ? "No Session"
-                      : lightChar.sessionId), //our text widget with our description
+//                  new Text(lightChar.gender),
+
+                  Text("Lvl: ${level = AppData.calcLevel(lightChar.xp)}"),
+                  Text("P: ${AppData.calcProf(level)}")
+//                  new Text((lightChar.sessionId == null)
+//                      ? "No Session"
+//                      : lightChar.sessionId), //our text widget with our description
                 ],
               )
             ],
           ))
     ]);
+  }
+
+
+}
+
+class ClassIcon extends StatelessWidget {
+
+  final ClassType classType;
+
+  ClassIcon({this.classType});
+  ClassIcon.str(String c) : classType = ClassType.getClass(c);
+
+  @override
+  Widget build(BuildContext context) {
+    var image = Image.asset('assets/class_images/icons/${classType.name.toLowerCase()}-icon.png',color: classType.color,);
+    if(image==null)
+      return Image.asset('assets/placeholder.jpg',);
+    else
+      return image;
+  }
+}
+
+
+class GenderIcon extends StatelessWidget{
+
+  final bool male;
+  GenderIcon({this.male});
+
+  GenderIcon.str(String gender): male = (gender=='Male');
+
+  @override
+  Widget build(BuildContext context){
+
+    if(male)
+    return Image.asset(
+       'assets/icon_assets/male.png',color: Colors.lightBlue,
+     );
+    else
+      return Image.asset(
+        'assets/icon_assets/female.png',color: Colors.pinkAccent,
+      );
   }
 }
 
@@ -662,7 +731,7 @@ class CharacterSelectionState extends State<CharacterSelection>
                   padding:
                       const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                   //adds padding between cards and screen
-                  children: lightCharacters.map((LightCharacter char) {
+                  children: AppData.lightCharacters.map((LightCharacter char) {
                     //this goes through all our characters and makes a card for each
                     return new Container(
                         //this is our 'card'
@@ -710,13 +779,13 @@ class CharacterSelectionState extends State<CharacterSelection>
               Navigator
                   .push(
                       context,
-                      new MaterialPageRoute<DismissDialogAction>(
+                      new MaterialPageRoute<bool>(
                         builder: (BuildContext context) =>
                             new CreateCharacterDialog(),
                         fullscreenDialog: true,
                       ))
                   .then((val) {
-                if (val == DismissDialogAction.save) updateCharacters(this);
+                if (val == true) updateCharacters(this);
               });
             }));
   }

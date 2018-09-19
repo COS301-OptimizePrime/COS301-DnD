@@ -3,135 +3,315 @@ import 'dart:async';
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/backend/server.pbgrpc.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:dnd_301_final/menu.dart';
-import 'package:dnd_301_final/session/in_session.dart';
+import 'package:dnd_301_final/session/game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class GameSession extends StatefulWidget {
   static String tag = "game-session";
 
-//  final LightSession lightSession;
-  final Session session;
+  static LightSession session;
+  static GameSessionState gs;
 
-  GameSession(this.session) {
-//    session = AppData.getSessionById(lightSession.sessionId);
+  GameSession(Session s) {
+    AppData.currentSession = s;
   }
+
   @override
-  GameSessionState createState() => new GameSessionState(this.session);
-
-
-  static int currentReadyUsers(Session session) {
-    int readyUsers = 0;
-    session.users.forEach((User u) => (){if(u.readyInThisSession)readyUsers+=1;});
-    return readyUsers;
-  }
-
+  GameSessionState createState() => (gs = new GameSessionState());
 }
 
-class GameSessionState extends State<GameSession> {
+class GameSessionState extends State<GameSession>{
 
   static List<String> _items = <String>[];
-  static List<User> _players = <User>[];
+  static List<PlayerLobbyListTile> _players = <PlayerLobbyListTile>[];
 
 //  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-  final Session session;
-  Session responseSession;
   static Timer timer;
-
 
   static bool stopped = false;
   static bool busy = false;
 
-  GameSessionState(this.session) {
-    responseSession = this.session;
+  static bool allPlayersReady = false;
+  bool iAmGameMaster;
+
+  static ReadyCountdown countdown;
+
+  String lastStatus;
+  String lastState;
+  int lastUsers;
+  int lastReadyUsers;
+  var hasCharacterInSession;
+
+
+  GameSessionState() {
+    GameSession.session = null;
     _items = <String>[];
-//    _players = List<User>();
     stopped = false;
-    timer = new Timer.periodic(const Duration(seconds: 1), (Timer t) => _update());
+    iAmGameMaster = (AppData.currentSession.dungeonMaster.uid == AppData.user.uid);
+    print('I am Dungeon master: $iAmGameMaster');
+    if(iAmGameMaster)
+      timer = new Timer.periodic(const Duration(seconds: AppData.pollRate), (Timer t) => _update());
+    else
+      {
+        checkForCharacterInSession().then((bool b){if(this.mounted)setState(() {
+          //update view to reflect finish
+          hasCharacterInSession = b;
+          print('hasCharacterInSession: $hasCharacterInSession');
+          timer = new Timer.periodic(const Duration(seconds: AppData.pollRate), (Timer t) => _update());
+        });});
+      }
   }
 
   @override
   void dispose() {
     super.dispose();
     timer.cancel();
+    GameSession.session = null;
   }
 
-  void _update() async {
+  Future _update() async {
 
     if(busy) return;
     busy = true;
 
-    GetSessionRequest gsr = new GetSessionRequest();
-    gsr.sessionId = this.session.sessionId;
-    gsr.authIdToken = AppData.token;
+    if(AppData.currentSession==null){
+      print('AppData current session is null!');
+      return;
+    }
 
-    var response;
+    LightSession response = await AppData.getLightSessionById(AppData.currentSession.sessionId);
+    if(timer==null)
+      {
+        busy = false;
+        return;
+      }
 
-    if(AppData.sessionStub!=null)
-      response = await AppData.sessionStub.getSessionById(gsr);
+    if(response==null)
+      {
+        print('response is null');
+        busy = false;
+        return;
+      }
 
-    print('Status: ${response.status}');
-    print('Status Message: ${response.statusMessage}');
-    print('Number of users: ${response.users}');
-    print('Number of ready users: ${response.users}');
-    responseSession = response;
-//    _items.clear();
     bool needToUpdateView = false;
 
-    for (User user in responseSession.users) {
-      print(user.name);
-      User u = _players.firstWhere((p)=>p.uid==user.uid,orElse: (){return null;});
-      if(u!=null)
-//      _items.add(user.name);
+    if(GameSession.session == null)
+      needToUpdateView = true;
+
+   if(response.state=='EXPLORING'){
+     print('Session state changed to exploring');
+      GameSessionState.timer.cancel();
+      Navigator.of(context).pop();
+      Navigator.push(context, new MaterialPageRoute(builder: (context)=>new GameScreen(iAmGameMaster)));
+
+     if(!iAmGameMaster)
+       {
+         timer.cancel();
+         busy = false;
+       }
+
+     return;
+   }
+
+   else if(!iAmGameMaster && response.state =="READYUP")
+     {
+       needToUpdateView=true;
+     }
+
+    //check if session has changed - and pull full object if necessary
+    if(AppData.currentSession.lastUpdated != response.lastUpdated)
+      {
+
+        //important - full session server call
+        AppData.currentSession =  await AppData.getSessionById(AppData.currentSession.sessionId);
+        needToUpdateView=true;
+
+        if(lastStatus == null || lastStatus!=response.status)
         {
-          _players.add(user);
+          lastStatus = response.status;
+          print('Status: ${response.status}');
+          if(response.status=="FAILED") print('Status Message: ${response.statusMessage}');
+        }
+
+        if(lastState==null || lastState != response.state)
+          {
+            lastState = response.state;
+            print('State: ${response.state}');
+          }
+
+        if(lastUsers==null || lastUsers != AppData.currentSession.users.length)
+          {
+            lastUsers = AppData.currentSession.users.length;
+            print('Number of users: $lastUsers');
+          }
+
+        if(lastReadyUsers==null || lastReadyUsers!=AppData.currentSession.readyUsers.length)
+          {
+            lastReadyUsers = AppData.currentSession.readyUsers.length;
+            print('Number of ready users: $lastReadyUsers');
+          }
+
+      }
+
+
+    GameSession.session = response;
+
+    for (User user in AppData.currentSession.users) {
+//      print(user.name);
+      PlayerLobbyListTile pt = _players.firstWhere((p)=>p.pUser.uid==user.uid,orElse: (){return null;});
+      User u = (pt!=null)? pt.pUser: null;
+      if(u==null)
+        {
+          _players.add(new PlayerLobbyListTile.player(pUser: user));
           needToUpdateView=true;
         }
       else if(u.readyInThisSession!=user.readyInThisSession)
         {
           u = user;
+//          pt = new PlayerLobbyListTIle.player(pUser: user);
+          pt.build(context);
           needToUpdateView=true;
         }
+
+
+      print('${user.name} : ${user.readyInThisSession}');
     }
 
+    busy = false;
+
     try {
-//      if(needToUpdateView)
+      if(needToUpdateView)
       setState(() {
         // _items = _items;
+        print('updating view');
       });
     }
     catch(Exception) {print('setState called on null');}
-//        sleep(new Duration(seconds: 1));
-    busy = false;
+
   }
 
 
   Future<Null> _handleRefresh() async{
     GetSessionRequest gsr = new GetSessionRequest();
-    gsr.sessionId = this.session.sessionId;
+    gsr.sessionId = AppData.currentSession.sessionId;
     gsr.authIdToken = AppData.token;
 
     final response = await AppData.sessionStub.getSessionById(gsr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
-    responseSession = response;
     _items = <String>[];
 
-    for (User user in responseSession.users) {
+    for (User user in response.users) {
       print(user.name);
       _items.add(user.name);
     }
     setState((){
       _items = _items;
     });
+
+    AppData.currentSession = response;
+
     return null;
   }
 
+
+  void characterSelected(int index) {
+
+    //@todo: remember to re-enable
+    //performs server calls to add the selected character to this session
+    AppData.addCharacterToCurrentSession(AppData.lightCharacters[index].characterId);
+    //local update - not strictly necessary
+    AppData.lightCharacters[index].sessionId = AppData.currentSession.sessionId;
+
+    print('added character ${AppData.lightCharacters[index].name} to game');
+    //update view
+    setState(() {
+      hasCharacterInSession=true;
+    });
+
+    timer = new Timer.periodic(const Duration(seconds: AppData.pollRate), (Timer t) => _update());
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    AppData appData = AppData.instance();
+
+    Widget bodyWidget;
+
+    if(GameSession.session==null)
+      return Material(
+        child: new Center(
+            child: Text('Loading...'),
+          ),
+      );
+    else if(!iAmGameMaster && hasCharacterInSession!=true)
+      {
+        if(hasCharacterInSession==null)
+        {
+          bodyWidget = Center(
+            child: Text('Looking for Character...'),
+          );
+        }
+        else if(hasCharacterInSession==false)
+        {
+          bodyWidget = Column(
+            children: <Widget>[
+              Text('Please select or create a character to play:'),
+
+              //display available characters
+              Expanded(child: SelectCharacterMaster(characterSelected)),
+
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: FlatButton(onPressed: (){
+                    print('opening character creation');
+
+                    timer.cancel();
+                    Navigator.push(context, new MaterialPageRoute(builder: (context)=>CreateCharacterDialog())).then(
+                            (b){if(b==true)setState(() {
+                          //update new character
+                          print('Created new char: $b');
+                          timer = new Timer.periodic(const Duration(seconds: AppData.pollRate), (Timer t) => _update());
+                        });}
+                    );
+
+                  }, child: Container(child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Add a new Character'),
+                      Icon(Icons.add,color: Colors.deepOrange,),
+                    ],))),
+                ),
+              )
+            ],
+          );
+        }
+      }
+    else
+      {
+        bodyWidget =  new ListView.builder(
+            shrinkWrap: true,
+            padding: kMaterialListPadding,
+            itemCount: _players.length+1,
+            itemBuilder: (BuildContext context, int index) {
+
+              if (index == _players.length) {
+                return new Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Center(
+                      child: (iAmGameMaster)? StartGameButton() : ReadyUpButton(),
+                    )
+                );
+              }
+              return _players[index];
+            });
+
+      }
 
     return new Scaffold(
       drawer: new Menu(),
@@ -159,7 +339,7 @@ class GameSessionState extends State<GameSession> {
                         child: new Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              new QrImage(data: this.responseSession.sessionId, size: 250.0,)
+                              new QrImage(data: GameSession.session.sessionId, size: 250.0,)
                             ]),
                       ),
                     ]),
@@ -170,7 +350,7 @@ class GameSessionState extends State<GameSession> {
           ),
           new IconButton(icon: new Icon(Icons.exit_to_app),
               onPressed: () {
-            AppData.leaveSessions(this.responseSession.sessionId);
+            AppData.leaveSessions(GameSession.session.sessionId);
             Navigator.pop(context);
               }
           ),
@@ -188,41 +368,25 @@ class GameSessionState extends State<GameSession> {
                 new Container (child: new Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: new Container(
-                    child: new Text("Welcome to: ${this.responseSession.name}",style: new TextStyle(fontSize: 20.0,color: Colors.deepOrange),),
+                    child: new Text("Welcome to: ${GameSession.session.name}",style: new TextStyle(fontSize: 20.0,color: Colors.deepOrange),),
                   ),
                 ),),
                 new Container (child: new Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: new Container(
-                    child: new Text("Dungeon Master: ${this.session.dungeonMaster.name}!",style: new TextStyle(fontSize: 15.0,color: Colors.white),),
+                    child: new Text("Dungeon Master: ${AppData.currentSession.dungeonMaster.name}!",style: new TextStyle(fontSize: 15.0,color: Colors.white),),
                   ),
                 ),),
                 new Container (child: new Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: new Container(
-                    child: new Text("Party Size: ${this.responseSession.users.length}/${this.responseSession.maxPlayers}",style: new TextStyle(fontSize: 15.0,color: Colors.deepOrange),),
+                    child: new Text("Party Size: ${AppData.currentSession.users.length}/${AppData.currentSession.maxPlayers}",style: new TextStyle(fontSize: 15.0,color: Colors.deepOrange),),
                   ),
                 ),),new Container (child: new Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: ReadyCountdown(session: session,),
+                  child: (countdown!=null)? (countdown) : Container(),
                 ),),
-                new ListView.builder(
-                    shrinkWrap: true,
-                    padding: kMaterialListPadding,
-//                    itemCount: _items.length + 1,
-                    itemCount: _players.length+1,
-                    itemBuilder: (BuildContext context, int index) {
-//                      if (index == _items.length) {
-                      if (index == _players.length) {
-                        return new Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: (this.session.dungeonMaster.uid == AppData.user.uid)? StartGameButton(session: session,) : ReadyUpButton(session: session,)
-                        );
-                      }
-//                      final String item = _items[index];
-//                      return new PlayerLobbyListTIle(item: item);
-                    return new PlayerLobbyListTIle.player(pUser: _players[index]);
-                    }),
+                Expanded(child: bodyWidget),
               ],
              )
             ),
@@ -230,16 +394,41 @@ class GameSessionState extends State<GameSession> {
         ),
       );
   }
+
+
+  void startCountdown(int time) {
+    this.setState(
+        (){
+          countdown=ReadyCountdown(readyUpExpiryTime: time,);
+        }
+    );
+  }
+
+  Future<bool> checkForCharacterInSession() async{
+
+    if(AppData.currentSession.charactersInSession.isEmpty)
+      AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
+
+    for(int i = 0; i < AppData.currentSession.charactersInSession.length;i++)
+    {
+      if(AppData.currentSession.charactersInSession[i].creatorId==AppData.user.uid)
+        return true;
+    }
+
+//    await AppData.getUserCharacters();
+
+    return false;
+  }
 }
 
-class PlayerLobbyListTIle extends StatelessWidget {
+class PlayerLobbyListTile extends StatelessWidget {
 
-  const PlayerLobbyListTIle({
+  const PlayerLobbyListTile({
     Key key,
     @required this.name,
   }) : super(key: key);
 
-  const PlayerLobbyListTIle.player({
+  const PlayerLobbyListTile.player({
     Key key,
     @required this.pUser,
   }) : super(key: key);
@@ -260,18 +449,28 @@ class PlayerLobbyListTIle extends StatelessWidget {
     );
 
     else
-      return new SizedBox(
-        width: AppData.screenWidth/1.10,
-        height: AppData.screenHeight/20,
-        child: Container(
-          color: (pUser.readyInThisSession)? Colors.redAccent : Colors.transparent,
-          child: Row(
-            children: <Widget>[
-              new CircleAvatar(
-                backgroundImage: new AssetImage('assets/placeholder.jpg'),
-              ),
-              new Text('$name'),
-            ],
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: new SizedBox(
+          width: AppData.screenWidth/1.3,
+          height: AppData.screenHeight/20,
+          child: Container(
+            color: (pUser.readyInThisSession)? Colors.lightBlueAccent : Colors.transparent,
+            child: Row(
+              children: <Widget>[
+                new CircleAvatar(
+                  backgroundImage: new AssetImage('assets/placeholder.jpg'),
+                ),
+                Expanded(child: Container(),),
+                
+                new Text('${pUser.name}'),
+                
+                Expanded(child: Container(),),
+                
+//                Container(child: AnimatedIcon(icon: AnimatedIcons.ellipsis_search, progress: ),),
+                Container(child: (pUser.readyInThisSession)? Icon(Icons.check,size: 25.0,color: Colors.green,) : Icon(Icons.clear,size: 25.0,color: Colors.red,),),
+              ],
+            ),
           ),
         ),
       );
@@ -280,9 +479,7 @@ class PlayerLobbyListTIle extends StatelessWidget {
 
 class ReadyUpButton extends StatefulWidget {
 
-  ReadyUpButton({@required this.session});
-
-  final Session session;
+  ReadyUpButton();
 
   @override
   Color get color => Colors.deepOrange;
@@ -293,28 +490,37 @@ class ReadyUpButton extends StatefulWidget {
 
 class _ReadyUpButtonState extends State<ReadyUpButton> {
 
+  bool busy = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        GameSessionState.timer.cancel();
-        Navigator.of(context).pop();
-        Navigator.push(context, new MaterialPageRoute(builder: (context)=>InSession(widget.session,false)));
-      },
+
+    if(AppData.currentSession.state!='READYUP')
+    return new Text('Waiting on Game Master');
+
+    return MaterialButton(onPressed: (){
+//        GameSessionState.timer.cancel();
+      if(!busy)
+        {
+          busy = true;
+          AppData.readyToggle(AppData.currentSession.sessionId).whenComplete((){busy = false;});
+        }
+
+//        Navigator.of(context).pop();
+//        Navigator.push(context, new MaterialPageRoute(builder: (context)=>InSession(widget.session,false)));
+    },
       child: Container(
         child: new Text("Ready Up",
             style: new TextStyle(color: Colors.white)),
       ),
     );
+
   }
 }
 
 class StartGameButton extends StatefulWidget {
 
-  StartGameButton({this.session});
-
-  final Session session;
+  StartGameButton();
 
   @override
   _StartGameButtonState createState() => _StartGameButtonState();
@@ -322,52 +528,41 @@ class StartGameButton extends StatefulWidget {
 
 class _StartGameButtonState extends State<StartGameButton> {
 
+  String text = "Start Game";
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        GameSessionState.timer.cancel();
-        Navigator.of(context).pop();
-        Navigator.push(context, new MaterialPageRoute(builder: (context)=>InSession(widget.session,true)));
-      },
+
+    return MaterialButton(onPressed: (){
+
+      if(GameSessionState.countdown!=null){
+        GameSessionState.countdown=null;
+        AppData.setSessionState("PAUSED", AppData.currentSession.sessionId);
+        text = "Start Game";
+      }
+        else
+          {
+            GameSession.gs.startCountdown(AppData.currentSession.readyUpExpiryTime);
+            AppData.setSessionState('READYUP',AppData.currentSession.sessionId);
+            text = "Cancel Ready Up";
+          }
+
+    },
       child: Container(
-        child: new Text("Start Game",
+        child: new Text(text,
             style: new TextStyle(color: Colors.white)),
       ),
     );
+
   }
 
 }
-//
-//class CircleClipper extends CustomClipper<Rect>
-//{
-//
-//  double percent;
-//
-//  CircleClipper({this.percent});
-//
-//  @override
-//  Rect getClip(Size size) {
-//      final height = size.height/10;
-//      final  width = size.width/4;
-//
-////      return Rect
-//  }
-//
-//  @override
-//  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-
-//    return true;
-//  }
-//
-//}
 
 class ReadyCountdown extends StatefulWidget {
 
-  ReadyCountdown({this.session});
+  ReadyCountdown({this.readyUpExpiryTime});
 
-  final Session session;
+  final int readyUpExpiryTime;
 
   @override
   _ReadyCountdownState createState() => _ReadyCountdownState();
@@ -380,8 +575,8 @@ class _ReadyCountdownState extends State<ReadyCountdown>{
 
   @override void initState() {
     super.initState();
-    seconds = widget.session.readyUpExpiryTime;
-    timer = new Timer.periodic(Duration(seconds: 1),(Timer t) => tick(t));
+    seconds = widget.readyUpExpiryTime;
+    timer = new Timer.periodic(Duration(seconds: AppData.pollRate),(Timer t) => tick(t));
   }
 
   tick(Timer t) {
@@ -411,5 +606,190 @@ class _ReadyCountdownState extends State<ReadyCountdown>{
     super.dispose();
     timer.cancel();
   }
+}
+
+
+class SelectCharacterMaster extends StatefulWidget {
+
+  final List<SelectCharacterWidget> items;
+  int last;
+  final Function confirmSelection;
+
+  SelectCharacterMaster(Function f) : items = new List() , confirmSelection = f;
+
+  tapped(int index)
+  {
+    //last has no value initially
+    if(last!=null && last!=index)
+      items[last].scws.unSelect();
+
+    if(last==index)
+    {
+      confirmSelection(index);
+      return;
+    }
+
+    items[index].scws.pressed();
+    last = index;
+
+  }
+
+  @override
+  _SelectCharacterMasterState createState() => _SelectCharacterMasterState();
+}
+
+class _SelectCharacterMasterState extends State<SelectCharacterMaster> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    if(AppData.lightCharacters.isEmpty)
+      AppData.getUserCharacters().whenComplete((){
+        if(this.mounted)
+          setState(() {
+            //update list
+            print('updating char list');
+          });
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListView.builder(
+      itemCount: AppData.lightCharacters.length,
+      itemBuilder: (BuildContext context, int index) {
+        print('${AppData.lightCharacters[index].name} : ${AppData.lightCharacters[index].sessionId}');
+        if (AppData.lightCharacters[index].sessionId == null || AppData.lightCharacters[index].sessionId == "") {
+          widget.items.add(
+              SelectCharacterWidget(AppData.lightCharacters[index]));
+          return GestureDetector(
+            onTap: () {
+              widget.tapped(index);
+            },
+            child: widget.items.last,
+          );
+        }
+        return Container(child: null,);
+      },
+    );
+
+  }
+
+}
+
+//
+//class SelectCharacterMaster extends StatelessWidget {
+//
+//  final List<SelectCharacterWidget> items;
+//  int last;
+//  final Function confirmSelection;
+//
+//  SelectCharacterMaster(Function f) : items = new List() , confirmSelection = f;
+//
+//  tapped(int index)
+//  {
+//    //last has no value initially
+//    if(last!=null && last!=index)
+//      items[last].scws.unSelect();
+//
+//    if(last==index)
+//    {
+//      confirmSelection(index);
+//      return;
+//    }
+//
+//    items[index].scws.pressed();
+//    last = index;
+//
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//
+//   return ListView.builder(
+//      itemCount: AppData.lightCharacters.length,
+//      itemBuilder: (BuildContext context, int index) {
+//        if(AppData.lightCharacters[index].sessionId==null)
+//        {
+//          items.add(SelectCharacterWidget(AppData.lightCharacters[index]));
+//          return GestureDetector(
+//            onTap: (){tapped(index);},
+//            child: items.last,
+//          );
+//        }
+//      },
+//    );
+//
+//}
+
+
+class SelectCharacterWidget extends StatefulWidget {
+
+  final _SelectCharacterWidgetState scws;
+  final LightCharacter character;
+  final CharacterLightView clv;
+
+  SelectCharacterWidget(LightCharacter char,) : character = char, clv = CharacterLightView(lightChar: char) ,scws = new _SelectCharacterWidgetState(character: char);
+
+  @override
+  _SelectCharacterWidgetState createState() => scws;
+}
+
+class _SelectCharacterWidgetState extends State<SelectCharacterWidget> {
+
+  _SelectCharacterWidgetState({this.character});
+
+  bool confirmSelect = false;
+  LightCharacter character;
+
+  bool pressed() {
+    print('tapped ${character.name}');
+    if (confirmSelect) {
+      //select character
+      print('selected ${character.name} (${character.characterId})');
+    } else {
+      setState(() {
+        confirmSelect = true;
+      });
+    }
+  }
+
+  void unSelect() {
+    setState(() {
+      confirmSelect = false;
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+//    if(confirmSelect)
+//      return Container(
+//        height: 100.0,
+//        width: AppData.screenWidth/1.5,
+//        color: Colors.green,
+//        child: Text('Select ${character.name}?'),
+//      );
+
+
+
+    return Container(
+      height: 100.0,
+      padding: (confirmSelect)? EdgeInsets.symmetric(horizontal: 8.0) : null,
+      decoration: (confirmSelect)? BoxDecoration(
+        color: Colors.black12 ,
+        border: Border.all(width: 3.0,style: BorderStyle.solid,color: Colors.deepOrange),
+      ) : null,
+
+      child: CharacterLightView(
+          lightChar: widget.character,
+          titleStyle: Theme.of(context).textTheme.headline.copyWith(color: Colors.white)),
+      );
+  }
+
+
 }
 

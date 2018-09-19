@@ -47,7 +47,7 @@ class _QrMakerWidgetState extends State<QrMakerWidget> {
               child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    new QrImage(data: AppData.sessionId, size: 250.0,)
+                    new QrImage(data: AppData.currentSession.sessionId, size: 250.0,)
                   ]),
             ),
             new Padding(
@@ -57,10 +57,10 @@ class _QrMakerWidgetState extends State<QrMakerWidget> {
                   minWidth: 200.0,
                   height: 42.0,
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(context, new MaterialPageRoute(
                       builder: (BuildContext context) => new GameSession(seshToPass),
                     ));
-                    Navigator.pop(context);
                   },
                   color: Colors.deepOrange,
                   child: new Text(

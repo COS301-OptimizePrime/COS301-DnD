@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
 //    final FirebaseUser currentUser = await appData.auth.currentUser();
 //    assert(user.uid == currentUser.uid);
 
-    await appData.signinWithGoogle();
+    await appData.signInWithGoogle();
 
     Navigator.pop(context); //pop dialog
     Navigator.of(context).pushNamed(HomePage.tag);

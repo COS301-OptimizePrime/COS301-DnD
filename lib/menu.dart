@@ -14,11 +14,11 @@ class Menu extends StatelessWidget {
 
     Widget displayImage;
 
-    if(appData.user_google_image!=null)
+    if(appData.userGoogleImage!=null)
       displayImage = new SizedBox(
         height: 108.0,
         width: 108.0,
-        child: appData.user_google_image,
+        child: appData.userGoogleImage,
       );
     else
       displayImage = new Hero(

@@ -185,7 +185,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         else {
                           if(widget.char==null)
                             {
-                              addNewChar().whenComplete((){Navigator.pop(context, DismissDialogAction.save);});
+                              addNewChar().whenComplete((){Navigator.pop(context, true);});
                             }
                           else
                             {

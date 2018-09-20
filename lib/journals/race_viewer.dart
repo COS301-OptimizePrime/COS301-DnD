@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 //final List<Monster> monstersList = new List<Monster>();
 
 class RaceViewer extends StatefulWidget {
-  static String tag = 'monster-journal';
+  static String tag = 'race-journal';
 
   @override
   _RaceViewerUpdatedState createState() => _RaceViewerUpdatedState();
@@ -29,7 +29,7 @@ class _RaceViewerUpdatedState extends State<RaceViewer> {
           controller: monsterController,
           decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              hintText: 'Search Monster Journal...'),
+              hintText: 'Search Race Journal...'),
           onChanged: (searchText) {
             mlb.filter(searchText);
           },

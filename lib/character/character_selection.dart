@@ -750,7 +750,7 @@ class CharacterSelectionState extends State<CharacterSelection>
                                 controller.forward();
                                 CharacterSelection.inPreviewState = true;
 //                                                                CharacterSwipePreview.char = char;
-//                                CharacterSwipePreview.setChar(char);
+                                CharacterSwipePreview.setChar(char);
                                 //@TODO: fix character swiping
                               }
                               swipeStart = swipeEnd = 0.0;

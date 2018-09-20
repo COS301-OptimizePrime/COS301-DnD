@@ -102,8 +102,7 @@ class Menu extends StatelessWidget {
                     // Update the state of the app
                     // ...
                     await appData.signout();
-                    Navigator.pop(context);
-                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                    Navigator.popUntil(context, ModalRoute.withName('login-page'));
                   },
                 )
               ],

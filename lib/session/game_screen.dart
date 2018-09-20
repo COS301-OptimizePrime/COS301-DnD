@@ -6,6 +6,8 @@ import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter_slidable/flutter_slidable.dart';
+//import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
 ///To hold the actual game screen logic
 class GameScreen extends StatefulWidget {
@@ -319,128 +321,590 @@ class _PlayerFrameState extends State<PlayerFrame> {
 class MonstersTab extends StatefulWidget {
 
   final List<Monster> monstersInSession;
+  final List<MonsterListItem> markedForReclaim = new List();
 
   MonstersTab() : monstersInSession = new List();
-  MonstersTab.list(List<Monster> list): monstersInSession = list;
+  MonstersTab.list(List<Monster> list) : monstersInSession = new List();
+
+
 
   @override
   MonstersTabState createState() => new MonstersTabState();
 }
 class MonstersTabState extends State<MonstersTab> {
 
-  MonstersTabState();
+  final List<MonsterListItem> monstersToAdd = new List();
 
-  @override
-  Widget build(BuildContext context) {
+  MonstersTabState()
+  {
+    if (monstersList.isEmpty)
+      MonsterJournal.loadMonsters().whenComplete(() {
+        if(this.mounted)
+          setState(() {
+          //update dat list
+        });
+      });
 
-    // TODO: tododoodo
+//    monstersToAdd.add(AddMonsterListItem(update: addMonsterToList,));
 
-    return new ListView(
-        itemExtent: CharacterItem.height,
-        padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-        children: widget.monstersInSession.map((Monster mon) {  //this goes through all our monsters and makes a card for each
-          return new Container(       //this is our 'card'
-              margin: const EdgeInsets.only(bottom: 8.0),
-              child: new MonsterItem(myMon: mon)  //give our card a monster to use
-          );
-        }).toList()
+  }
+
+  addMonsters(List<MonsterListItem> list)
+  {
+    List<Monster> temp = list.map((mli){return mli.monster;}).toList();
+    widget.monstersInSession.addAll(
+        temp
+    );
+
+    setState(() {
+      //update view
+    });
+  }
+
+  bool addingMonster = false;
+  ScrollController myScrollController = new ScrollController();
+  AddMonsterListItem addListTile;
+
+
+  deleteItemFromList(int id)
+  {
+    monstersToAdd.removeWhere((mli)=>mli.id == id);
+  }
+
+  addMonsterToList(MonsterListItem mli)
+  {
+    setState(() {
+      //update view
+      monstersToAdd.insert(0,mli);
+    });
+  }
+
+  List<MonsterListItem> monsters = new List();
+  List<MonsterListItem> reclaimList;
+  markForXpReclaim(int index)
+  {
+    if(reclaimList==null)
+      reclaimList = new List();
+
+    reclaimList.add(
+      monsters.elementAt(index)
     );
   }
-}
+
+  killMonstersAndGetXp()
+  {
+
+    int total = 0;
+
+    //go through reclaimList and remove every monster from monsters list
+    //and sum the xp
+    reclaimList.forEach((mli){
+      total+=mli.monster.xp;
+      int index = monsters.indexOf(mli);
+      widget.monstersInSession.removeAt(index);
+    });
+
+    reclaimList.clear();
+
+    print('=========================>  XP: $total   <=======================');
+
+    int xp = AppData.currentSession.charactersInSession.length;
+    xp = total~/xp;
+    AppData.currentSession.charactersInSession.forEach((c){
+      c.xp+=xp;
+    });
+
+    setState(() {
+      print('=========================>  XP: $total   <=======================');
+    });
 
 
-class TabWidget extends StatefulWidget {
+    ///@todo: Get that yummy xp to the server vaults!
+//    AppData.distributeXP(total).whenComplete((){
+//      if(this.mounted)
+//      setState(() {
+//        print('=========================>  XP: $total   <=======================');
+//      });
+//    });
 
-  final List<Widget> tabHeadings;
-  final List<Widget> tabs;
-
-  TabWidget({this.tabHeadings,this.tabs});
-
-  @override
-  _TabWidgetState createState() => _TabWidgetState(tabHeadings,tabs);
-}
-
-class _TabWidgetState extends State<TabWidget> {
-
-  List<FlatButton> tabButtons = new List();
-  List<Widget> tabHeadings;
-  List<Widget> tabs;
-
-  int last = 0;
-
-  _TabWidgetState(List<Widget> headings, List<Widget> t) {
-    tabHeadings = headings;
-    tabs = t;
-
-    if (tabButtons.isEmpty) {
-      tabButtons.add(FlatButton(
-        onPressed: () {
-          //track
-          update(0);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
-          ),
-          child: tabHeadings[0],
-        ),
-      ));
-
-      for (int i = 1; i < tabHeadings.length; i++) {
-        tabButtons.add(FlatButton(
-          onPressed: () {
-            //track
-            update(i);
-          },
-          child: tabHeadings[i],
-        ));
-      }
-    }
   }
 
-  update(int index) {
-    int temp = last;
-    //last has no value initially
-    if (last != index) {
-      tabButtons[index] = new FlatButton(onPressed: () {
-        update(index);
-      }, child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
-        ),
-        child: tabHeadings[index],
-      ));
-
-      tabButtons[temp] = new FlatButton(onPressed: () {
-        update(temp);
-      }, child: Container(
-        child: tabHeadings[temp],
-      ));
-
-      if(this.mounted)
-        setState(() {
-        //update view
-        last = index;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: tabButtons.map((b) {
-                return Expanded(child: b);
-              }).toList(),
+
+
+    if(!addingMonster)
+      {
+        monsters.clear();
+
+        return Scaffold(
+          body: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.deepOrange,width: 3.0))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text('Name',style: TextStyle(fontSize: 20.0,color: Colors.red),),
+                    ),
+
+                    Text('CR:'),
+
+                    Text('XP'),
+                    Text('Killed'),
+
+                  ],
+                ),
+              ),
+              Expanded(
+                child: new ListView.builder(
+                  padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+                  itemCount: widget.monstersInSession.length,
+                  itemBuilder: (BuildContext context, int index){
+                    monsters.add(MonsterListItem((){markForXpReclaim(index);},monster: widget.monstersInSession[index],));
+                    return monsters.last;
+                  },
+//                children: widget.monstersInSession.map((m){
+//                  return MonsterListItem(markForXpReclaim, monster: m,);
+//                }).toList()
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 25.0),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.purple,
+                  heroTag: null,
+                  onPressed: (){
+                    killMonstersAndGetXp();
+                  },
+                  child: Icon(Icons.all_inclusive),
+                ),
+              ),
+              FloatingActionButton(
+                onPressed: (){
+                  setState(() {
+                    addingMonster=true;
+                  });
+                },
+                child: Icon(Icons.add),
+              ),
+            ],
+          ),
+        );
+      }
+
+    else///adding monsters
+      {
+        bool colorswap = false;
+        int itemExtent =3+22-2;//padding + container height - delta
+        if(addListTile==null)
+          addListTile = AddMonsterListItem(update: addMonsterToList,deleteListItem: deleteItemFromList,);
+
+        return Scaffold(
+          resizeToAvoidBottomPadding: false,
+//          body: DraggableScrollbar.rrect(
+//            controller: myScrollController,
+//            labelTextBuilder: (offset) => Text('${monstersList.elementAt((offset/itemExtent).round()).name[0].toUpperCase()}',style: TextStyle(color: Colors.black),),
+//            child: ListView(
+//                controller: myScrollController,
+//                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
+//                children: monstersList.map((Monster mon) {  //this goes through all our monsters and makes a card for each
+//                  colorswap = !colorswap;
+//                  return new GestureDetector(
+//                    child: Center(child: Container(padding: EdgeInsets.symmetric(vertical: 3.0),height: 22.0,child: Text(mon.name,style: TextStyle(fontSize: 20.0,color: (colorswap)? Colors.deepOrange : Colors.red),))),
+//                  );
+//                }).toList()
+//            ),
+//          ),
+          body: Container(
+            child: Column(
+              children: <Widget>[
+                //Add Monsters
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Monsters:',style: TextStyle(fontSize: 25.0,color: Colors.deepOrange),),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text('Name',style: TextStyle(fontSize: 20.0,color: Colors.red),),
+                    ),
+
+                    Text('CR:'),
+
+                    Text('XP'),
+                    Text('DELETE'),
+
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    child:  ListView.builder(
+                      itemCount: monstersToAdd.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return monstersToAdd[index];
+                      }),
+
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 80.0),
+                  child: addListTile,
+                ),
+
+              ],
             ),
-            Expanded(child: tabs[last],)
+          ),
+          floatingActionButton: FloatingActionButton(
+            heroTag: null,
+            backgroundColor: Colors.primaries[9],
+            onPressed: (){
+              addMonsters(monstersToAdd);
+              monstersToAdd.clear();
+              addListTile = null;
+              setState(() {
+                addingMonster=false;
+              });
+            },
+            child: Icon(Icons.done),
+          ),
+        );
+
+      }
+
+  }
+}
+
+class MonsterListItem extends StatefulWidget {
+
+  final Monster monster;
+  final int id;
+  static int mid = 0;
+  static bool colorSwap = false;
+
+  final Function state;
+
+  MonsterListItem(Function notify,{this.monster}) : id = mid++, state = ((){return _MonsterListItemState(notify);});
+
+  MonsterListItem.add(Function delete,{this.monster,}): id = mid++, state = ((){return _MonsterListItemAddState(delete);});
+
+  @override
+  State<StatefulWidget> createState() => state();
+}
+
+///monster list item state with delete functionality
+class _MonsterListItemAddState extends State<MonsterListItem>
+{
+  Function delete;
+  _MonsterListItemAddState(Function f) : delete = f;
+
+  @override
+  Widget build(BuildContext context) {
+
+        MonsterListItem.colorSwap = !MonsterListItem.colorSwap;
+
+        return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 40.0),
+            child: Text(widget.monster.name,style: TextStyle(fontSize: 20.0,color: (MonsterListItem.colorSwap)? Colors.purpleAccent : Colors.teal),),
+          ),
+
+          Text(widget.monster.cr.toString()),
+
+          Text(widget.monster.xp.toString()),
+
+          FlatButton(
+            onPressed: (){
+              delete(widget.id);
+            },
+            child: Icon(Icons.delete),
+          ),
+
+        ]
+    );
+  }
+
+}
+
+///normal monster list item state - with checkbox functionality
+class _MonsterListItemState extends State<MonsterListItem>
+{
+
+  bool isChecked = false;
+  Function notify;
+
+  _MonsterListItemState(Function n) : notify = n;
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    MonsterListItem.colorSwap = !MonsterListItem.colorSwap;
+
+    Widget type;
+    if(isChecked)
+      type = Icon(Icons.check_box);
+    else
+      type = Icon(Icons.check_box_outline_blank);
+
+    return GestureDetector(
+      onTap: (){
+        notify();
+        setState(() {
+          isChecked = !isChecked;
+        });
+      },
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0),
+              child: Text(widget.monster.name,style: TextStyle(fontSize: 20.0,color: (MonsterListItem.colorSwap)? Colors.purpleAccent : Colors.teal),),
+            ),
+
+            Text(widget.monster.cr.toString()),
+
+            Text(widget.monster.xp.toString()),
+
+            type,
+
           ]
       ),
     );
+
   }
 }
+
+
+class AddMonsterListItem extends StatefulWidget {
+
+  final List<Widget> listOfMonsters;
+  final Function update;
+  final Function deleteListItem;
+
+  AddMonsterListItem({this.listOfMonsters,this.update,this.deleteListItem});
+
+  @override
+  _AddMonsterListItemState createState() => _AddMonsterListItemState();
+}
+
+class _AddMonsterListItemState extends State<AddMonsterListItem> {
+
+  bool capturingNewMonster = false;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController combatController = TextEditingController();
+  final TextEditingController xpController = TextEditingController();
+
+  deletingItemFromList(int id)
+  {
+    widget.deleteListItem(id);
+    setState(() {
+      //update view to reflect item being deleted
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    if(!capturingNewMonster)
+      return Container(
+        child: FlatButton(
+          onPressed: (){
+            //add new monster dialog or w/e
+            setState(() {
+              capturingNewMonster = true;
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Add Monster'),
+              Icon(Icons.add_circle_outline)
+            ],
+          ),
+        ),
+      );
+    else{
+      String amount = "Amount";
+
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 4.0),
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.deepOrange,width: 3.0),bottom: BorderSide(color: Colors.deepOrange,width: 3.0))),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Expanded(
+                        child: Text('Name:'),
+                      ),
+                      Expanded(
+                        child: Text('Combat Rating'),
+                      ),
+                      Expanded(
+                        child: Text('Experience')
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(hintText: 'Name'),
+//                          onSubmitted: (val){nameController.value = TextEditingValue(text: val);},
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: combatController,
+                          decoration: InputDecoration(hintText: 'CR'),
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (val){xpController.text = (combatRatingToXp(double.parse(val))).toString() ;},
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: xpController,
+                          decoration: InputDecoration(hintText: amount),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: FlatButton(
+                onPressed: (){
+                  //add new MonsterListItem to list
+                  print('adding ${nameController.value.text} to list');
+                  widget.update(MonsterListItem.add(
+                    deletingItemFromList,
+                    monster: new Monster(nameController.value.text, null, null, null, double.parse(combatController.value.text), null, null, null, null, null, null,int.parse(xpController.value.text)),
+                  ));
+                },
+                child: Icon(Icons.add),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+  }
+}
+
+
+//class TabWidget extends StatefulWidget {
+//
+//  final List<Widget> tabHeadings;
+//  final List<Widget> tabs;
+//
+//  TabWidget({this.tabHeadings,this.tabs});
+//
+//  @override
+//  _TabWidgetState createState() => _TabWidgetState(tabHeadings,tabs);
+//}
+//
+//class _TabWidgetState extends State<TabWidget> {
+//
+//  List<FlatButton> tabButtons = new List();
+//  List<Widget> tabHeadings;
+//  List<Widget> tabs;
+//
+//  int last = 0;
+//
+//  _TabWidgetState(List<Widget> headings, List<Widget> t) {
+//    tabHeadings = headings;
+//    tabs = t;
+//
+//    if (tabButtons.isEmpty) {
+//      tabButtons.add(FlatButton(
+//        onPressed: () {
+//          //track
+//          update(0);
+//        },
+//        child: Container(
+//          decoration: BoxDecoration(
+//              border: Border(
+//                  bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
+//          ),
+//          child: tabHeadings[0],
+//        ),
+//      ));
+//
+//      for (int i = 1; i < tabHeadings.length; i++) {
+//        tabButtons.add(FlatButton(
+//          onPressed: () {
+//            //track
+//            update(i);
+//          },
+//          child: tabHeadings[i],
+//        ));
+//      }
+//    }
+//  }
+//
+//  update(int index) {
+//    int temp = last;
+//    //last has no value initially
+//    if (last != index) {
+//      tabButtons[index] = new FlatButton(onPressed: () {
+//        update(index);
+//      }, child: Container(
+//        decoration: BoxDecoration(
+//            border: Border(
+//                bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
+//        ),
+//        child: tabHeadings[index],
+//      ));
+//
+//      tabButtons[temp] = new FlatButton(onPressed: () {
+//        update(temp);
+//      }, child: Container(
+//        child: tabHeadings[temp],
+//      ));
+//
+//      if(this.mounted)
+//        setState(() {
+//        //update view
+//        last = index;
+//      });
+//    }
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container(
+//      child: Column(
+//          children: <Widget>[
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//              children: tabButtons.map((b) {
+//                return Expanded(child: b);
+//              }).toList(),
+//            ),
+//            Expanded(child: tabs[last],)
+//          ]
+//      ),
+//    );
+//  }
+//}

@@ -6,10 +6,12 @@ import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character/character_creation.dart';
 import 'package:dnd_301_final/character/character_preview.dart';
 import 'package:dnd_301_final/character/races_and_classes.dart';
+import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class LocalCharacter {
   LocalCharacter({
@@ -224,8 +226,9 @@ class CharacterLightView extends StatelessWidget {
                 children: <Widget>[
 //                  new Text(lightChar.gender),
 
-                  Text("Lvl: ${level = AppData.calcLevel(lightChar.xp)}"),
-                  Text("P: ${AppData.calcProf(level)}")
+//                  Text("Lvl: ${level = calcLevel(lightChar.xp)}"),
+                  LevelWidget(lightChar.xp),
+                  Text("P: ${calcProf(calcLevel(lightChar.xp))}")
 //                  new Text((lightChar.sessionId == null)
 //                      ? "No Session"
 //                      : lightChar.sessionId), //our text widget with our description
@@ -238,6 +241,32 @@ class CharacterLightView extends StatelessWidget {
 
 
 }
+
+class LevelWidget extends StatelessWidget {
+
+  final int xp;
+
+  LevelWidget(this.xp);
+
+  @override
+  Widget build(BuildContext context) {
+
+    int level = calcLevel(xp);
+    double percent = calcPercentToNextLevel(level,xp);
+
+    return  Container(
+      child: new CircularPercentIndicator(
+        radius: 30.0,
+        lineWidth: 3.0,
+        percent: percent,
+        center: Text('$level'),
+        backgroundColor: Colors.grey,
+        progressColor: Colors.blue,
+      ),
+    );
+  }
+}
+
 
 class ClassIcon extends StatelessWidget {
 

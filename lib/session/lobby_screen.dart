@@ -107,7 +107,7 @@ class GameSessionState extends State<GameSession>{
      print('Session state changed to exploring');
       GameSessionState.timer.cancel();
       Navigator.of(context).pop();
-      Navigator.push(context, new MaterialPageRoute(builder: (context)=>new GameScreen(iAmGameMaster)));
+      Navigator.push(context, new MaterialPageRoute(builder: (context)=> (iAmGameMaster)?  new GameScreen.isDM() : new GameScreen()));
 
      if(!iAmGameMaster)
        {
@@ -426,12 +426,12 @@ class PlayerLobbyListTile extends StatelessWidget {
   const PlayerLobbyListTile({
     Key key,
     @required this.name,
-  }) : super(key: key);
+  }) : pUser = null, super(key: key);
 
   const PlayerLobbyListTile.player({
     Key key,
     @required this.pUser,
-  }) : super(key: key);
+  }) : name = null, super(key: key);
 
   final String name;
   final User pUser;
@@ -499,15 +499,11 @@ class _ReadyUpButtonState extends State<ReadyUpButton> {
     return new Text('Waiting on Game Master');
 
     return MaterialButton(onPressed: (){
-//        GameSessionState.timer.cancel();
       if(!busy)
         {
           busy = true;
           AppData.readyToggle(AppData.currentSession.sessionId).whenComplete((){busy = false;});
         }
-
-//        Navigator.of(context).pop();
-//        Navigator.push(context, new MaterialPageRoute(builder: (context)=>InSession(widget.session,false)));
     },
       child: Container(
         child: new Text("Ready Up",
@@ -576,7 +572,7 @@ class _ReadyCountdownState extends State<ReadyCountdown>{
   @override void initState() {
     super.initState();
     seconds = widget.readyUpExpiryTime;
-    timer = new Timer.periodic(Duration(seconds: AppData.pollRate),(Timer t) => tick(t));
+    timer = new Timer.periodic(Duration(seconds: 1),(Timer t) => tick(t));
   }
 
   tick(Timer t) {
@@ -585,7 +581,6 @@ class _ReadyCountdownState extends State<ReadyCountdown>{
         seconds-=1;
       else
         {
-          ///@TODO: implement countdown finished!
           t.cancel();
         }
     });
@@ -679,52 +674,6 @@ class _SelectCharacterMasterState extends State<SelectCharacterMaster> {
 
 }
 
-//
-//class SelectCharacterMaster extends StatelessWidget {
-//
-//  final List<SelectCharacterWidget> items;
-//  int last;
-//  final Function confirmSelection;
-//
-//  SelectCharacterMaster(Function f) : items = new List() , confirmSelection = f;
-//
-//  tapped(int index)
-//  {
-//    //last has no value initially
-//    if(last!=null && last!=index)
-//      items[last].scws.unSelect();
-//
-//    if(last==index)
-//    {
-//      confirmSelection(index);
-//      return;
-//    }
-//
-//    items[index].scws.pressed();
-//    last = index;
-//
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//
-//   return ListView.builder(
-//      itemCount: AppData.lightCharacters.length,
-//      itemBuilder: (BuildContext context, int index) {
-//        if(AppData.lightCharacters[index].sessionId==null)
-//        {
-//          items.add(SelectCharacterWidget(AppData.lightCharacters[index]));
-//          return GestureDetector(
-//            onTap: (){tapped(index);},
-//            child: items.last,
-//          );
-//        }
-//      },
-//    );
-//
-//}
-
-
 class SelectCharacterWidget extends StatefulWidget {
 
   final _SelectCharacterWidgetState scws;
@@ -744,7 +693,7 @@ class _SelectCharacterWidgetState extends State<SelectCharacterWidget> {
   bool confirmSelect = false;
   LightCharacter character;
 
-  bool pressed() {
+   pressed() {
     print('tapped ${character.name}');
     if (confirmSelect) {
       //select character
@@ -777,7 +726,6 @@ class _SelectCharacterWidgetState extends State<SelectCharacterWidget> {
 
 
     return Container(
-      height: 100.0,
       padding: (confirmSelect)? EdgeInsets.symmetric(horizontal: 8.0) : null,
       decoration: (confirmSelect)? BoxDecoration(
         color: Colors.black12 ,

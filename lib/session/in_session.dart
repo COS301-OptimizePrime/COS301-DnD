@@ -4,7 +4,7 @@ import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character/character_creation.dart';
 import 'package:dnd_301_final/character/character_selection.dart';
-import 'package:dnd_301_final/journals/monster_journal.dart';
+import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -583,9 +583,11 @@ class MonstersTabState extends State<MonstersTab> {
         children: sessionMonsters.map((Monster mon) {  //this goes through all our monsters and makes a card for each
           return new Container(       //this is our 'card'
               margin: const EdgeInsets.only(bottom: 8.0),
-              child: new MonsterItem(mon: mon)  //give our card a monster to use
+              child: new MonsterItem(myMon: mon)  //give our card a monster to use
           );
         }).toList()
     );
   }
 }
+
+

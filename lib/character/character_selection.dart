@@ -357,9 +357,9 @@ class CharacterDetailsView extends StatefulWidget {
   const CharacterDetailsView({
     Key key,
     @required this.char,
-  }) : super(key: key);
+  }) :  lightChar = null, super(key: key);
 
-  CharacterDetailsView.load({Key key, @required this.lightChar,});
+  CharacterDetailsView.load({Key key, @required this.lightChar,}) : char=null;
 
   final LocalCharacter char;
   final LightCharacter lightChar;

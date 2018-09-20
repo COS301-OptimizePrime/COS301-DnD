@@ -25,7 +25,7 @@ class _SessionViewListState extends State<SessionViewList> {
   void initState() {
 
     widget.updateList = this.update;
-    AppData.getUserSessions().whenComplete((){loadedSessions=true; if(AppData.activeSessions.length>0) valid = true; setState(() {
+    AppData.getUserSessions().whenComplete((){loadedSessions=true; if(AppData.activeSessions. length>0) valid = true; setState(() {
       //do the do
     });});
 
@@ -67,7 +67,7 @@ class _SessionViewListState extends State<SessionViewList> {
                       {
                         AppData.currentSession = fullSession;
                         Navigator.push(context, new MaterialPageRoute(
-                          builder: (BuildContext context) => new GameScreen(item.dungeonMaster.uid==AppData.user.uid),
+                          builder: (BuildContext context) => (item.dungeonMaster.uid==AppData.user.uid)? new GameScreen.isDM() : new GameScreen(),
                         )).whenComplete(update);
                       }
                     else

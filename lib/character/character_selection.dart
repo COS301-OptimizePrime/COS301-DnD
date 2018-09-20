@@ -751,7 +751,6 @@ class CharacterSelectionState extends State<CharacterSelection>
                                 CharacterSelection.inPreviewState = true;
 //                                                                CharacterSwipePreview.char = char;
                                 CharacterSwipePreview.setChar(char);
-                                //@TODO: fix character swiping
                               }
                               swipeStart = swipeEnd = 0.0;
                             },

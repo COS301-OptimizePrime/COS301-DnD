@@ -1,6 +1,5 @@
 import 'package:splashscreen/splashscreen.dart';
 import 'package:dnd_301_final/login_page.dart';
-import 'package:dnd_301_final/app_data.dart';
 import 'package:flutter/material.dart';
 
 class Splash extends StatefulWidget {
@@ -10,7 +9,6 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  final AppData appData = AppData.instance();
 
   @override
   Widget build(BuildContext context) {

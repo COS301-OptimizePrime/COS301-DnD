@@ -9,10 +9,10 @@ import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 
 
-void main() => runApp(new MyApp());
+void main() => runApp(new Main());
 
 
-class MyApp extends StatelessWidget {
+class Main extends StatelessWidget {
 
   final AppData appData = AppData.instance();
 

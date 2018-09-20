@@ -79,7 +79,7 @@ class Menu extends StatelessWidget {
                     // ...
 
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, MonsterJournal.tag);
+                    Navigator.push(context, new MaterialPageRoute(builder: (context)=>new MonsterJournal()));
                   },
                 ),
                 new ListTile(

@@ -8,10 +8,10 @@ dependencies:
   google_sign_in:
   image_picker:
   async: '>=1.13.3 <3.0.0'
-  protobuf: ^0.7.2
+  protobuf: ^0.10.2
   http: ^0.11.3+16
   http2: ^0.1.7
-  grpc: "^0.4.1"
+  grpc: ^0.6.5
   qr_flutter: '^1.1.1'
   qr_reader: "^0.1.0"
 
@@ -24,13 +24,13 @@ dev_dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
-  flutter_launcher_icons: "^0.2.0"
-
-# Select app icon
-flutter_icons:
-  image_path: "assets/dadlogo2.png"
-  android: true
-  ios: true
+#  flutter_launcher_icons:
+#
+## Select app icon
+#flutter_icons:
+#  image_path: "assets/dadlogo2.png"
+#  android: true
+#  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -106,6 +106,22 @@ flutter:
     - assets/icon_assets/Wisdom.png
     #dm icon
     - assets/icon_assets/dm_icon.png
+    #gender icons
+    - assets/icon_assets/male.png
+    - assets/icon_assets/female.png
+    #class icons
+    - assets/class_images/icons/barbarian-icon.png
+    - assets/class_images/icons/bard-icon.png
+    - assets/class_images/icons/cleric-icon.png
+    - assets/class_images/icons/druid-icon.png
+    - assets/class_images/icons/fighter-icon.png
+    - assets/class_images/icons/monk-icon.png
+    - assets/class_images/icons/paladin-icon.png
+    - assets/class_images/icons/ranger-icon.png
+    - assets/class_images/icons/rogue-icon.png
+    - assets/class_images/icons/sorcerer-icon.png
+    - assets/class_images/icons/warlock-icon.png
+    - assets/class_images/icons/wizard-icon.png
 
     #monster list file
     - assets/dad_5e_monster_manual.txt

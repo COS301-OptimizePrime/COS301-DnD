@@ -1,10 +1,19 @@
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/session_screen.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
+import 'package:dnd_301_final/session/game_screen.dart';
+import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 
 class SessionViewList extends StatefulWidget {
   @override
   _SessionViewListState createState() => new _SessionViewListState();
+
+  Function updateList;
+
+  void update() {
+    if(updateList!=null)
+      updateList();
+  }
 }
 
 class _SessionViewListState extends State<SessionViewList> {
@@ -15,11 +24,21 @@ class _SessionViewListState extends State<SessionViewList> {
   @override
   void initState() {
 
-    AppData.getUserSessions().whenComplete((){loadedSessions=true; if(AppData.activeSessions.length>0) valid = true; setState(() {
+    widget.updateList = this.update;
+    AppData.getUserSessions().whenComplete((){loadedSessions=true; if(AppData.activeSessions. length>0) valid = true; setState(() {
       //do the do
     });});
 
     super.initState();
+  }
+
+
+  void update()
+  {
+    int items = AppData.activeSessions.length;
+    AppData.getUserSessions().whenComplete((){loadedSessions=true; if(items!=AppData.activeSessions.length) valid = true; setState(() {
+      //update list
+    });});
   }
 
 
@@ -41,11 +60,20 @@ class _SessionViewListState extends State<SessionViewList> {
                 decoration: new BoxDecoration(border: new Border(bottom: new BorderSide(color: Colors.deepOrange))),
                 child: new ListTile(
                   title: new Text('${item.name}'),
-                  trailing: (item.dungeonMaster.uid==AppData.instance().user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
-                  onTap: (){
-                    Navigator.push(context, new MaterialPageRoute(
-                      builder: (BuildContext context) => new GameSessionDemo(AppData.activeSessions.elementAt(index)),
-                    ));
+                  trailing: (item.dungeonMaster.uid==AppData.user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
+                  onTap: () async {
+                    Session fullSession = await AppData.getSessionById(AppData.activeSessions.elementAt(index).sessionId);
+                    if(fullSession!=null && fullSession.state=='EXPLORING')//go to game
+                      {
+                        AppData.currentSession = fullSession;
+                        Navigator.push(context, new MaterialPageRoute(
+                          builder: (BuildContext context) => (item.dungeonMaster.uid==AppData.user.uid)? new GameScreen.isDM() : new GameScreen(),
+                        )).whenComplete(update);
+                      }
+                    else
+                      Navigator.push(context, new MaterialPageRoute(
+                        builder: (BuildContext context) => new GameSession(fullSession),
+                      )).whenComplete(update);
                   },
                 ),
               );}),

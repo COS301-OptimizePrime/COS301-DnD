@@ -43,14 +43,14 @@ class _LoginPageState extends State<LoginPage> {
 //    final FirebaseUser currentUser = await appData.auth.currentUser();
 //    assert(user.uid == currentUser.uid);
 
-    await appData.signinWithGoogle();
+    await appData.signInWithGoogle();
 
     Navigator.pop(context); //pop dialog
     Navigator.of(context).pushNamed(HomePage.tag);
     Menu.currentPage = HomePage.tag;
 
 //    googleSignedIn = true;
-    print('This user is signed in: '+ appData.user.toString());
+    print('This user is signed in: '+ AppData.user.toString());
   }
 
 //  Future <LoginPage> _signOut()  async{

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/character_selection.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

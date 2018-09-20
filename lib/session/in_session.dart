@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/monster_journal.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
+import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -40,53 +40,9 @@ class SessionCharacterItem extends StatelessWidget {
         )
     );
 
-    SizedBox racePreview = new SizedBox(
-      height: 60.0,
-      width: 60.0,
-      child: new Stack(
-          children: <Widget>[
-            new Positioned.fill( //add image to bottom of stack
-                child: new Image.asset(
-                  'assets/race_images/' + char.charRace.getImage() + '.png',
-                  fit: BoxFit.scaleDown,)
-            ),
-            new Positioned( //positioned widgets can be moved within their parent (aka stack)
-              bottom: 1.0,
-              left: 1.0,
-              right: 1.0,
-              child: new FittedBox( //new box, fitted to remaining space
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft, //place box left
-                  child: Text(char.charRace.name)
-              ),
-            ),
-          ]
-      ),
-    );
-
-    SizedBox classPreview = new SizedBox(
-      height: 60.0,
-      width: 60.0,
-      child: new Stack(
-          children: <Widget>[
-            new Positioned.fill( //add image to bottom of stack
-                child: new Image.asset(
-                  'assets/class_images/' + char.charClass.name + '.png',
-                  fit: BoxFit.scaleDown,)
-            ),
-            new Positioned( //positioned widgets can be moved within their parent (aka stack)
-              bottom: 1.0,
-              left: 1.0,
-              right: 1.0,
-              child: new FittedBox( //new box, fitted to remaining space
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft, //place box left
-                  child: Text(char.charClass.name)
-              ),
-            ),
-          ]
-      ),
-    );
+//    RacePreview racePreview = RacePreview(race: char.charRace);
+//
+//    ClassPreview classPreview = ClassPreview(charClass: char.charClass);
 
     Card card = new Card(child: new Column(
         //move to crossaxis (aka horizontal as we are vertical)'s start (left)
@@ -99,10 +55,10 @@ class SessionCharacterItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    racePreview,
-                    classPreview,
+                    RacePreview(race: char.charRace),
+                    ClassPreview(charClass: char.charClass),
 //                    profeciecy,
-                    Container(width: 60.0, child: new Shield(armorClass)),
+                    Container(width: 60.0, child: new Shield.value(armorClass)),
                   ],
                 )
             )
@@ -556,6 +512,7 @@ class AllCharactersTabState extends State<AllCharactersTab> {
                   armorClass += item.val;
               }
           );
+
         }
         // all our characters and makes a card for each
         sessionChars.add(new Container( //this is our 'card'
@@ -626,9 +583,11 @@ class MonstersTabState extends State<MonstersTab> {
         children: sessionMonsters.map((Monster mon) {  //this goes through all our monsters and makes a card for each
           return new Container(       //this is our 'card'
               margin: const EdgeInsets.only(bottom: 8.0),
-              child: new MonsterItem(mon: mon)  //give our card a monster to use
+              child: new MonsterItem(myMon: mon)  //give our card a monster to use
           );
         }).toList()
     );
   }
 }
+
+

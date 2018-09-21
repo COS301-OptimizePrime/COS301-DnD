@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Race
 {
 
@@ -46,9 +48,27 @@ class Race
       return out;
   }
 
-  static Race getRace(String race) {
-    return races.firstWhere( (r) => r.name.compareTo(race)==0,orElse: (){return null;});
+  static Race getRace(String raceName) {
+    Race temp = races.firstWhere( (r) => r.name.compareTo(raceName)==0,orElse: (){return null;});
+
+    if(temp==null)
+      print('no race found for $raceName');
+
+    return temp;
   }
+
+//  void set(Race other) {
+//    name = other.name;
+//    desc = other.desc;
+//    traits = other.traits;
+//    strength = other.strength;
+//    dexterity = other.dexterity;
+//    constitution = other.constitution;
+//    intelligence = other.intelligence;
+//    wisdom = other.wisdom;
+//    charisma = other.charisma;
+//    image = other.image;
+//  }
 }
 
 final List<Race> races = <Race>[
@@ -293,6 +313,7 @@ class ClassType
   final int hitDie;
   final String primaryAbility;
   final String saves;
+  final Color color;
 
   const ClassType({
     this.name,
@@ -300,11 +321,20 @@ class ClassType
     this.hitDie,
     this.primaryAbility,
     this.saves,
+    this.color,
 });
 
   static ClassType getClass(String characterClass) {
     return typeClasses.firstWhere( (tc) => tc.name.compareTo(characterClass)==0,orElse: (){return null;});
   }
+
+//  void set(ClassType other) {
+//    this.name = other.name;
+//    this.desc = other.desc;
+//    this.hitDie = other.hitDie;
+//    this.primaryAbility = other.primaryAbility;
+//    this.saves = other.saves;
+//  }
 }
 
 final List<ClassType> typeClasses = <ClassType>[
@@ -313,83 +343,95 @@ final List<ClassType> typeClasses = <ClassType>[
     desc: "A fierce warrior of primitive background who can enter a battle rage",
     hitDie: 12,
     primaryAbility: "Strength",
-    saves: "Strength & Constitution"
+    saves: "Strength & Constitution",
+    color: Color.fromRGBO(210,105,30,1.0)
   ),
   const ClassType(
     name: "Bard",
     desc: "An inspiring magician whose power echoes the music of creation.",
     hitDie: 8,
     primaryAbility: "Charisma",
-    saves: "Dexterity & Charisma"
+    saves: "Dexterity & Charisma",
+    color: Colors.lightBlue,
   ),
   const ClassType(
     name: "Cleric",
     desc: "A priestly champion who wields divine magic in service of a higher power.",
     hitDie: 8,
     primaryAbility: "Wisdom",
-    saves: "Wisdom & Charisma"
+    saves: "Wisdom & Charisma",
+    color: Colors.white,
   ),
   const ClassType(
     name: "Druid",
     desc: "A priest of the Old Faith, wielding the powers of nature and adopting animal forms.",
     hitDie: 8,
     primaryAbility: "Wisdom",
-    saves: "Intelligence & Wisdom"
+    saves: "Intelligence & Wisdom",
+    color: Colors.green,
   ),
   const ClassType(
     name: "Fighter",
     desc: "A master of martial combat, skilled with a variety of weapons and armor.",
     hitDie: 10,
     primaryAbility: "Strength or Dexterity",
-    saves: "Strength & Constitution"
+    saves: "Strength & Constitution",
+    color: Colors.redAccent,
   ),
   const ClassType(
     name: "Monk",
     desc: "A master of martial arts, harnessing the power of the body in pursuit of physical and spiritual perfection.",
     hitDie: 8,
     primaryAbility: "Dexterity & Wisdom",
-    saves: "Strength & Dexterity"
+    saves: "Strength & Dexterity",
+    color: Colors.orange,
   ),
   const ClassType(
     name: "Paladin",
     desc: "A holy warrior bound to a sacred oath.",
     hitDie: 10,
     primaryAbility: "Strength & Charisma",
-    saves: "Wisdom & Charisma"
+    saves: "Wisdom & Charisma",
+    color: Colors.yellow,
   ),
   const ClassType(
     name: "Ranger",
     desc: "A warrior who combats threats on the edges of civilization.",
     hitDie: 10,
     primaryAbility: "Dexterity and Wisdom",
-    saves: "Strength & Dexterity"
+    saves: "Strength & Dexterity",
+    color: Color.fromRGBO(85,107,47, 1.0),
   ),
   const ClassType(
     name: "Rogue",
     desc: "A scoundrel who uses stealth and trickery to overcome obstacles and enemies.",
     hitDie: 8,
     primaryAbility: "Dexterity",
-    saves: "Dexterity & Intelligence"
+    saves: "Dexterity & Intelligence",
+    color: Colors.deepPurpleAccent,
   ),
   const ClassType(
     name: "Sorcerer",
     desc: "A spellcaster who draws on inherent magic from a gift or bloodline.",
     hitDie: 6,
     primaryAbility: "Charisma",
-    saves: "Constitution & Charisma"
+    saves: "Constitution & Charisma",
+    color: Colors.purple
   ),
   const ClassType(
     name: "Warlock",
     desc: "A wielder of magic that is derived from a bargain with an extraplanar entity.",
     hitDie: 8,
     primaryAbility: "Charisma",
-    saves: "Wisdom & Charisma"
+    saves: "Wisdom & Charisma",
+    color: Color.fromRGBO(220,20,60, 1.0)
   ),
   const ClassType (
     name: "Wizard",
     desc: "A scholarly magic-user capable of manipulating the structures of reality.",
     hitDie: 6,
     primaryAbility: "Intelligence",
-    saves: "Intelligence & Wisdom"
+    saves: "Intelligence & Wisdom",
+    color: Colors.cyan
   )
 ];

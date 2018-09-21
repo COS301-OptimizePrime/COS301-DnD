@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/session_screen.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
+import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'backend/server.pb.dart';
-import 'dart:async';
 
 class QrMakerWidget extends StatefulWidget {
 
@@ -46,7 +47,7 @@ class _QrMakerWidgetState extends State<QrMakerWidget> {
               child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    new QrImage(data: AppData.sessionId, size: 250.0,)
+                    new QrImage(data: AppData.currentSession.sessionId, size: 250.0,)
                   ]),
             ),
             new Padding(
@@ -56,8 +57,9 @@ class _QrMakerWidgetState extends State<QrMakerWidget> {
                   minWidth: 200.0,
                   height: 42.0,
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(context, new MaterialPageRoute(
-                      builder: (BuildContext context) => new GameSessionDemo(seshToPass),
+                      builder: (BuildContext context) => new GameSession(seshToPass),
                     ));
                   },
                   color: Colors.deepOrange,

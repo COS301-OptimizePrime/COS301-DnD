@@ -8,27 +8,16 @@ final List<Monster> monstersList = new List<Monster>();
 class MonsterJournal extends StatefulWidget {
   static String tag = 'monster-journal';
 
-  @override
-  _MonsterJournalUpdatedState createState() => _MonsterJournalUpdatedState();
-}
-
-class _MonsterJournalUpdatedState extends State<MonsterJournal> {
-  @override
-  initState() {
-    super.initState();
-    if (monstersList.isEmpty)
-      readFileIntoList().whenComplete(() {
-        print('${monstersList.length} Monsters successfully loaded!');
-
-        setState(() {
-          //update dat list
-        });
-      });
+  static Future loadMonsters() async
+  {
+    await readFileIntoList();
+    print('loaded monsters');
+    return;
   }
 
-  Future readFileIntoList() async {
+  static Future readFileIntoList() async {
     String data =
-        await rootBundle.loadString('assets/dad_5e_monster_manual.txt');
+    await rootBundle.loadString('assets/dad_5e_monster_manual.txt');
 
     ///convert list into monsters
     //first item in list contains our field
@@ -52,15 +41,17 @@ class _MonsterJournalUpdatedState extends State<MonsterJournal> {
           parseBool(fields.removeAt(0)),
           fields.removeAt(0),
           fields.removeAt(0),
-          parseTypes(fields)));
+          parseTypes(fields),
+          null
+      ));
     }
   }
 
-  bool parseBool(String removeAt) {
+  static bool parseBool(String removeAt) {
     return removeAt.compareTo("NO") == 0;
   }
 
-  List<monsterType> parseTypes(List<String> fields) {
+  static List<monsterType> parseTypes(List<String> fields) {
     List<monsterType> typing = new List<monsterType>();
 
     for (int i = 0; i < fields.length; i++) {
@@ -70,6 +61,27 @@ class _MonsterJournalUpdatedState extends State<MonsterJournal> {
 
     return typing;
   }
+
+  @override
+  _MonsterJournalUpdatedState createState() => _MonsterJournalUpdatedState();
+}
+
+class _MonsterJournalUpdatedState extends State<MonsterJournal> {
+
+
+  @override
+  initState() {
+    super.initState();
+    if (monstersList.isEmpty)
+      MonsterJournal.loadMonsters().whenComplete(() {
+        if(this.mounted)
+          setState(() {
+          //update dat list
+        });
+      });
+  }
+
+
 
   final TextEditingController monsterController = new TextEditingController();
 
@@ -154,6 +166,203 @@ enum monsterType {
   URBAN
 }
 
+int calcLevel(int xp)
+{
+if     (xp<300)
+return 1;
+else if(xp<900)
+return 2;
+else if(xp<2700)
+return 3;
+else if(xp<6500)
+return 4;
+else if(xp<14000)
+return 5;
+else if(xp<27000)
+return 6;
+else if(xp<34000)
+return 7;
+else if(xp<48000)
+return 8;
+else if(xp<64000)
+return 9;
+else if(xp<85000)
+return 10;
+else if(xp<100000)
+return 11;
+else if(xp<120000)
+return 12;
+else if(xp<140000)
+return 13;
+else if(xp<165000)
+return 14;
+else if(xp<195000)
+return 15;
+else if(xp<225000)
+return 16;
+else if(xp<265000)
+return 17;
+else if(xp<305000)
+return 18;
+else if(xp<355000)
+return 19;
+else
+return 20;
+}
+
+double calcPercentToNextLevel(int level, int xp)
+{
+
+  switch (level)
+  {
+    case 1: return xp/300.0;
+    case 2: return xp/900.0;
+    case 3: return xp/2700.0;
+    case 4: return xp/6500.0;
+    case 5: return xp/14000.0;
+    case 6: return xp/23000.0;
+    case 7: return xp/34000.0;
+    case 8: return xp/48000.0;
+    case 9: return xp/64000.0;
+    case 10: return xp/85000.0;
+    case 11: return xp/100000.0;
+    case 12: return xp/120000.0;
+    case 13: return xp/140000.0;
+    case 14: return xp/165000.0;
+    case 15: return xp/195000.0;
+    case 16: return xp/225000.0;
+    case 17: return xp/265000.0;
+    case 18: return xp/305000.0;
+    case 19: return xp/355000.0;
+    default: return 1.0;
+  }
+}
+
+
+int calcProf(int lvl)
+{
+if(lvl<5)
+return 2;
+else if(lvl<9)
+return 3;
+else if(lvl<13)
+return 4;
+else if(lvl<17)
+return 5;
+else
+return 6;
+}
+
+/*
+  Challenge Rating 	XP
+0 	0 or 10
+1/8 	25
+1/4 	50
+1/2 	100
+1 	200
+2 	450
+3 	700
+4 	1,100
+5 	1,800
+6 	2,300
+7 	2,900
+8 	3,900
+9 	5,000
+10 	5,900
+11 	7,200
+12 	8,400
+13 	10,000
+14 	11,500
+15 	13,000
+16 	15,000
+17 	18,000
+18 	20,000
+19 	22,000
+20 	25,000
+21 	33,000
+22 	41,000
+23 	50,000
+24 	62,000
+25 	75,000
+26 	90,000
+27 	105,000
+28 	120,000
+29 	135,000
+30 	155,000
+   */
+
+int combatRatingToXp(double cr) {
+if(cr==0)
+return 10;
+else if(cr==0.125)
+return 25;
+else if(cr==0.25)
+return 50;
+else if(cr==0.5)
+return 100;
+else if(cr==1)
+return 200;
+else if(cr==2)
+return 450;
+else if(cr==3)
+return 700;
+else if(cr==4)
+return 1100;
+else if(cr==5)
+return 1800;
+else if(cr==6)
+return 2300;
+else if(cr==7)
+return 2900;
+else if(cr==8)
+return 3900;
+else if(cr==9)
+return 5000;
+else if(cr==10)
+return 5900;
+else if(cr==11)
+return 7200;
+else if(cr==12)
+return 8400;
+else if(cr==13)
+return 10000;
+else if(cr==14)
+return 11500;
+else if(cr==15)
+return 13000;
+else if(cr==16)
+return 15000;
+else if(cr==17)
+return 18000;
+else if(cr==18)
+return 20000;
+else if(cr==19)
+return 22000;
+else if(cr==20)
+return 25000;
+else if(cr==21)
+return 33000;
+else if(cr==22)
+return 41000;
+else if(cr==23)
+return 50000;
+else if(cr==24)
+return 62000;
+else if(cr==25)
+return 75000;
+else if(cr==26)
+return 90000;
+else if(cr==27)
+return 105000;
+else if(cr==28)
+return 120000;
+else if(cr==29)
+return 135000;
+else
+return 155000;
+
+}
+
 class Monster {
   final String name;
   final String type;
@@ -166,9 +375,10 @@ class Monster {
   final String atk1;
   final String atk2;
   final List<monsterType> typing;
+  final int xp;
 
   Monster(this.name, this.type, this.alignment, this.size, this.cr, this.ac,
-      this.hp, this.spellcasting, this.atk1, this.atk2, this.typing);
+      this.hp, this.spellcasting, this.atk1, this.atk2, this.typing, this.xp);
 
   List<String> getTypes() {
     List<String> types = new List();

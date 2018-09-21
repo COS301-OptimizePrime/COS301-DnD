@@ -15,7 +15,7 @@ dependencies:
   qr_flutter: '^1.1.1'
   qr_reader: "^0.1.0"
   percent_indicator: ^1.0.9
-#  draggable_scrollbar: ^0.0.4
+  splashscreen:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -48,6 +48,7 @@ flutter:
   assets:
     - assets/alucard.jpg
     - assets/dadlogo2.png
+    - assets/splash.png
     - assets/monster_images/beholder.jpg
     - assets/monster_images/dragon.png
     - assets/monster_images/fire_giant.jpg

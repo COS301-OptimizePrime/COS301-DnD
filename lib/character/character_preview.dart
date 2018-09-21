@@ -1,19 +1,62 @@
 import 'dart:math';
+import 'dart:async';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/backend/server.pb.dart';
 import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // fits into preview and contains details about character
-class CharacterPreview extends StatelessWidget {
-  final LocalCharacter char;
+class CharacterPreview extends StatefulWidget {
+  const CharacterPreview({
+    Key key,
+    @required this.char,
+  })
+      : lightChar = null,
+        super(key: key);
 
-  CharacterPreview(this.char);
+  CharacterPreview.load({Key key, @required this.lightChar,}) : char=null;
+
+  final LocalCharacter char;
+  final LightCharacter lightChar;
+
+  @override
+  _CharacterPreviewState createState() => _CharacterPreviewState(char);
+}
+
+class _CharacterPreviewState extends State<CharacterPreview>
+{
+  _CharacterPreviewState(this.char);
+
+  LocalCharacter char;
+
+  Future<LocalCharacter> loadCharacter() async
+  {
+    final charResponse = await (AppData.getCharacterById(widget.lightChar.characterId));
+    //may return null in case of error
+    if(charResponse!=null) return charResponse;
+  }
+
+  @override
+  initState()
+  {
+    super.initState();
+    if(char!=null) return;
+
+    loadCharacter().then((c){
+      setState(() {
+        //update view
+        char = c;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if(char==null) return Material(child: Center(child: Text('Just a moment...',style: TextStyle(fontSize: 15.0,fontStyle: FontStyle.normal),softWrap: false,)));
+
     return new Column(
       children: <Widget>[
         new Text(
@@ -72,10 +115,10 @@ class CharacterSwipePreview extends AnimatedWidget
 
   static Widget cp = new Container();
 
-  static setChar(LocalCharacter c)
+  static setChar(LightCharacter c)
   {
 //    char = c;
-    cp = new CharacterPreview(c);
+    cp = new CharacterPreview.load(lightChar: c);
   }
 
 //  static LocalCharacter char = new LocalCharacter(
@@ -96,8 +139,8 @@ class CharacterSwipePreview extends AnimatedWidget
 
   @override
   Widget build(BuildContext context) {
-
     final Animation<double> animation = listenable;
+
     return new GestureDetector(
       onHorizontalDragStart: (start){startPos = start.globalPosition.dx;},
       onHorizontalDragUpdate: (update){endPos = update.globalPosition.dx;},

@@ -4,19 +4,21 @@ import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/journals/race_viewer.dart';
 import 'package:dnd_301_final/login_page.dart';
+import 'package:dnd_301_final/splash.dart';
 import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 
 
-void main() => runApp(new MyApp());
+void main() => runApp(new Main());
 
 
-class MyApp extends StatelessWidget {
+class Main extends StatelessWidget {
 
   final AppData appData = AppData.instance();
 
 
   final routes = <String, WidgetBuilder>{
+    Splash.tag: (context) => new Splash(),
     LoginPage.tag: (context) => new LoginPage(),
     HomePage.tag: (context) => new HomePage(),
     MonsterJournal.tag: (context) => new MonsterJournal(),
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         textSelectionHandleColor: Colors.white,
         fontFamily: 'Nunito',
       ),
-      home: new LoginPage(),
+      home: new Splash(),
       routes: routes,
 
     );

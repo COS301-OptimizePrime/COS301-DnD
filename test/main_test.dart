@@ -6,13 +6,10 @@ import 'package:dnd_301_final/home_page.dart';
 import 'package:dnd_301_final/journals/race_viewer.dart';
 import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/login_page.dart';
-import 'package:dnd_301_final/main.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dnd_301_final/splash.dart';
-import 'package:splashscreen/splashscreen.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
 
 main() {
@@ -217,6 +214,100 @@ main() {
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 
+  testWidgets('Gender Icon Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new GenderIcon.str("Male")
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new GenderIcon.str("Female")
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('Race Preview Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new RacePreview(race: RacesAndClasses.Race.getRace("Aarakocra"))
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text("Aarakocra"), findsOneWidget);
+  });
+
+  testWidgets('Class Preview Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new ClassPreview(charClass: RacesAndClasses.ClassType.getClass("Barbarian"))
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text("Barbarian"), findsOneWidget);
+  });
+
+  testWidgets('Class Icon Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new ClassIcon.str("Barbarian")
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('Stat Icons Test', (WidgetTester tester) async {
+    // set up environment
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Int(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Chr(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Str(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Wis(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Dex(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+
+    await tester.pumpWidget(new MaterialApp(
+        home: new Container(child: Stat.Con(value: 2,hasButtons: false,),),
+    ));
+
+    // check if page loaded correctly
+    expect(find.byType(Image), findsOneWidget);
+  });
+
   // Tests Character Details Page
   testWidgets('Character Details Page Test', (WidgetTester tester) async {
     // CharacterSelection in real app downloads characters. Mock characters
@@ -251,7 +342,6 @@ main() {
     // check if page loaded correctly
     expect(find.text("Character Details"), findsOneWidget);
     expect(find.text("James"), findsOneWidget);
-    expect(find.text("Female"), findsOneWidget);
     expect(find.text("Stats: "), findsOneWidget);
     expect(find.text("Int"), findsOneWidget);
     expect(find.text("Dex"), findsOneWidget);

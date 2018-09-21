@@ -448,13 +448,15 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   RacePreview(
-                    race: char.race,
+                    race: char.charRace,
                   ),
                   ClassPreview(
                     charClass: char.charClass,
                   ),
-                  new Text(
-                      char.charGender), //our text widget with our description
+                  Container(
+                    height: 20.0,
+                    child: GenderIcon.str(char.charGender),
+                  )
                 ],
               ),
               new Padding(

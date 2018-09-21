@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:dnd_301_final/app_data.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/races_and_classes.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
+import 'package:dnd_301_final/character/races_and_classes.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -64,8 +64,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
     ) ?? false;
   }
 
-  void addNewChar()
-  {
+  Future addNewChar()
+  async {
 
 //    formKey.currentState.save();
     LocalCharacter temp = new LocalCharacter(
@@ -73,11 +73,11 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       charClass: BasicInfoTab.selectedClass,
       charRace: BasicInfoTab.selectedRace,
       charGender: bit.newCharGender,
-      strength: bit.stats.intel,
+      strength: bit.stats.str,
       dexterity: bit.stats.dex,
       constitution: bit.stats.con,
       intelligence: bit.stats.intel,
-      wisdom: bit.stats.intel,
+      wisdom: bit.stats.wis,
       charisma: bit.stats.chr,
       background: lit.background,
       personality: lit.personality,
@@ -92,24 +92,24 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
     print("New Character ${bit.newCharName = ""} created.");
 
 
-    AppData.addNewCharacter(temp);
+    await AppData.addNewCharacter(temp);
 
     setState((){});
   }
 
-  LocalCharacter updateChar()
-  {
+  Future<LocalCharacter> updateChar()
+  async {
     LocalCharacter temp = new LocalCharacter(
       characterId: widget.char.characterId,
       title: bit.newCharName,
       charClass: BasicInfoTab.selectedClass,
       charRace: BasicInfoTab.selectedRace,
       charGender: bit.newCharGender,
-      strength: bit.stats.intel,
+      strength: bit.stats.str,
       dexterity: bit.stats.dex,
       constitution: bit.stats.con,
       intelligence: bit.stats.intel,
-      wisdom: bit.stats.intel,
+      wisdom: bit.stats.wis,
       charisma: bit.stats.chr,
       background: lit.background,
       personality: lit.personality,
@@ -123,7 +123,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
     print("Updating Character ${bit.newCharName = ""}.");
 
     widget.char = temp;
-    AppData.updateCharacter(temp);
+    await AppData.updateCharacter(temp);
 
     return temp;
 
@@ -185,13 +185,13 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         else {
                           if(widget.char==null)
                             {
-                              addNewChar();
-                              Navigator.pop(context, DismissDialogAction.save);
+                              addNewChar().whenComplete((){Navigator.pop(context, true);});
                             }
                           else
                             {
-                              final char = updateChar();
-                              Navigator.pop(context, char);
+                              updateChar().then((char){
+                                Navigator.pop(context, char);
+                              });
                             }
                         }
                       }
@@ -234,8 +234,8 @@ class BasicInfoTab extends StatefulWidget {
   String newCharGender = "Male";
   static ClassType selectedClass = typeClasses.elementAt(0);
   static Race selectedRace = races.elementAt(0);
-  RacePreview racePrev;
-  ClassPreview classPrev;
+  RacePreviewRow racePrev;
+  ClassPreviewRow classPrev;
   StatsWidgets stats;
 
   final TextEditingController char_name = new TextEditingController();
@@ -249,8 +249,8 @@ class BasicInfoTab extends StatefulWidget {
 //        newCharGender = "Male";//@TODO: fix when gender is added to server
         selectedClass = c.charClass;
         selectedRace = c.charRace;
-        racePrev = new RacePreview(race: selectedRace);
-        classPrev = new ClassPreview(classType: selectedClass);
+        racePrev = new RacePreviewRow(race: selectedRace);
+        classPrev = new ClassPreviewRow(classType: selectedClass);
         stats = new StatsWidgets(
           intel: c.intelligence, dex: c.dexterity, str: c.strength, chr: c.charisma, con: c.constitution, wis: c.wisdom,
         );
@@ -258,8 +258,8 @@ class BasicInfoTab extends StatefulWidget {
       else
       {
         newCharGender = "Male";
-        racePrev = new RacePreview(race: selectedRace);
-        classPrev = new ClassPreview(classType: selectedClass);
+        racePrev = new RacePreviewRow(race: selectedRace);
+        classPrev = new ClassPreviewRow(classType: selectedClass);
         stats = new StatsWidgets();
       }
   }
@@ -286,7 +286,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       onSubmitted: (val){widget.newCharName = val; print('saving name $val'); setState(() {
 
                       });},
-                      autofocus: true,
+//                      autofocus: true,
                       decoration: new InputDecoration(
                         hintText: 'Type name here',
                       )
@@ -313,7 +313,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                       BasicInfoTab.selectedRace=val;
                       _saveNeeded = true;
                       setState(() {
-                        widget.racePrev=new RacePreview(race: BasicInfoTab.selectedRace,);
+                        widget.racePrev=new RacePreviewRow(race: BasicInfoTab.selectedRace,);
 //                        new StatsWidgets(race: widget.selectedRace);
                       });},
                     value: BasicInfoTab.selectedRace,
@@ -355,7 +355,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                             child: new Text(c.name)
                           );}).toList(),
                         isDense: true,
-                        onChanged: (val){if(val!=null) BasicInfoTab.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreview(classType: BasicInfoTab.selectedClass,);});},
+                        onChanged: (val){if(val!=null) BasicInfoTab.selectedClass = val; _saveNeeded=true; setState(() {widget.classPrev = new ClassPreviewRow(classType: BasicInfoTab.selectedClass,);});},
                         value: BasicInfoTab.selectedClass,
                       ),
 
@@ -525,7 +525,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
             armorClass+=item.val;
         }
     );
-    shield = new Shield(armorClass);
+    shield = new Shield.value(armorClass);
   }
 
   newItemDialog(BuildContext context) async
@@ -544,7 +544,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
 
       if(!newItem.isWep) {
         armorClass += newItem.val;
-        shield = new Shield(armorClass);
+        shield = new Shield.value(armorClass);
       }
     }
 
@@ -600,7 +600,7 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
                           this.armorClass -= widget.equipment
                               .elementAt(index)
                               .val;
-                          this.shield = new Shield(armorClass);
+                          this.shield = new Shield.value(armorClass);
                         }
                       });
                       widget.equipment.removeAt(index);
@@ -623,9 +623,23 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
 }
 
 class Shield extends StatelessWidget {
-  final int armorClass;
+  int armorClass = 0;
+  List equipmentList;
 
-  Shield(this.armorClass);
+  Shield.value(this.armorClass);
+  Shield.list(this.equipmentList)
+  {
+    if (equipmentList != null) {
+      equipmentList.forEach((item) {
+        if (item != null && !item.isWep)
+          armorClass += item.val;
+      }
+      );
+    }
+    else {
+      armorClass = 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -912,11 +926,11 @@ final TextStyle traitsStyle = new TextStyle(
 );
 
 
-class RacePreview extends StatelessWidget {
+class RacePreviewRow extends StatelessWidget {
 
 final Race race;
 
-RacePreview({
+RacePreviewRow({
   this.race,
 });
 
@@ -970,11 +984,11 @@ RacePreview({
   }
 }
 
-class ClassPreview extends StatelessWidget {
+class ClassPreviewRow extends StatelessWidget {
 
   final ClassType classType;
 
-  ClassPreview({
+  ClassPreviewRow({
     this.classType,
   });
 
@@ -1043,7 +1057,6 @@ class ClassPreview extends StatelessWidget {
                       text: 'd${classType.hitDie.toString()}',
                       style: traitsStyle,
                     ),
-
                   ]
               ),
             ),
@@ -1110,7 +1123,6 @@ class StatsWidgets extends StatelessWidget {
               ],
             ),
           ),
-
         ],
       ),
     );

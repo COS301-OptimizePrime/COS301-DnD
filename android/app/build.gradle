@@ -17,6 +17,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -36,6 +37,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -54,6 +56,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation "com.android.support:support-v4:27.1.1"
 }
 
 apply plugin: 'com.google.gms.google-services'
+

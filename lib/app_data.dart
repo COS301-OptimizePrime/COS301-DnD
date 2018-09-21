@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:dnd_301_final/character_creation.dart';
-import 'package:dnd_301_final/character_selection.dart';
-import 'package:dnd_301_final/races_and_classes.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
+import 'package:dnd_301_final/character/character_selection.dart';
+import 'package:dnd_301_final/character/races_and_classes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:grpc/grpc.dart";
@@ -14,23 +14,25 @@ class AppData{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-  FirebaseUser user;
+  static FirebaseUser user;
   GoogleSignInAccount googleUser;
-  GoogleUserCircleAvatar user_google_image;
+  GoogleUserCircleAvatar userGoogleImage;
 
   static String token = "anon";
+  static const int pollRate = 2;
 
-  // This should change, we should not have a global session as there can be multiple
-  static Session temp_session;
-  // This should change we should not have a global session as there can be multiple
-  static String sessionId;
-  static List<Session> activeSessions;
+  // The current active game session
+  static Session currentSession;
+
+  static List<LightSession> activeSessions;
   static ClientChannel channel;
-  static SessionsManagerClient stub;
+  static SessionsManagerClient sessionStub;
+  static bool readyInSession;
 
   ///characters
   static CharactersManagerClient charStub;
   static int charsLoaded;
+  static final List<LightCharacter> lightCharacters = new List();
 
   static double screenWidth;
   static double screenHeight;
@@ -40,7 +42,7 @@ class AppData{
   AppData() {
     //this class contains data to be passed around the app
     //DO NOT instantiate new AppData classes with 'new'
-    //use AppData.instance()
+    //use AppData.instance() or call AppData.staticField
   }
 
   static AppData instance()
@@ -51,7 +53,7 @@ class AppData{
     return _singleton;
   }
 
-  Future signinWithGoogle() async
+  Future signInWithGoogle() async
   {
     googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -71,7 +73,7 @@ class AppData{
     final FirebaseUser currentUser = await auth.currentUser();
     assert(user.uid == currentUser.uid);
 
-    user_google_image = new GoogleUserCircleAvatar(identity: googleUser,placeholderPhotoUrl: googleUser.photoUrl);
+    userGoogleImage = new GoogleUserCircleAvatar(identity: googleUser,placeholderPhotoUrl: googleUser.photoUrl);
   }
 
   Future<bool> signInWithEmailAndPass(String email, String pass) async{
@@ -103,9 +105,11 @@ class AppData{
     jr.sessionId = sid;
     jr.authIdToken = token;
 
-    final response = await stub.leave(jr);
+    final response = await sessionStub.leave(jr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
+
+    activeSessions.removeAt(activeSessions.indexWhere((e)=>e.sessionId==sid));
 
     return response;
   }
@@ -117,11 +121,18 @@ class AppData{
       {
         googleSignIn.signOut();
         googleUser = null;
-        user_google_image=null;
+        userGoogleImage=null;
       }
     user = null;
-    characters.clear();
+//    characters.clear();
     charsLoaded = null;
+    lightCharacters.clear();
+    sessionStub = null;
+    charStub = null;
+    activeSessions = null;
+    user = null;
+    readyInSession = false;
+    currentSession=null;
   }
 
   static void connectToServer()
@@ -135,21 +146,21 @@ class AppData{
   static Future<Session> createSession(String name, int maxPlayers)
   async {
 
-        if(channel==null)
-          connectToServer();
+    if(channel==null)
+      connectToServer();
 
-        if(stub==null)
-          stub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
-        NewSessionRequest nsr = new NewSessionRequest();
+    NewSessionRequest nsr = new NewSessionRequest();
     nsr.name = name;
     nsr.authIdToken = token;
     nsr.maxPlayers = maxPlayers;
-    final response = await stub.create(nsr);
+
+    final response = await sessionStub.create(nsr);
     print('Client received: ${response.status}');
 
-    temp_session = response;
-    sessionId = response.sessionId;
+    currentSession = response;
     return response;
   }
 
@@ -158,14 +169,14 @@ class AppData{
     if(channel==null)
       connectToServer();
 
-    if(stub==null)
-      stub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
     JoinRequest jr = new JoinRequest();
     jr.sessionId = sid;
     jr.authIdToken = token;
 
-    final response = await stub.join(jr);
+    final response = await sessionStub.join(jr);
     print('Status: ${response.status}');
     print('Status Message: ${response.statusMessage}');
 
@@ -177,17 +188,23 @@ class AppData{
     if(channel==null)
       connectToServer();
 
-    if(stub==null)
-      stub = new SessionsManagerClient(channel);
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
     GetSessionsOfUserRequest gsur = new GetSessionsOfUserRequest();
     gsur.limit = 10;
     gsur.authIdToken = token;
 
-    final response = await stub.getSessionsOfUser(gsur);
-    activeSessions = response.sessions;
-    print('Status: ${response.status}');
-    print('Status Message: ${response.status}');
+    final response = await sessionStub.getSessionsOfUser(gsur);
+
+    if(activeSessions==null || activeSessions.length!=response.lightSessions.length) {
+      activeSessions = response.lightSessions;
+      print('updating ActiveSessions list');
+    }
+    else print('not updating ActiveSessions list');
+
+    print('   Status: ${response.status}');
+    print('   Status Message: ${response.status}');
 
     return response;
   }
@@ -201,29 +218,31 @@ class AppData{
     if(charStub==null)
       charStub = new CharactersManagerClient(channel);
 
-    if(charsLoaded==null)
-      return getUseCharacters();
+//    if(charsLoaded==null)
+//      return getUserCharacters();
 
     GetCharactersRequest gcr = new GetCharactersRequest();
     gcr.authIdToken = token;
 
     final chars = await charStub.getCharacters(gcr);
 
-    print('adding ${chars.characters.length - charsLoaded} characters');
+    print('adding ${chars.lightCharacters.length - charsLoaded} characters');
 
 //    for (int i = charsLoaded; i>=0 && i < chars.characters.length;i++)
-    characters.clear();
-    for (int i = 0; i>=0 && i < chars.characters.length;i++)
-    {
-      characters.add(
-          convertToLocalChar(chars.characters.elementAt(i))
-      );
-      charsLoaded++;
-    }
+
+    lightCharacters.clear();
+    lightCharacters.addAll(chars.lightCharacters);
+//    for (int i = 0; i>=0 && i < chars.lightCharacters.length;i++)
+//    {
+////      characters.add(
+////          convertToLocalChar(chars.lightCharacters.elementAt(i))
+////      );
+//      charsLoaded++;
+//    }
     print('characters added');
   }
 
-  static Future getUseCharacters()
+  static Future getUserCharacters()
   async
   {
     if(channel==null)
@@ -239,15 +258,18 @@ class AppData{
 
     final chars = await charStub.getCharacters(gcr);
 
-    charsLoaded = chars.characters.length;
-    print('adding ${chars.characters.length} characters');
+//    charsLoaded = chars.characters.length;
+    print('adding ${chars.lightCharacters.length} characters');
 
-    for (int i = 0; i < chars.characters.length;i++)
-      {
-        characters.add(
-          convertToLocalChar(chars.characters.elementAt(i))
-        );
-      }
+//    for (int i = 0; i < chars.characters.length;i++)
+//      {
+//        characters.add(
+//          convertToLocalChar(chars.characters.elementAt(i))
+//        );
+//      }
+
+    if(lightCharacters.isNotEmpty) lightCharacters.clear();
+    lightCharacters.addAll(chars.lightCharacters);
 
     print('characters added');
 
@@ -270,7 +292,7 @@ class AppData{
 
    final response = await charStub.createCharacter(ncr);
 
-   print('added character: ${response.characterId}');
+   print('\tAdding character: ${response.status}');
 
    characters.add(char);
 
@@ -283,7 +305,7 @@ class AppData{
       title: netChar.name,
       charClass: ClassType.getClass(netChar.characterClass),
       charRace:  Race.getRace(netChar.race),
-      charGender: 'unimplemented',
+      charGender: netChar.gender,
       strength: netChar.strength,
       dexterity: netChar.dexterity,
       charisma: netChar.charisma,
@@ -334,7 +356,7 @@ class AppData{
     temp.name = char.title;
     temp.characterClass = char.charClass.name;
     temp.race = char.charRace.name;
-//    temp.gender = char.charGender;
+    temp.gender = char.charGender;
     temp.strength = char.strength;
     temp.dexterity = char.dexterity;
     temp.charisma = char.charisma;
@@ -347,13 +369,12 @@ class AppData{
     temp.bonds = char.bonds;
     temp.flaws = char.flaws;
     temp.featuresAndTraits = char.featuresTraits;
-    temp.sessionId = char.sessionId;
     convertToNetEquip(temp.equipment ,char.equipment);
 
     return temp;
   }
 
-  static deleteCharacter(String id) async{
+  static Future deleteCharacter(String id) async{
 
     if(channel==null)
       connectToServer();
@@ -366,6 +387,8 @@ class AppData{
     dcr.authIdToken=token;
 
     print("deleting character $id");
+    lightCharacters.removeWhere((c)=>c.characterId==id);
+    characters.removeWhere((c)=>c.characterId==id);
 
     final response = await charStub.deleteCharacter(dcr);
 
@@ -394,7 +417,7 @@ class AppData{
     print(response.statusMessage);
   }
 
-  static void updateCharacter(LocalCharacter localChar) async {
+  static Future updateCharacter(LocalCharacter localChar) async {
 
     if(channel==null)
       connectToServer();
@@ -414,5 +437,243 @@ class AppData{
     print(response.statusMessage);
 
   }
+
+  static Future<Session> getSessionById(String id) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+    GetSessionRequest gsr = new GetSessionRequest();
+    gsr.authIdToken = token;
+    gsr.sessionId = id;
+
+    final response = await (sessionStub.getSessionById(gsr));
+
+    print('Retrieved session: \'${response.name}\' with id: ${response.sessionId}');
+
+    if(response.status!="FAILED")
+      return response;
+    else
+      return null;
+
+  }
+
+  static updateUserLightCharacters()
+  async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+//    if(charsLoaded==null)
+//      return getUserCharacters();
+
+    GetCharactersRequest gcr = new GetCharactersRequest();
+    gcr.authIdToken = token;
+
+    final chars = await charStub.getCharacters(gcr);
+
+    int updatedChars = 0;
+    int addedChars = 0;
+
+    for(int i = 0; i < chars.lightCharacters.length;i++)
+      {
+        LightCharacter tempNet = chars.lightCharacters.elementAt(i);
+        LightCharacter tempLoc = lightCharacters.firstWhere((c) => c.characterId==tempNet.characterId,orElse: (){return null;});
+
+        if(tempLoc!=null)//match found - do not re-add
+          continue;//@todo: implement checking for updates
+//          if(tempnet.hasLastUpdated())
+//            checkForChanges(tempLoc,tempNet);
+
+        addedChars++;
+        lightCharacters.add(tempNet);
+      }
+
+    print('Updating User Light Characters:\n');
+    print('\tadding $addedChars characters\n');
+    print('\tupdating $updatedChars characters\n');
+  }
+
+  static Future<LocalCharacter> getCharacterById(String id) async {
+    if(channel==null)
+      connectToServer();
+
+    if(charStub==null)
+      charStub = new CharactersManagerClient(channel);
+
+    GetCharacterByIdRequest gcrId = new GetCharacterByIdRequest();
+    gcrId.characterId = id;
+    gcrId.authIdToken = token;
+
+    final charResponse = await charStub.getCharacterById(gcrId);
+
+    if(charResponse.status=='SUCCESS') {
+      print("Fetched character <${charResponse.name}> with id [${charResponse.characterId}]");
+      return convertToLocalChar(charResponse);
+    }
+     else {
+      print("Failed to fetch character with id [$id]");
+      return null;
+    }
+  }
+
+  static Future readyToggle(String id) async{
+
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+     ReadyUpRequest rur = new ReadyUpRequest();
+     rur.sessionId = id;
+     rur.authIdToken = token;
+
+     final ReadyUpReply response = await sessionStub.ready(rur);
+     print('Readying up user: $id  -> ${response.status}');
+
+     return;
+  }
+
+  static void setSessionState(String s, String id) async{
+
+
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+    ChangeStateRequest csr = new ChangeStateRequest();
+    csr.state = s;
+    csr.sessionId = id;
+    csr.authIdToken = token;
+
+    final Session response = await sessionStub.changeState(csr);
+
+    if(response.status=="FAILED")
+      print('Failed to update state to $s');
+
+  }
+
+  static Future<LightSession> getLightSessionById(sessionId) async{
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+    GetSessionRequest gsr = new GetSessionRequest();
+    gsr.authIdToken = token;
+    gsr.sessionId = sessionId;
+
+    final response = await (sessionStub.getLightSessionById(gsr));
+
+    print('Retrieved light session: \'${response.name}\' with id: ${response.sessionId}');
+
+    if(response!=null && response.status!=null && response.status!="FAILED")
+      return response;
+    else
+      return null;
+
+  }
+
+  static Future addCharacterToCurrentSession(String charId) async
+  {
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+    final request = AddCharacterToSessionRequest();
+    request.sessionId = currentSession.sessionId;
+    request.characterId = charId;
+    request.authIdToken = token;
+
+    final response = await (sessionStub.addCharacterToSession(request));
+
+    print("Adding $charId to session (${currentSession.name}) => ${response.status}");
+    if(response.status=="FAILED")
+      print(response.statusMessage);
+
+  }
+
+  static Future<List<LightCharacter>> getGameCharacters(String sessionId) async {
+
+    if(channel==null)
+      connectToServer();
+
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
+
+
+    print('Fetching characters for session: $sessionId');
+    final GetCharactersInSessionRequest request = new GetCharactersInSessionRequest();
+    request.sessionId = sessionId;
+    request.authIdToken = token;
+
+    final GetCharactersInSessionResponse response = await sessionStub.getCharactersInSession(request);
+
+    print('   status: ${response.status}');
+    if(response.status=="FAILED")
+      print('   message: ${response.statusMessage}');
+
+    return response.lightCharacters;
+  }
+
+  static distributeXP(int total) async{
+
+    int xp = total ~/ currentSession.charactersInSession.length;
+
+    bool oneBusy = false;
+    bool twoBusy = false;
+
+    currentSession.charactersInSession.forEach((char){
+
+
+
+    });
+
+  }
+
+  static giveXpToCharacter(int xp, String charid) async
+  {
+
+  }
+
+  /*
+
+  0 	1 	+2
+300 	2 	+2
+900 	3 	+2
+2,700 	4 	+2
+6,500 	5 	+3
+14,000 	6 	+3
+23,000 	7 	+3
+34,000 	8 	+3
+48,000 	9 	+4
+64,000 	10 	+4
+85,000 	11 	+4
+100,000 	12 	+4
+120,000 	13 	+5
+140,000 	14 	+5
+165,000 	15 	+5
+195,000 	16 	+5
+225,000 	17 	+6
+265,000 	18 	+6
+305,000 	19 	+6
+355,000 	20 	+6
+
+   */
+
+
+
 
 }

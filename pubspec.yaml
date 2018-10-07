@@ -8,7 +8,7 @@ dependencies:
   google_sign_in:
   image_picker:
   async: '>=1.13.3 <3.0.0'
-  protobuf: ^0.10.2
+  protobuf: ^0.10.4
   http: ^0.11.3+16
   http2: ^0.1.7
   grpc: ^0.6.5

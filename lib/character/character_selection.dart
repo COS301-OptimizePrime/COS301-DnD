@@ -34,6 +34,7 @@ class LocalCharacter {
     this.flaws = '',
     this.featuresTraits = '',
     this.equipment,
+    this.xp
   });
 
   final String title;
@@ -62,6 +63,8 @@ class LocalCharacter {
 
   Race race;
   ClassType classType;
+
+  int xp;
 
   bool isValid() {
     return (title != null &&
@@ -168,10 +171,12 @@ class CharacterLightView extends StatelessWidget {
     Key key,
     @required this.lightChar,
     @required this.titleStyle,
+    this.armorValue,
   }) : super(key: key);
 
   final LightCharacter lightChar;
   final TextStyle titleStyle;
+  final Shield armorValue;
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +221,10 @@ class CharacterLightView extends StatelessWidget {
                   height: 20.0,
                   child: GenderIcon.str(lightChar.gender)
               ),
+              //@TODO: armor class viewable
+              Container(
+                child: (armorValue!=null)? armorValue : null,
+              ) ,
 //              RacePreview(
 //                race: Race.getRace(lightChar.race),
 //              ),
@@ -383,15 +392,19 @@ class RacePreview extends StatelessWidget {
 }
 
 class CharacterDetailsView extends StatefulWidget {
-  const CharacterDetailsView({
-    Key key,
-    @required this.char,
-  }) :  lightChar = null, super(key: key);
+//  const CharacterDetailsView({
+//    Key key,
+//    @required this.char,
+//  }) :  lightChar = null, super(key: key);
 
-  CharacterDetailsView.load({Key key, @required this.lightChar,}) : char=null;
+  CharacterDetailsView ({this.char,this.editable=true,this.deletable=true,this.fullView=true}) : lightChar= null;
+  CharacterDetailsView.load({Key key, @required this.lightChar, this.editable = true, this.deletable = true,this.fullView=true}) : char=null;
 
   final LocalCharacter char;
   final LightCharacter lightChar;
+  final bool editable;
+  final bool deletable;
+  final bool fullView;
 
   @override
   _CharacterDetailsViewState createState() => _CharacterDetailsViewState(char);
@@ -405,12 +418,14 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
 
   Future<LocalCharacter> loadCharacter() async
   {
+
     final charResponse = await (AppData.getCharacterById(widget.lightChar.characterId));
     //may return null in case of error
-    if(charResponse!=null) return charResponse;
+    return charResponse;
 
 //    char.set(charResponse);
   }
+
 
   @override
   initState()
@@ -436,9 +451,11 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
 
     return new Scaffold(
         //new scaffold
-        appBar: new AppBar(
+        appBar: (widget.fullView)?
+          new AppBar(
           title: const Text('Character Details'), //title of view
           actions: <Widget>[
+            (widget.editable)?
             IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {
@@ -459,8 +476,9 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
                     });
                   });
                 })
+                : null
           ],
-        ),
+        ) : null,
         body: new ListView(
             shrinkWrap: true,
             padding: const EdgeInsets.all(10.0),
@@ -578,6 +596,7 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
                     ? EquipmentList(char: char)
                     : new Column(),
               ),
+            (widget.deletable)?
               new Center(
                 child: new Container(
                   width: AppData.screenWidth / 3,
@@ -585,16 +604,38 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
                   child: new DeleteButton(charId: char.characterId),
                 ),
               )
-            ]));
+                : Container(width: 0.0,height: 0.0,child: null,)
+            ])
+    );
   }
 }
 
 class EquipmentList extends StatefulWidget {
   final LocalCharacter char;
+  final bool addItem;
 
   EquipmentList({
     this.char,
-  });
+  }) : addItem=false;
+
+  EquipmentList.add({
+    this.char,
+  }) : addItem=true;
+
+
+  static Future<LocalEquipment> addNewItem(BuildContext context) async
+  {
+    LocalEquipment newItem = await (showDialog(context: context,
+      builder: (_) => new SimpleDialog(
+        children: <Widget>[
+          NewItemDialogWidget(),
+        ],
+      ),
+    ));
+
+    return newItem;
+  }
+
 
   @override
   _EquipmentListState createState() => _EquipmentListState();
@@ -602,13 +643,65 @@ class EquipmentList extends StatefulWidget {
 
 class _EquipmentListState extends State<EquipmentList> {
   int index = 0;
+  bool busy = false;
 
   @override
   Widget build(BuildContext context) {
+    if(widget.char.equipment==null || widget.char.equipment.length<1)
+      ListView.builder(
+        padding: EdgeInsets.all(8.0),
+        itemCount: 1,
+        itemBuilder: (context,index){
+          return GestureDetector(
+            onTap: () async{
+              if(busy) return;
+              busy = true;
+              await EquipmentList.addNewItem(context).then((LocalEquipment e) async{
+                widget.char.equipment.add(e);
+                if(widget.addItem)
+                  await AppData.updateCharacter(widget.char);
+
+                setState(() {
+                  //update view
+                  print('updated char');
+                });
+              });
+              busy = false;
+            },
+            child: Container(
+              child: EquipmentWidget.add(),
+              padding: EdgeInsets.all(5.0),
+            ),
+          );
+      });
     return ListView.builder(
         padding: EdgeInsets.all(8.0),
-        itemCount: widget.char.equipment.length,
+        itemCount: (widget.addItem)? widget.char.equipment.length +1 : widget.char.equipment.length,
         itemBuilder: (context, index) {
+
+          if(index==widget.char.equipment.length)
+            return GestureDetector(
+              onTap: () async{
+                if(busy) return;
+                busy = true;
+                await EquipmentList.addNewItem(context).then((LocalEquipment e) async{
+                  widget.char.equipment.add(e);
+                  if(widget.addItem)
+                    await AppData.updateCharacter(widget.char);
+
+                  setState(() {
+                    //update view
+                    print('updated char');
+                  });
+                });
+                busy = false;
+              },
+              child: Container(
+                child: EquipmentWidget.add(),
+                padding: EdgeInsets.all(5.0),
+              ),
+            );
+
           final item = widget.char.equipment[index];
 
           if (item == null) return Container();
@@ -626,6 +719,8 @@ class _EquipmentListState extends State<EquipmentList> {
             // We also need to provide a function that will tell our app
             // what to do after an item has been swiped away.
             onDismissed: (direction) {
+
+              ///@todo: implement confirm action
               widget.char.equipment.removeAt(index);
 
               AppData.removeEquipment(widget.char, index);
@@ -824,4 +919,107 @@ class CharacterSelectionState extends State<CharacterSelection>
     controller.dispose();
     super.dispose();
   }
+}
+
+/*
+Spell Slots per Spell Level Lvl.
+
+lvl   1 	2 	3 	4 	5 	6 	7 	8 	9 'th tier spell
+1st 	2 	— 	— 	— 	— 	— 	— 	— 	—
+2nd 	3 	— 	— 	— 	— 	— 	— 	— 	—
+3rd 	4 	2 	— 	— 	— 	— 	— 	— 	—
+4th 	4 	3 	— 	— 	— 	— 	— 	— 	—
+5th 	4 	3 	2 	— 	— 	— 	— 	— 	—
+6th 	4 	3 	3 	— 	— 	— 	— 	— 	—
+7th 	4 	3 	3 	1 	— 	— 	— 	— 	—
+8th 	4 	3 	3 	2 	— 	— 	— 	— 	—
+9th 	4 	3 	3 	3 	1 	— 	— 	— 	—
+10th 	4 	3 	3 	3 	2 	— 	— 	— 	—
+11th 	4 	3 	3 	3 	2 	1 	— 	— 	—
+12th 	4 	3 	3 	3 	2 	1 	— 	— 	—
+13th 	4 	3 	3 	3 	2 	1 	1 	— 	—
+14th 	4 	3 	3 	3 	2 	1 	1 	— 	—
+15th 	4 	3 	3 	3 	2 	1 	1 	1 	—
+16th 	4 	3 	3 	3 	2 	1 	1 	1 	—
+17th 	4 	3 	3 	3 	2 	1 	1 	1 	1
+18th 	4 	3 	3 	3 	3 	1 	1 	1 	1
+19th 	4 	3 	3 	3 	3 	2 	1 	1 	1
+20th 	4 	3 	3 	3 	3 	2 	2 	1 	1
+ */
+
+
+List<int> getSpellSlotsForCharacter(LocalCharacter char) => getSpellSlotsForLevel(calcLevel(char.xp));
+
+List<int> getSpellSlotsForLevel(int level)
+{
+
+  assert(level!=null && level>0,'Level <$level> must not be null or less than zero');
+  List<int> spells;
+
+  switch(level)
+  {
+    case 1:
+      spells = [2];
+      break;
+    case 2:
+      spells = [3];
+      break;
+    case 3:
+      spells=[4,2];
+      break;
+    case 4:
+      spells=[4,3];
+      break;
+    case 5:
+      spells=[4,3,2];
+      break;
+    case 6:
+      spells=[4,3,3];
+      break;
+    case 7:
+      spells=[4,3,3,1];
+      break;
+    case 8:
+      spells=[4,3,3,2];
+      break;
+    case 9:
+      spells=[4,3,3,3,1];
+      break;
+    case 10:
+      spells=[4,3,3,3,2];
+      break;
+    case 11:
+      spells=[4,3,3,3,2,1];
+      break;
+    case 12:
+      spells=[4,3,3,3,2,1];
+      break;
+    case 13:
+      spells=[4,3,3,3,2,1,1];
+      break;
+    case 14:
+      spells=[4,3,3,3,2,1,1];
+      break;
+    case 15:
+      spells=[4,3,3,3,2,1,1,1];
+      break;
+    case 16:
+      spells=[4,3,3,3,2,1,1,1];
+      break;
+    case 17:
+      spells=[4,3,3,3,2,1,1,1,1];
+      break;
+    case 18:
+      spells=[4,3,3,3,3,1,1,1,1];
+      break;
+    case 19:
+      spells=[4,3,3,3,3,2,1,1,1];
+      break;
+    case 20:
+      spells=[4,3,3,3,3,2,2,1,1];
+      break;
+  }
+
+  return spells;
+
 }

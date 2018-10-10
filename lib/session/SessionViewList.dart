@@ -63,11 +63,12 @@ class _SessionViewListState extends State<SessionViewList> {
                   trailing: (item.dungeonMaster.uid==AppData.user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
                   onTap: () async {
                     Session fullSession = await AppData.getSessionById(AppData.activeSessions.elementAt(index).sessionId);
-                    if(fullSession!=null && fullSession.state=='EXPLORING')//go to game
+                    if(fullSession!=null && fullSession.hasFirstStartedTime() && fullSession.charactersInSession.length==fullSession.users.length-1)//go to game
                       {
                         AppData.currentSession = fullSession;
+                        String id = fullSession.charactersInSession.firstWhere((c)=>c.creatorId==AppData.user.uid,orElse: (){print('no charId at SVL'); return null;})?.characterId;
                         Navigator.push(context, new MaterialPageRoute(
-                          builder: (BuildContext context) => (item.dungeonMaster.uid==AppData.user.uid)? new GameScreen.isDM() : new GameScreen(),
+                          builder: (BuildContext context) => (item.dungeonMaster.uid==AppData.user.uid)? new GameScreen.isDM() : new GameScreen.isPlayer(charID: id),
                         )).whenComplete(update);
                       }
                     else

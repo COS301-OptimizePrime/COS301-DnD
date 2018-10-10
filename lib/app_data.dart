@@ -319,6 +319,7 @@ class AppData{
       flaws: netChar.flaws,
       featuresTraits: netChar.featuresAndTraits,
       equipment: convertToLocalEquip(netChar.equipment),
+      xp: netChar.xp
     );
   }
 
@@ -369,6 +370,7 @@ class AppData{
     temp.bonds = char.bonds;
     temp.flaws = char.flaws;
     temp.featuresAndTraits = char.featuresTraits;
+//    temp.xp = char.xp;
     convertToNetEquip(temp.equipment ,char.equipment);
 
     return temp;
@@ -436,6 +438,7 @@ class AppData{
     print('Update: ${response.status}');
     print(response.statusMessage);
 
+    return null;
   }
 
   static Future<Session> getSessionById(String id) async
@@ -518,7 +521,7 @@ class AppData{
       return convertToLocalChar(charResponse);
     }
      else {
-      print("Failed to fetch character with id [$id]");
+      print("Failed to fetch character with id [$id]: ${charResponse.statusMessage}");
       return null;
     }
   }
@@ -628,18 +631,33 @@ class AppData{
     return response.lightCharacters;
   }
 
-  static distributeXP(int total) async{
+  static distributeXP(int total, String sessionID) async{
 
-    int xp = total ~/ currentSession.charactersInSession.length;
+//    int xp = total ~/ currentSession.charactersInSession.length;
 
-    bool oneBusy = false;
-    bool twoBusy = false;
+//    currentSession.charactersInSession.forEach((char){
+//
+//      giveXpToCharacter(, charid)
+//
+//    });
 
-    currentSession.charactersInSession.forEach((char){
+    if(channel==null)
+      connectToServer();
 
+    if(sessionStub==null)
+      sessionStub = new SessionsManagerClient(channel);
 
+    DistributeXpRequest dxr = new DistributeXpRequest();
+    dxr.authIdToken = token;
+    dxr.xp = total;
+    dxr.sessionId = sessionID;
 
-    });
+    final DistributeXpReply response = await sessionStub.distributeXp(dxr);
+
+    print('Distributing XP: ${response.status}');
+    if(response.status!="SUCCESS"){
+      print(response.statusMessage);
+    }
 
   }
 
@@ -647,6 +665,18 @@ class AppData{
   {
 
   }
+
+//  static Future setUpdatedFlag() {
+//
+//    if(channel==null)
+//      connectToServer();
+//
+//    if(sessionStub==null)
+//      sessionStub = new SessionsManagerClient(channel);
+//
+//    sessionStub.
+//
+//  }
 
   /*
 

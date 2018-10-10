@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/backend/server.pb.dart';
+import 'package:dnd_301_final/character/character_creation.dart';
 import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 //import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
@@ -13,18 +15,22 @@ import 'package:flutter/material.dart';
 class GameScreen extends StatefulWidget {
 
 
-  final List<PlayerFrame> playerCharacters = new List();
+//  final List<PlayerFrame> playerCharacters = new List();
   final bool iAmDungeonMaster;
   final List<Monster> sessionMonsters = new List();
+  final String charID;
+//  static bool mustUpdateChar = false;
+
 //  final PlayerView pv = PlayerView();
 //  final MonstersTab mt = MonstersTab();
 
 
-  GameScreen() : iAmDungeonMaster = false;
-  GameScreen.isDM() : iAmDungeonMaster = true ;
+  GameScreen.isPlayer({this.charID}) : iAmDungeonMaster = false;
+  GameScreen.isDM() : iAmDungeonMaster = true, charID =null ;
 
   @override
-  _GameScreenState createState() => _GameScreenState(playerCharacters);
+//  _GameScreenState createState() => _GameScreenState(playerCharacters);
+  _GameScreenState createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
@@ -33,17 +39,19 @@ class _GameScreenState extends State<GameScreen> {
   bool busy;
 
   bool iAmGameMaster = false;
-  List<PlayerFrame> playerCharacters;
+//  List<PlayerFrame> playerCharacters;
 
 
-  _GameScreenState(List<PlayerFrame> list) {
+//  _GameScreenState(List<PlayerFrame> list) {
+  _GameScreenState() {
     busy = false;
-    playerCharacters = list;
+//    playerCharacters = list;
 
     init().whenComplete(() {
       setState(() {
         timer = new Timer.periodic(
-            const Duration(seconds: AppData.pollRate), (Timer t) => _update());
+            const Duration(seconds: AppData.pollRate*5), (Timer t) => _update()
+        );
       });
     });
   }
@@ -54,10 +62,10 @@ class _GameScreenState extends State<GameScreen> {
       AppData.currentSession.charactersInSession.addAll(
           await AppData.getGameCharacters(AppData.currentSession.sessionId));
 
-    if (playerCharacters.isEmpty)
-      AppData.currentSession.charactersInSession.forEach((char) {
-        playerCharacters.add(new PlayerFrame(char: char));
-      });
+//    if (playerCharacters.isEmpty)
+//      AppData.currentSession.charactersInSession.forEach((char) {
+//        playerCharacters.add(new PlayerFrame(char: char));
+//      });
 
 //    if(widget.pv.playerCharacters==null || widget.pv.playerCharacters.isEmpty)
 //      widget.pv.playerCharacters.addAll(playerCharacters);
@@ -163,6 +171,8 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
     if (timer != null)
       timer.cancel();
+//    if(GameScreen.mustUpdateChar)
+//      AppData.updateCharacter(_PlayerSelfViewState.myChar);
   }
 
 //  PlayerView pv;
@@ -192,7 +202,8 @@ class _GameScreenState extends State<GameScreen> {
             ),
             body: TabBarView(
               children: [
-                PlayerView.list(playerCharacters),
+//                PlayerView.list(playerCharacters),
+                PartyView(),
                 MonstersTab.list(widget.sessionMonsters),
               ],
             ),
@@ -220,47 +231,453 @@ class _GameScreenState extends State<GameScreen> {
 //        ),
 //      );
     }
-    else
+    else {
       //if a user
-      return Scaffold(
-        drawer: Menu(),
-        appBar: AppBar(
-          title: Text(AppData.currentSession.name),
-        ),
-        body: PlayerView.list(playerCharacters),
+
+//      if(widget.charID == null)
+////        return Container(child: Center(child: Text("select a character"),),);
+
+      return new DefaultTabController(length: 2,
+          child: Scaffold(
+            drawer: Menu(),
+            appBar: AppBar(
+              title: Text(AppData.currentSession.name),
+              bottom: TabBar(
+                tabs: [
+                  Tab(text: 'Myself',),
+                  Tab(text: 'Party',),
+                ],
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                PlayerSelfView(myCharID: widget.charID),
+                PartyView(),
+              ],
+            ),
+          )
       );
+    }
   }
 }
 
-class PlayerView extends StatelessWidget {
+class PlayerSelfView extends StatefulWidget {
+
+  final String myCharID;
+
+  PlayerSelfView({this.myCharID});
+
+  @override
+  _PlayerSelfViewState createState() => _PlayerSelfViewState();
+}
+
+class _PlayerSelfViewState extends State<PlayerSelfView> {
+
+  static LocalCharacter myChar;
+  bool update = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+//    getCharacter(widget.myCharID).then((c){
+//      if(this.mounted)
+//        setState(() {
+//          myChar = c;
+//        });
+//    });
+  }
+
+
+  Future<LocalCharacter> getCharacter(String id) async
+  {
+    if(id == null) id = AppData.currentSession.charactersInSession.firstWhere((c)=>c.creatorId==AppData.user.uid,orElse: (){print('Shits fucked yo'); return null;})?.characterId;
+    if(id == null) return null;
+
+    return await AppData.getCharacterById(id);
+  }
+
+  bool editing = false;
+  bool busy = false;
+  bool shouldUpdate = false;
+  void toggleEdit() async
+  {
+    if(busy) return;
+    busy = true;
+
+    //done editing
+    if(editing){
+      if(shouldUpdate){
+        AppData.updateCharacter(myChar);
+        shouldUpdate = false;
+      }
+    }
+
+    setState(() {
+      editing = !editing;
+      print('Editing: $editing');
+    });
+
+    busy = false;
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+//    AppData.updateCharacter(myChar);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    if(myChar==null) {
+      getCharacter(widget.myCharID).then((c){
+          setState(() {
+            myChar = c;
+          });
+    });
+      return Material(child: Center(child: Text('Loading Character...'),));
+    }
+
+    return new Scaffold(
+        //new scaffold
+          resizeToAvoidBottomPadding: false,
+          floatingActionButton:FloatingActionButton(
+            child: (!editing)? Icon(Icons.edit) : Icon(Icons.done),
+            onPressed: (){
+              toggleEdit();
+            },
+          ),
+          body: new ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(10.0),
+              children: <Widget>[
+                RichText(text: TextSpan(
+                    style: TextStyle(
+                        color: myChar.charClass.color,
+                        fontSize: 23.0
+                    ),
+                    text: '${myChar.title}\n',
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '     ${myChar.charRace.name}   - ',
+                        style: TextStyle(color: Colors.white70,fontSize: 13.0),
+                      ),
+                      TextSpan(
+                        text: '  ${myChar.charClass.name}',
+                        style: traitsTitleStyle,
+                      )
+                    ]
+                )),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    RacePreview(
+                      race: myChar.charRace,
+                    ),
+                    Container(
+                      height: 60.0,
+                      child: ClassIcon(
+                        classType: myChar.charClass,
+                      ),
+                    ),
+                    Container(
+                      height: 20.0,
+                      child: GenderIcon.str(myChar.charGender),
+                    ),
+                    new Column(
+                      children: <Widget>[
+//                  new Text(lightChar.gender),
+
+//                  Text("Lvl: ${level = calcLevel(lightChar.xp)}"),
+                        LevelWidget(myChar.xp),
+                        Text("P: ${calcProf(calcLevel(myChar.xp))}")
+//                  new Text((lightChar.sessionId == null)
+//                      ? "No Session"
+//                      : lightChar.sessionId), //our text widget with our description
+                      ],
+                    )
+                  ],
+                ),
+                new Padding(
+                  padding: new EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: new Divider(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    new Text(
+                      'SpellSlots: ',
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Expanded(child: Container()),
+                    IconButton(icon: Icon((!SpellSlots.resetMode)? Icons.refresh : Icons.done,color: Colors.deepOrange,) ,
+                      onPressed: (){
+                        setState(() {
+                          SpellSlots.resetMode=!SpellSlots.resetMode;
+                        });
+                    }),
+                  ],
+                ),
+
+                ///SpellSlots
+                SpellSlots( spellSlots: getSpellSlotsForCharacter(myChar),),
+
+                new Padding(
+                  padding: new EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: new Divider(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                new Text(
+                  'Stats: ',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                new Container(
+                  height: AppData.screenHeight / 4,
+                  child: new Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: new Row(
+                      children: <Widget>[
+                        new Expanded(
+                          flex: 1,
+                          child: new Column(
+                            children: <Widget>[
+                              ///main stats
+                              new Expanded(
+                                child: Stat.Int(
+                                  value: myChar.intelligence,
+                                  hasButtons: editing,
+                                  update: (int i){myChar.intelligence=i; shouldUpdate=true;},
+                                ),
+                              ),
+                              new Expanded(
+                                child: Stat.Str(
+                                  value: myChar.strength,
+                                  hasButtons: editing,
+                                  update: (int s){myChar.strength=s; shouldUpdate=true;},
+                                ),
+                              ),
+                              new Expanded(
+                                child: Stat.Dex(
+                                  value: myChar.dexterity,
+                                  hasButtons: editing,
+                                  update: (int d){myChar.dexterity=d; shouldUpdate=true;},
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        new Expanded(
+                          flex: 1,
+                          child: new Column(
+                            children: <Widget>[
+                              ///main stats
+                              new Expanded(
+                                child: Stat.Wis(
+                                  value: myChar.wisdom,
+                                  hasButtons: editing,
+                                  update: (int w){myChar.wisdom=w; shouldUpdate=true;},
+                                ),
+                              ),
+                              new Expanded(
+                                child: Stat.Chr(
+                                  value: myChar.charisma,
+                                  hasButtons: editing,
+                                  update: (int ch){myChar.charisma=ch; shouldUpdate=true;}
+                                ),
+                              ),
+                              new Expanded(
+                                child: Stat.Con(
+                                  value: myChar.constitution,
+                                  hasButtons: editing,
+                                  update: (int co){myChar.constitution=co; shouldUpdate=true;},
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                new Padding(
+                  padding: new EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: new Divider(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                Shield.list(myChar.equipment),
+                Container(
+                  width: AppData.screenWidth,
+                  height: AppData.screenHeight / 4,
+                  child: EquipmentList.add(char: myChar),
+                ),
+                new Padding(
+                  padding: new EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: new Divider(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                LoreView(
+                  background: myChar.background,
+                  personality: myChar.personality,
+                  ideals: myChar.ideals,
+                  bonds: myChar.bonds,
+                  flaws: myChar.flaws,
+                  featAndTraits: myChar.featuresTraits,
+                )
+              ])
+      );
+    }
+  }
+
+
+class SpellSlots extends StatelessWidget {
+
+  final List<SpellSlot> slots = new List();
+  //@todo: dispose
+  static List<int> usedSpells = [0,0,0,0,0,0,0,0,0];
+
+  static void useSpell(int slot)
+  {
+    usedSpells[slot-1]++;
+  }
+
+  SpellSlots({@required List<int> spellSlots})
+  {
+    for(int i = 0; i < 9;i++) slots.add(SpellSlot(i+1, (spellSlots.length>i)? spellSlots[i]: 0));
+  }
+
+  //@todo: dispose
+  static bool resetMode = false;
+
+  static toggleReset()
+  {
+    resetMode = !resetMode;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(bottom: 10.0),
+          child: (!SpellSlots.resetMode)?Text('Slots per Level') : Text('Tap to Reset'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: slots,
+          )
+        ],
+      ),
+    );
+  }
+
+  static void resetSlot(int slot) {
+    SpellSlots.usedSpells[slot-1] = 0;
+  }
+}
+
+
+class SpellSlot extends StatefulWidget {
+
+  final int slot;
+  final int capacity;
+
+  SpellSlot(this.slot,this.capacity);
+
+  @override
+  _SpellSlotState createState() => _SpellSlotState();
+
+}
+
+class _SpellSlotState extends State<SpellSlot> {
+
+
+//  int usedSpells = 0;
+
+//  _SpellSlotState(){if(widget.alreadyUsedSpells[widget.slot-1]!=null) usedSpells=widget.alreadyUsedSpells[widget.slot-1];}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      //disable button when all spells used
+      onTap: (){
+
+        if(!SpellSlots.resetMode && SpellSlots.usedSpells[widget.slot-1]==widget.capacity) return null;
+
+        setState(() {
+          if(SpellSlots.resetMode)
+            SpellSlots.resetSlot(widget.slot);
+          else
+            SpellSlots.useSpell(widget.slot);
+        });
+      },
+      splashColor: Colors.transparent,
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: CircularPercentIndicator(
+                radius: 30.0,
+                lineWidth: 3.0,
+                percent: SpellSlots.usedSpells[widget.slot-1]/widget.capacity,
+                center: Text('${widget.capacity-SpellSlots.usedSpells[widget.slot-1]}',style: (SpellSlots.usedSpells[widget.slot-1]!=widget.capacity)? TextStyle(color: Colors.red,fontWeight: FontWeight.bold) : null,),
+                backgroundColor: Colors.grey,
+                progressColor: Colors.deepOrange,
+                animation: true,
+                animationDuration: 1000,
+              ),
+            ),
+            Text('${widget.slot}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+class PartyView extends StatelessWidget {
 
   final List<PlayerFrame> playerCharacters;
 
 
-  PlayerView() : playerCharacters = new List();
-  PlayerView.list(List<PlayerFrame> list): playerCharacters = list;
+  PartyView() : playerCharacters = new List();
+  PartyView.list(List<PlayerFrame> list): playerCharacters = list;
 
   @override
   Widget build(BuildContext context) {
-    if(playerCharacters==null || playerCharacters.isEmpty)
-      return Container(child: null,);
+    if(playerCharacters==null || playerCharacters.isEmpty){
+
+      AppData.currentSession.charactersInSession.forEach((c)=>playerCharacters.add(PlayerFrame(char: c,)));
+
+      if(playerCharacters.length==0)
+        return Container(child: null,);
+    }
 
     return Column(
       children: playerCharacters,
     );
-
-//    return Container(
-//      child: ListView.builder(
-//          padding: kMaterialListPadding,
-//          itemCount: playerCharacters.length,
-//          itemBuilder: (BuildContext context, int index) {
-//            return playerCharacters[index];
-//          }),
-//    );
   }
 }
 
-
+///A CharacterLightView widget wrapped in a tap detector.
 class PlayerFrame extends StatefulWidget {
 
 
@@ -291,29 +708,19 @@ class _PlayerFrameState extends State<PlayerFrame> {
   @override
   Widget build(BuildContext context) {
     return Container(
-//      height: AppData.screenHeight/5,
-      child: CharacterLightView(lightChar: character,titleStyle: null,),
-//      child: Row(
-//        children: <Widget>[
-//          ///player image
-//          Container(
-//            width: AppData.screenWidth/9,
-//            child: null,
-//              //@todo add player image
-//          ),
-//
-//          ///player details
-//          Column(
-//            children: <Widget>[
-//              ///player name and class/race
-//
-//
-//              ///player xp bar
-////              PlayerXpBar(),
-//            ],
-//          )
-//        ],
-//      ),
+      child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(new MaterialPageRoute<int>(
+                builder: (BuildContext context) {
+                  //build a new widget
+                  return new CharacterDetailsView.load(lightChar: character,editable: true,deletable: false,);
+                }
+            )).then((val) {
+              //1 = edited, 0 = nothing changed
+              if(val==1) CharacterSelectionState.updateCharacters(CharacterSelectionState.currentState);
+            });
+          },
+          child: CharacterLightView(lightChar: character,titleStyle: null,)),
     );
   }
 }
@@ -400,19 +807,16 @@ class MonstersTabState extends State<MonstersTab> {
     //and sum the xp
     reclaimList.forEach((mli){
       total+=mli.monster.xp;
-      int index = monsters.indexOf(mli);
-      widget.monstersInSession.removeAt(index);
+//      int index = monsters.indexOf(mli);
+//      widget.monstersInSession.removeAt(index);
+      widget.monstersInSession.remove(mli.monster);
     });
 
     reclaimList.clear();
 
     print('=========================>  XP: $total   <=======================');
 
-    int xp = AppData.currentSession.charactersInSession.length;
-    xp = total~/xp;
-    AppData.currentSession.charactersInSession.forEach((c){
-      c.xp+=xp;
-    });
+
 
     setState(() {
       print('=========================>  XP: $total   <=======================');
@@ -420,12 +824,18 @@ class MonstersTabState extends State<MonstersTab> {
 
 
     ///@todo: Get that yummy xp to the server vaults!
-//    AppData.distributeXP(total).whenComplete((){
-//      if(this.mounted)
-//      setState(() {
-//        print('=========================>  XP: $total   <=======================');
+    AppData.distributeXP(total,AppData.currentSession.sessionId).whenComplete((){
+//      AppData.setUpdatedFlag();
+//      int xp = AppData.currentSession.charactersInSession.length;
+//      xp = total~/xp;
+//      AppData.currentSession.charactersInSession.forEach((c){
+//        c.xp+=xp;
 //      });
-//    });
+      if(this.mounted)
+      setState(() {
+        print('=========================>  XP: $total   <=======================');
+      });
+    });
 
   }
 
@@ -812,99 +1222,95 @@ class _AddMonsterListItemState extends State<AddMonsterListItem> {
   }
 }
 
+class LoreView extends StatelessWidget {
 
-//class TabWidget extends StatefulWidget {
-//
-//  final List<Widget> tabHeadings;
-//  final List<Widget> tabs;
-//
-//  TabWidget({this.tabHeadings,this.tabs});
-//
-//  @override
-//  _TabWidgetState createState() => _TabWidgetState(tabHeadings,tabs);
-//}
-//
-//class _TabWidgetState extends State<TabWidget> {
-//
-//  List<FlatButton> tabButtons = new List();
-//  List<Widget> tabHeadings;
-//  List<Widget> tabs;
-//
-//  int last = 0;
-//
-//  _TabWidgetState(List<Widget> headings, List<Widget> t) {
-//    tabHeadings = headings;
-//    tabs = t;
-//
-//    if (tabButtons.isEmpty) {
-//      tabButtons.add(FlatButton(
-//        onPressed: () {
-//          //track
-//          update(0);
-//        },
-//        child: Container(
-//          decoration: BoxDecoration(
-//              border: Border(
-//                  bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
-//          ),
-//          child: tabHeadings[0],
-//        ),
-//      ));
-//
-//      for (int i = 1; i < tabHeadings.length; i++) {
-//        tabButtons.add(FlatButton(
-//          onPressed: () {
-//            //track
-//            update(i);
-//          },
-//          child: tabHeadings[i],
-//        ));
-//      }
-//    }
-//  }
-//
-//  update(int index) {
-//    int temp = last;
-//    //last has no value initially
-//    if (last != index) {
-//      tabButtons[index] = new FlatButton(onPressed: () {
-//        update(index);
-//      }, child: Container(
-//        decoration: BoxDecoration(
-//            border: Border(
-//                bottom: BorderSide(color: Colors.deepOrange, width: 2.0))
-//        ),
-//        child: tabHeadings[index],
-//      ));
-//
-//      tabButtons[temp] = new FlatButton(onPressed: () {
-//        update(temp);
-//      }, child: Container(
-//        child: tabHeadings[temp],
-//      ));
-//
-//      if(this.mounted)
-//        setState(() {
-//        //update view
-//        last = index;
-//      });
-//    }
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container(
-//      child: Column(
-//          children: <Widget>[
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//              children: tabButtons.map((b) {
-//                return Expanded(child: b);
-//              }).toList(),
-//            ),
-//            Expanded(child: tabs[last],)
-//          ]
-//      ),
-//    );
-//  }
-//}
+  final String background;
+  final String personality;
+  final String ideals;
+  final String bonds;
+  final String flaws;
+  final String featAndTraits;
+
+  LoreView({this.background,this.personality,this.ideals,this.bonds,this.flaws,this.featAndTraits});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        new Text(
+          'Lore: ',
+          style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
+        ),
+        new Text(
+          'Background: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(background,
+          textAlign: TextAlign.center,
+        ),
+        new Text(
+          'Personality: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(personality,
+          textAlign: TextAlign.center,
+        ),
+        new Text(
+          'Ideals: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(ideals,
+          textAlign: TextAlign.center,
+        ),
+        new Text(
+          'Bonds: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(bonds,
+          textAlign: TextAlign.center,
+        ),
+        new Text(
+          'Flaws: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(flaws,
+          textAlign: TextAlign.center,
+        ),
+        new Text(
+          'Features and Traits: ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,),
+        ),
+        new Text(featAndTraits,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}

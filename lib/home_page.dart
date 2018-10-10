@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () async {
 
                     String sid = await new QRCodeReader()
-                        .setAutoFocusIntervalInMs(200) // default 5000
+                        .setAutoFocusIntervalInMs(1000) // default 5000
                         .setForceAutoFocus(true) // default false
                         .setTorchEnabled(true) // default false
                         .setHandlePermissions(true) // default true

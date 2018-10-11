@@ -1,7 +1,43 @@
 ///
 //  Generated code. Do not modify.
+//  source: server.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
+
+const GiveXpRequest$json = const {
+  '1': 'GiveXpRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'character_id', '3': 3, '4': 1, '5': 9, '10': 'characterId'},
+    const {'1': 'xp', '3': 4, '4': 1, '5': 13, '10': 'xp'},
+  ],
+};
+
+const GiveXpReply$json = const {
+  '1': 'GiveXpReply',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+  ],
+};
+
+const DistributeXpRequest$json = const {
+  '1': 'DistributeXpRequest',
+  '2': const [
+    const {'1': 'auth_id_token', '3': 1, '4': 1, '5': 9, '10': 'authIdToken'},
+    const {'1': 'session_id', '3': 2, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'xp', '3': 4, '4': 1, '5': 13, '10': 'xp'},
+  ],
+};
+
+const DistributeXpReply$json = const {
+  '1': 'DistributeXpReply',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'status_message', '3': 2, '4': 1, '5': 9, '10': 'statusMessage'},
+  ],
+};
 
 const AddCharacterToSessionRequest$json = const {
   '1': 'AddCharacterToSessionRequest',
@@ -293,6 +329,7 @@ const Session$json = const {
     const {'1': 'last_updated', '3': 15, '4': 1, '5': 9, '10': 'lastUpdated'},
     const {'1': 'ready_up_expiry_time', '3': 16, '4': 1, '5': 13, '10': 'readyUpExpiryTime'},
     const {'1': 'charactersInSession', '3': 17, '4': 3, '5': 11, '6': '.session.LightCharacter', '10': 'charactersInSession'},
+    const {'1': 'first_started_time', '3': 18, '4': 1, '5': 9, '10': 'firstStartedTime'},
   ],
 };
 

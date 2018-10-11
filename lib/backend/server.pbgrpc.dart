@@ -1,7 +1,8 @@
 ///
 //  Generated code. Do not modify.
+//  source: server.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 
 import 'dart:async';
 
@@ -11,8 +12,9 @@ import 'server.pb.dart';
 
 export 'server.pb.dart';
 //  Generated code. Do not modify.
+//  source: server.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 
 
 class SessionsManagerClient extends Client {
@@ -92,6 +94,15 @@ class SessionsManagerClient extends Client {
       (GetCharactersInSessionRequest value) => value.writeToBuffer(),
       (List<int> value) =>
           new GetCharactersInSessionResponse.fromBuffer(value));
+  static final _$giveXp = new ClientMethod<GiveXpRequest, GiveXpReply>(
+      '/session.SessionsManager/GiveXp',
+      (GiveXpRequest value) => value.writeToBuffer(),
+      (List<int> value) => new GiveXpReply.fromBuffer(value));
+  static final _$distributeXp =
+      new ClientMethod<DistributeXpRequest, DistributeXpReply>(
+          '/session.SessionsManager/DistributeXp',
+          (DistributeXpRequest value) => value.writeToBuffer(),
+          (List<int> value) => new DistributeXpReply.fromBuffer(value));
 
   SessionsManagerClient(ClientChannel channel, {CallOptions options})
       : super(channel, options: options);
@@ -221,6 +232,20 @@ class SessionsManagerClient extends Client {
       {CallOptions options}) {
     final call = $createCall(
         _$getCharactersInSession, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<GiveXpReply> giveXp(GiveXpRequest request,
+      {CallOptions options}) {
+    final call = $createCall(_$giveXp, new Stream.fromIterable([request]),
+        options: options);
+    return new ResponseFuture(call);
+  }
+
+  ResponseFuture<DistributeXpReply> distributeXp(DistributeXpRequest request,
+      {CallOptions options}) {
+    final call = $createCall(_$distributeXp, new Stream.fromIterable([request]),
         options: options);
     return new ResponseFuture(call);
   }
@@ -355,6 +380,20 @@ abstract class SessionsManagerServiceBase extends Service {
         (List<int> value) =>
             new GetCharactersInSessionRequest.fromBuffer(value),
         (GetCharactersInSessionResponse value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<GiveXpRequest, GiveXpReply>(
+        'GiveXp',
+        giveXp_Pre,
+        false,
+        false,
+        (List<int> value) => new GiveXpRequest.fromBuffer(value),
+        (GiveXpReply value) => value.writeToBuffer()));
+    $addMethod(new ServiceMethod<DistributeXpRequest, DistributeXpReply>(
+        'DistributeXp',
+        distributeXp_Pre,
+        false,
+        false,
+        (List<int> value) => new DistributeXpRequest.fromBuffer(value),
+        (DistributeXpReply value) => value.writeToBuffer()));
   }
 
   Future<Session> create_Pre(ServiceCall call, Future request) async {
@@ -431,6 +470,15 @@ abstract class SessionsManagerServiceBase extends Service {
     return getCharactersInSession(call, await request);
   }
 
+  Future<GiveXpReply> giveXp_Pre(ServiceCall call, Future request) async {
+    return giveXp(call, await request);
+  }
+
+  Future<DistributeXpReply> distributeXp_Pre(
+      ServiceCall call, Future request) async {
+    return distributeXp(call, await request);
+  }
+
   Future<Session> create(ServiceCall call, NewSessionRequest request);
   Future<Session> join(ServiceCall call, JoinRequest request);
   Future<LeaveReply> leave(ServiceCall call, LeaveRequest request);
@@ -454,6 +502,9 @@ abstract class SessionsManagerServiceBase extends Service {
       ServiceCall call, RemoveCharacterFromSessionRequest request);
   Future<GetCharactersInSessionResponse> getCharactersInSession(
       ServiceCall call, GetCharactersInSessionRequest request);
+  Future<GiveXpReply> giveXp(ServiceCall call, GiveXpRequest request);
+  Future<DistributeXpReply> distributeXp(
+      ServiceCall call, DistributeXpRequest request);
 }
 
 class CharactersManagerClient extends Client {

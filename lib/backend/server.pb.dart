@@ -1,20 +1,168 @@
 ///
 //  Generated code. Do not modify.
+//  source: server.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 
 // ignore: UNUSED_SHOWN_NAME
 import 'dart:core' show int, bool, double, String, List, override;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 //  Generated code. Do not modify.
+//  source: server.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 // ignore: UNUSED_SHOWN_NAME
 
 
+class GiveXpRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GiveXpRequest', package: const $pb.PackageName('session'))
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..aOS(3, 'characterId')
+    ..a<int>(4, 'xp', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false
+  ;
+
+  GiveXpRequest() : super();
+  GiveXpRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GiveXpRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GiveXpRequest clone() => new GiveXpRequest()..mergeFromMessage(this);
+  GiveXpRequest copyWith(void Function(GiveXpRequest) updates) => super.copyWith((message) => updates(message as GiveXpRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static GiveXpRequest create() => new GiveXpRequest();
+  static $pb.PbList<GiveXpRequest> createRepeated() => new $pb.PbList<GiveXpRequest>();
+  static GiveXpRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static GiveXpRequest _defaultInstance;
+  static void $checkItem(GiveXpRequest v) {
+    if (v is! GiveXpRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  String get characterId => $_getS(2, '');
+  set characterId(String v) { $_setString(2, v); }
+  bool hasCharacterId() => $_has(2);
+  void clearCharacterId() => clearField(3);
+
+  int get xp => $_get(3, 0);
+  set xp(int v) { $_setUnsignedInt32(3, v); }
+  bool hasXp() => $_has(3);
+  void clearXp() => clearField(4);
+}
+
+class GiveXpReply extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GiveXpReply', package: const $pb.PackageName('session'))
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..hasRequiredFields = false
+  ;
+
+  GiveXpReply() : super();
+  GiveXpReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  GiveXpReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  GiveXpReply clone() => new GiveXpReply()..mergeFromMessage(this);
+  GiveXpReply copyWith(void Function(GiveXpReply) updates) => super.copyWith((message) => updates(message as GiveXpReply));
+  $pb.BuilderInfo get info_ => _i;
+  static GiveXpReply create() => new GiveXpReply();
+  static $pb.PbList<GiveXpReply> createRepeated() => new $pb.PbList<GiveXpReply>();
+  static GiveXpReply getDefault() => _defaultInstance ??= create()..freeze();
+  static GiveXpReply _defaultInstance;
+  static void $checkItem(GiveXpReply v) {
+    if (v is! GiveXpReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+}
+
+class DistributeXpRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DistributeXpRequest', package: const $pb.PackageName('session'))
+    ..aOS(1, 'authIdToken')
+    ..aOS(2, 'sessionId')
+    ..a<int>(4, 'xp', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false
+  ;
+
+  DistributeXpRequest() : super();
+  DistributeXpRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DistributeXpRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DistributeXpRequest clone() => new DistributeXpRequest()..mergeFromMessage(this);
+  DistributeXpRequest copyWith(void Function(DistributeXpRequest) updates) => super.copyWith((message) => updates(message as DistributeXpRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static DistributeXpRequest create() => new DistributeXpRequest();
+  static $pb.PbList<DistributeXpRequest> createRepeated() => new $pb.PbList<DistributeXpRequest>();
+  static DistributeXpRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static DistributeXpRequest _defaultInstance;
+  static void $checkItem(DistributeXpRequest v) {
+    if (v is! DistributeXpRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
+  }
+
+  String get authIdToken => $_getS(0, '');
+  set authIdToken(String v) { $_setString(0, v); }
+  bool hasAuthIdToken() => $_has(0);
+  void clearAuthIdToken() => clearField(1);
+
+  String get sessionId => $_getS(1, '');
+  set sessionId(String v) { $_setString(1, v); }
+  bool hasSessionId() => $_has(1);
+  void clearSessionId() => clearField(2);
+
+  int get xp => $_get(2, 0);
+  set xp(int v) { $_setUnsignedInt32(2, v); }
+  bool hasXp() => $_has(2);
+  void clearXp() => clearField(4);
+}
+
+class DistributeXpReply extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DistributeXpReply', package: const $pb.PackageName('session'))
+    ..aOS(1, 'status')
+    ..aOS(2, 'statusMessage')
+    ..hasRequiredFields = false
+  ;
+
+  DistributeXpReply() : super();
+  DistributeXpReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DistributeXpReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DistributeXpReply clone() => new DistributeXpReply()..mergeFromMessage(this);
+  DistributeXpReply copyWith(void Function(DistributeXpReply) updates) => super.copyWith((message) => updates(message as DistributeXpReply));
+  $pb.BuilderInfo get info_ => _i;
+  static DistributeXpReply create() => new DistributeXpReply();
+  static $pb.PbList<DistributeXpReply> createRepeated() => new $pb.PbList<DistributeXpReply>();
+  static DistributeXpReply getDefault() => _defaultInstance ??= create()..freeze();
+  static DistributeXpReply _defaultInstance;
+  static void $checkItem(DistributeXpReply v) {
+    if (v is! DistributeXpReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
+  }
+
+  String get status => $_getS(0, '');
+  set status(String v) { $_setString(0, v); }
+  bool hasStatus() => $_has(0);
+  void clearStatus() => clearField(1);
+
+  String get statusMessage => $_getS(1, '');
+  set statusMessage(String v) { $_setString(1, v); }
+  bool hasStatusMessage() => $_has(1);
+  void clearStatusMessage() => clearField(2);
+}
+
 class AddCharacterToSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('AddCharacterToSessionRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('AddCharacterToSessionRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..aOS(3, 'characterId')
@@ -25,16 +173,14 @@ class AddCharacterToSessionRequest extends $pb.GeneratedMessage {
   AddCharacterToSessionRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   AddCharacterToSessionRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   AddCharacterToSessionRequest clone() => new AddCharacterToSessionRequest()..mergeFromMessage(this);
+  AddCharacterToSessionRequest copyWith(void Function(AddCharacterToSessionRequest) updates) => super.copyWith((message) => updates(message as AddCharacterToSessionRequest));
   $pb.BuilderInfo get info_ => _i;
   static AddCharacterToSessionRequest create() => new AddCharacterToSessionRequest();
   static $pb.PbList<AddCharacterToSessionRequest> createRepeated() => new $pb.PbList<AddCharacterToSessionRequest>();
-  static AddCharacterToSessionRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyAddCharacterToSessionRequest();
-    return _defaultInstance;
-  }
+  static AddCharacterToSessionRequest getDefault() => _defaultInstance ??= create()..freeze();
   static AddCharacterToSessionRequest _defaultInstance;
   static void $checkItem(AddCharacterToSessionRequest v) {
-    if (v is! AddCharacterToSessionRequest) $pb.checkItemFailed(v, 'AddCharacterToSessionRequest');
+    if (v is! AddCharacterToSessionRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -53,10 +199,8 @@ class AddCharacterToSessionRequest extends $pb.GeneratedMessage {
   void clearCharacterId() => clearField(3);
 }
 
-class _ReadonlyAddCharacterToSessionRequest extends AddCharacterToSessionRequest with $pb.ReadonlyMessageMixin {}
-
 class RemoveCharacterFromSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('RemoveCharacterFromSessionRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('RemoveCharacterFromSessionRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..aOS(3, 'characterId')
@@ -67,16 +211,14 @@ class RemoveCharacterFromSessionRequest extends $pb.GeneratedMessage {
   RemoveCharacterFromSessionRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   RemoveCharacterFromSessionRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   RemoveCharacterFromSessionRequest clone() => new RemoveCharacterFromSessionRequest()..mergeFromMessage(this);
+  RemoveCharacterFromSessionRequest copyWith(void Function(RemoveCharacterFromSessionRequest) updates) => super.copyWith((message) => updates(message as RemoveCharacterFromSessionRequest));
   $pb.BuilderInfo get info_ => _i;
   static RemoveCharacterFromSessionRequest create() => new RemoveCharacterFromSessionRequest();
   static $pb.PbList<RemoveCharacterFromSessionRequest> createRepeated() => new $pb.PbList<RemoveCharacterFromSessionRequest>();
-  static RemoveCharacterFromSessionRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyRemoveCharacterFromSessionRequest();
-    return _defaultInstance;
-  }
+  static RemoveCharacterFromSessionRequest getDefault() => _defaultInstance ??= create()..freeze();
   static RemoveCharacterFromSessionRequest _defaultInstance;
   static void $checkItem(RemoveCharacterFromSessionRequest v) {
-    if (v is! RemoveCharacterFromSessionRequest) $pb.checkItemFailed(v, 'RemoveCharacterFromSessionRequest');
+    if (v is! RemoveCharacterFromSessionRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -95,10 +237,8 @@ class RemoveCharacterFromSessionRequest extends $pb.GeneratedMessage {
   void clearCharacterId() => clearField(3);
 }
 
-class _ReadonlyRemoveCharacterFromSessionRequest extends RemoveCharacterFromSessionRequest with $pb.ReadonlyMessageMixin {}
-
 class GetCharactersInSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersInSessionRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersInSessionRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..hasRequiredFields = false
@@ -108,16 +248,14 @@ class GetCharactersInSessionRequest extends $pb.GeneratedMessage {
   GetCharactersInSessionRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetCharactersInSessionRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetCharactersInSessionRequest clone() => new GetCharactersInSessionRequest()..mergeFromMessage(this);
+  GetCharactersInSessionRequest copyWith(void Function(GetCharactersInSessionRequest) updates) => super.copyWith((message) => updates(message as GetCharactersInSessionRequest));
   $pb.BuilderInfo get info_ => _i;
   static GetCharactersInSessionRequest create() => new GetCharactersInSessionRequest();
   static $pb.PbList<GetCharactersInSessionRequest> createRepeated() => new $pb.PbList<GetCharactersInSessionRequest>();
-  static GetCharactersInSessionRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersInSessionRequest();
-    return _defaultInstance;
-  }
+  static GetCharactersInSessionRequest getDefault() => _defaultInstance ??= create()..freeze();
   static GetCharactersInSessionRequest _defaultInstance;
   static void $checkItem(GetCharactersInSessionRequest v) {
-    if (v is! GetCharactersInSessionRequest) $pb.checkItemFailed(v, 'GetCharactersInSessionRequest');
+    if (v is! GetCharactersInSessionRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -131,10 +269,8 @@ class GetCharactersInSessionRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(2);
 }
 
-class _ReadonlyGetCharactersInSessionRequest extends GetCharactersInSessionRequest with $pb.ReadonlyMessageMixin {}
-
 class GetCharactersInSessionResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersInSessionResponse')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersInSessionResponse', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..pp<LightCharacter>(3, 'lightCharacters', $pb.PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
@@ -145,16 +281,14 @@ class GetCharactersInSessionResponse extends $pb.GeneratedMessage {
   GetCharactersInSessionResponse.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetCharactersInSessionResponse.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetCharactersInSessionResponse clone() => new GetCharactersInSessionResponse()..mergeFromMessage(this);
+  GetCharactersInSessionResponse copyWith(void Function(GetCharactersInSessionResponse) updates) => super.copyWith((message) => updates(message as GetCharactersInSessionResponse));
   $pb.BuilderInfo get info_ => _i;
   static GetCharactersInSessionResponse create() => new GetCharactersInSessionResponse();
   static $pb.PbList<GetCharactersInSessionResponse> createRepeated() => new $pb.PbList<GetCharactersInSessionResponse>();
-  static GetCharactersInSessionResponse getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersInSessionResponse();
-    return _defaultInstance;
-  }
+  static GetCharactersInSessionResponse getDefault() => _defaultInstance ??= create()..freeze();
   static GetCharactersInSessionResponse _defaultInstance;
   static void $checkItem(GetCharactersInSessionResponse v) {
-    if (v is! GetCharactersInSessionResponse) $pb.checkItemFailed(v, 'GetCharactersInSessionResponse');
+    if (v is! GetCharactersInSessionResponse) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -170,10 +304,8 @@ class GetCharactersInSessionResponse extends $pb.GeneratedMessage {
   List<LightCharacter> get lightCharacters => $_getList(2);
 }
 
-class _ReadonlyGetCharactersInSessionResponse extends GetCharactersInSessionResponse with $pb.ReadonlyMessageMixin {}
-
 class ChangeReadyUpExpiryTimeRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeReadyUpExpiryTimeRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeReadyUpExpiryTimeRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..a<int>(3, 'readyUpExpiryTime', $pb.PbFieldType.OU3)
@@ -184,16 +316,14 @@ class ChangeReadyUpExpiryTimeRequest extends $pb.GeneratedMessage {
   ChangeReadyUpExpiryTimeRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ChangeReadyUpExpiryTimeRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ChangeReadyUpExpiryTimeRequest clone() => new ChangeReadyUpExpiryTimeRequest()..mergeFromMessage(this);
+  ChangeReadyUpExpiryTimeRequest copyWith(void Function(ChangeReadyUpExpiryTimeRequest) updates) => super.copyWith((message) => updates(message as ChangeReadyUpExpiryTimeRequest));
   $pb.BuilderInfo get info_ => _i;
   static ChangeReadyUpExpiryTimeRequest create() => new ChangeReadyUpExpiryTimeRequest();
   static $pb.PbList<ChangeReadyUpExpiryTimeRequest> createRepeated() => new $pb.PbList<ChangeReadyUpExpiryTimeRequest>();
-  static ChangeReadyUpExpiryTimeRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeReadyUpExpiryTimeRequest();
-    return _defaultInstance;
-  }
+  static ChangeReadyUpExpiryTimeRequest getDefault() => _defaultInstance ??= create()..freeze();
   static ChangeReadyUpExpiryTimeRequest _defaultInstance;
   static void $checkItem(ChangeReadyUpExpiryTimeRequest v) {
-    if (v is! ChangeReadyUpExpiryTimeRequest) $pb.checkItemFailed(v, 'ChangeReadyUpExpiryTimeRequest');
+    if (v is! ChangeReadyUpExpiryTimeRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -212,10 +342,8 @@ class ChangeReadyUpExpiryTimeRequest extends $pb.GeneratedMessage {
   void clearReadyUpExpiryTime() => clearField(3);
 }
 
-class _ReadonlyChangeReadyUpExpiryTimeRequest extends ChangeReadyUpExpiryTimeRequest with $pb.ReadonlyMessageMixin {}
-
 class ChangeReadyUpExpiryTimeResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeReadyUpExpiryTimeResponse')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeReadyUpExpiryTimeResponse', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..hasRequiredFields = false
@@ -225,16 +353,14 @@ class ChangeReadyUpExpiryTimeResponse extends $pb.GeneratedMessage {
   ChangeReadyUpExpiryTimeResponse.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ChangeReadyUpExpiryTimeResponse.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ChangeReadyUpExpiryTimeResponse clone() => new ChangeReadyUpExpiryTimeResponse()..mergeFromMessage(this);
+  ChangeReadyUpExpiryTimeResponse copyWith(void Function(ChangeReadyUpExpiryTimeResponse) updates) => super.copyWith((message) => updates(message as ChangeReadyUpExpiryTimeResponse));
   $pb.BuilderInfo get info_ => _i;
   static ChangeReadyUpExpiryTimeResponse create() => new ChangeReadyUpExpiryTimeResponse();
   static $pb.PbList<ChangeReadyUpExpiryTimeResponse> createRepeated() => new $pb.PbList<ChangeReadyUpExpiryTimeResponse>();
-  static ChangeReadyUpExpiryTimeResponse getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeReadyUpExpiryTimeResponse();
-    return _defaultInstance;
-  }
+  static ChangeReadyUpExpiryTimeResponse getDefault() => _defaultInstance ??= create()..freeze();
   static ChangeReadyUpExpiryTimeResponse _defaultInstance;
   static void $checkItem(ChangeReadyUpExpiryTimeResponse v) {
-    if (v is! ChangeReadyUpExpiryTimeResponse) $pb.checkItemFailed(v, 'ChangeReadyUpExpiryTimeResponse');
+    if (v is! ChangeReadyUpExpiryTimeResponse) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -248,10 +374,8 @@ class ChangeReadyUpExpiryTimeResponse extends $pb.GeneratedMessage {
   void clearStatusMessage() => clearField(2);
 }
 
-class _ReadonlyChangeReadyUpExpiryTimeResponse extends ChangeReadyUpExpiryTimeResponse with $pb.ReadonlyMessageMixin {}
-
 class ChangeStateRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeStateRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ChangeStateRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..aOS(3, 'state')
@@ -262,16 +386,14 @@ class ChangeStateRequest extends $pb.GeneratedMessage {
   ChangeStateRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ChangeStateRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ChangeStateRequest clone() => new ChangeStateRequest()..mergeFromMessage(this);
+  ChangeStateRequest copyWith(void Function(ChangeStateRequest) updates) => super.copyWith((message) => updates(message as ChangeStateRequest));
   $pb.BuilderInfo get info_ => _i;
   static ChangeStateRequest create() => new ChangeStateRequest();
   static $pb.PbList<ChangeStateRequest> createRepeated() => new $pb.PbList<ChangeStateRequest>();
-  static ChangeStateRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyChangeStateRequest();
-    return _defaultInstance;
-  }
+  static ChangeStateRequest getDefault() => _defaultInstance ??= create()..freeze();
   static ChangeStateRequest _defaultInstance;
   static void $checkItem(ChangeStateRequest v) {
-    if (v is! ChangeStateRequest) $pb.checkItemFailed(v, 'ChangeStateRequest');
+    if (v is! ChangeStateRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -290,10 +412,8 @@ class ChangeStateRequest extends $pb.GeneratedMessage {
   void clearState() => clearField(3);
 }
 
-class _ReadonlyChangeStateRequest extends ChangeStateRequest with $pb.ReadonlyMessageMixin {}
-
 class ReadyUpRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ReadyUpRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ReadyUpRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..hasRequiredFields = false
@@ -303,16 +423,14 @@ class ReadyUpRequest extends $pb.GeneratedMessage {
   ReadyUpRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ReadyUpRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ReadyUpRequest clone() => new ReadyUpRequest()..mergeFromMessage(this);
+  ReadyUpRequest copyWith(void Function(ReadyUpRequest) updates) => super.copyWith((message) => updates(message as ReadyUpRequest));
   $pb.BuilderInfo get info_ => _i;
   static ReadyUpRequest create() => new ReadyUpRequest();
   static $pb.PbList<ReadyUpRequest> createRepeated() => new $pb.PbList<ReadyUpRequest>();
-  static ReadyUpRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyReadyUpRequest();
-    return _defaultInstance;
-  }
+  static ReadyUpRequest getDefault() => _defaultInstance ??= create()..freeze();
   static ReadyUpRequest _defaultInstance;
   static void $checkItem(ReadyUpRequest v) {
-    if (v is! ReadyUpRequest) $pb.checkItemFailed(v, 'ReadyUpRequest');
+    if (v is! ReadyUpRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -326,10 +444,8 @@ class ReadyUpRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(2);
 }
 
-class _ReadonlyReadyUpRequest extends ReadyUpRequest with $pb.ReadonlyMessageMixin {}
-
 class ReadyUpReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ReadyUpReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ReadyUpReply', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..hasRequiredFields = false
@@ -339,16 +455,14 @@ class ReadyUpReply extends $pb.GeneratedMessage {
   ReadyUpReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ReadyUpReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ReadyUpReply clone() => new ReadyUpReply()..mergeFromMessage(this);
+  ReadyUpReply copyWith(void Function(ReadyUpReply) updates) => super.copyWith((message) => updates(message as ReadyUpReply));
   $pb.BuilderInfo get info_ => _i;
   static ReadyUpReply create() => new ReadyUpReply();
   static $pb.PbList<ReadyUpReply> createRepeated() => new $pb.PbList<ReadyUpReply>();
-  static ReadyUpReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyReadyUpReply();
-    return _defaultInstance;
-  }
+  static ReadyUpReply getDefault() => _defaultInstance ??= create()..freeze();
   static ReadyUpReply _defaultInstance;
   static void $checkItem(ReadyUpReply v) {
-    if (v is! ReadyUpReply) $pb.checkItemFailed(v, 'ReadyUpReply');
+    if (v is! ReadyUpReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -362,10 +476,8 @@ class ReadyUpReply extends $pb.GeneratedMessage {
   void clearStatusMessage() => clearField(2);
 }
 
-class _ReadonlyReadyUpReply extends ReadyUpReply with $pb.ReadonlyMessageMixin {}
-
 class GetCharacterByIdRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharacterByIdRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharacterByIdRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'characterId')
     ..hasRequiredFields = false
@@ -375,16 +487,14 @@ class GetCharacterByIdRequest extends $pb.GeneratedMessage {
   GetCharacterByIdRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetCharacterByIdRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetCharacterByIdRequest clone() => new GetCharacterByIdRequest()..mergeFromMessage(this);
+  GetCharacterByIdRequest copyWith(void Function(GetCharacterByIdRequest) updates) => super.copyWith((message) => updates(message as GetCharacterByIdRequest));
   $pb.BuilderInfo get info_ => _i;
   static GetCharacterByIdRequest create() => new GetCharacterByIdRequest();
   static $pb.PbList<GetCharacterByIdRequest> createRepeated() => new $pb.PbList<GetCharacterByIdRequest>();
-  static GetCharacterByIdRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharacterByIdRequest();
-    return _defaultInstance;
-  }
+  static GetCharacterByIdRequest getDefault() => _defaultInstance ??= create()..freeze();
   static GetCharacterByIdRequest _defaultInstance;
   static void $checkItem(GetCharacterByIdRequest v) {
-    if (v is! GetCharacterByIdRequest) $pb.checkItemFailed(v, 'GetCharacterByIdRequest');
+    if (v is! GetCharacterByIdRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -398,10 +508,8 @@ class GetCharacterByIdRequest extends $pb.GeneratedMessage {
   void clearCharacterId() => clearField(2);
 }
 
-class _ReadonlyGetCharacterByIdRequest extends GetCharacterByIdRequest with $pb.ReadonlyMessageMixin {}
-
 class DeleteCharacterRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DeleteCharacterRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DeleteCharacterRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'characterId')
     ..hasRequiredFields = false
@@ -411,16 +519,14 @@ class DeleteCharacterRequest extends $pb.GeneratedMessage {
   DeleteCharacterRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   DeleteCharacterRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   DeleteCharacterRequest clone() => new DeleteCharacterRequest()..mergeFromMessage(this);
+  DeleteCharacterRequest copyWith(void Function(DeleteCharacterRequest) updates) => super.copyWith((message) => updates(message as DeleteCharacterRequest));
   $pb.BuilderInfo get info_ => _i;
   static DeleteCharacterRequest create() => new DeleteCharacterRequest();
   static $pb.PbList<DeleteCharacterRequest> createRepeated() => new $pb.PbList<DeleteCharacterRequest>();
-  static DeleteCharacterRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyDeleteCharacterRequest();
-    return _defaultInstance;
-  }
+  static DeleteCharacterRequest getDefault() => _defaultInstance ??= create()..freeze();
   static DeleteCharacterRequest _defaultInstance;
   static void $checkItem(DeleteCharacterRequest v) {
-    if (v is! DeleteCharacterRequest) $pb.checkItemFailed(v, 'DeleteCharacterRequest');
+    if (v is! DeleteCharacterRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -434,10 +540,8 @@ class DeleteCharacterRequest extends $pb.GeneratedMessage {
   void clearCharacterId() => clearField(2);
 }
 
-class _ReadonlyDeleteCharacterRequest extends DeleteCharacterRequest with $pb.ReadonlyMessageMixin {}
-
 class UpdateCharacterRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('UpdateCharacterRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('UpdateCharacterRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<Character>(2, 'character', $pb.PbFieldType.OM, Character.getDefault, Character.create)
     ..hasRequiredFields = false
@@ -447,16 +551,14 @@ class UpdateCharacterRequest extends $pb.GeneratedMessage {
   UpdateCharacterRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   UpdateCharacterRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   UpdateCharacterRequest clone() => new UpdateCharacterRequest()..mergeFromMessage(this);
+  UpdateCharacterRequest copyWith(void Function(UpdateCharacterRequest) updates) => super.copyWith((message) => updates(message as UpdateCharacterRequest));
   $pb.BuilderInfo get info_ => _i;
   static UpdateCharacterRequest create() => new UpdateCharacterRequest();
   static $pb.PbList<UpdateCharacterRequest> createRepeated() => new $pb.PbList<UpdateCharacterRequest>();
-  static UpdateCharacterRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyUpdateCharacterRequest();
-    return _defaultInstance;
-  }
+  static UpdateCharacterRequest getDefault() => _defaultInstance ??= create()..freeze();
   static UpdateCharacterRequest _defaultInstance;
   static void $checkItem(UpdateCharacterRequest v) {
-    if (v is! UpdateCharacterRequest) $pb.checkItemFailed(v, 'UpdateCharacterRequest');
+    if (v is! UpdateCharacterRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -470,10 +572,8 @@ class UpdateCharacterRequest extends $pb.GeneratedMessage {
   void clearCharacter() => clearField(2);
 }
 
-class _ReadonlyUpdateCharacterRequest extends UpdateCharacterRequest with $pb.ReadonlyMessageMixin {}
-
 class GetCharactersRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<int>(2, 'limit', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
@@ -483,16 +583,14 @@ class GetCharactersRequest extends $pb.GeneratedMessage {
   GetCharactersRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetCharactersRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetCharactersRequest clone() => new GetCharactersRequest()..mergeFromMessage(this);
+  GetCharactersRequest copyWith(void Function(GetCharactersRequest) updates) => super.copyWith((message) => updates(message as GetCharactersRequest));
   $pb.BuilderInfo get info_ => _i;
   static GetCharactersRequest create() => new GetCharactersRequest();
   static $pb.PbList<GetCharactersRequest> createRepeated() => new $pb.PbList<GetCharactersRequest>();
-  static GetCharactersRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersRequest();
-    return _defaultInstance;
-  }
+  static GetCharactersRequest getDefault() => _defaultInstance ??= create()..freeze();
   static GetCharactersRequest _defaultInstance;
   static void $checkItem(GetCharactersRequest v) {
-    if (v is! GetCharactersRequest) $pb.checkItemFailed(v, 'GetCharactersRequest');
+    if (v is! GetCharactersRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -506,10 +604,8 @@ class GetCharactersRequest extends $pb.GeneratedMessage {
   void clearLimit() => clearField(2);
 }
 
-class _ReadonlyGetCharactersRequest extends GetCharactersRequest with $pb.ReadonlyMessageMixin {}
-
 class GetCharactersReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetCharactersReply', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..pp<LightCharacter>(3, 'lightCharacters', $pb.PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
@@ -520,16 +616,14 @@ class GetCharactersReply extends $pb.GeneratedMessage {
   GetCharactersReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetCharactersReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetCharactersReply clone() => new GetCharactersReply()..mergeFromMessage(this);
+  GetCharactersReply copyWith(void Function(GetCharactersReply) updates) => super.copyWith((message) => updates(message as GetCharactersReply));
   $pb.BuilderInfo get info_ => _i;
   static GetCharactersReply create() => new GetCharactersReply();
   static $pb.PbList<GetCharactersReply> createRepeated() => new $pb.PbList<GetCharactersReply>();
-  static GetCharactersReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetCharactersReply();
-    return _defaultInstance;
-  }
+  static GetCharactersReply getDefault() => _defaultInstance ??= create()..freeze();
   static GetCharactersReply _defaultInstance;
   static void $checkItem(GetCharactersReply v) {
-    if (v is! GetCharactersReply) $pb.checkItemFailed(v, 'GetCharactersReply');
+    if (v is! GetCharactersReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -545,10 +639,8 @@ class GetCharactersReply extends $pb.GeneratedMessage {
   List<LightCharacter> get lightCharacters => $_getList(2);
 }
 
-class _ReadonlyGetCharactersReply extends GetCharactersReply with $pb.ReadonlyMessageMixin {}
-
 class GetSessionsOfUserRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionsOfUserRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionsOfUserRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<int>(2, 'limit', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
@@ -558,16 +650,14 @@ class GetSessionsOfUserRequest extends $pb.GeneratedMessage {
   GetSessionsOfUserRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetSessionsOfUserRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetSessionsOfUserRequest clone() => new GetSessionsOfUserRequest()..mergeFromMessage(this);
+  GetSessionsOfUserRequest copyWith(void Function(GetSessionsOfUserRequest) updates) => super.copyWith((message) => updates(message as GetSessionsOfUserRequest));
   $pb.BuilderInfo get info_ => _i;
   static GetSessionsOfUserRequest create() => new GetSessionsOfUserRequest();
   static $pb.PbList<GetSessionsOfUserRequest> createRepeated() => new $pb.PbList<GetSessionsOfUserRequest>();
-  static GetSessionsOfUserRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetSessionsOfUserRequest();
-    return _defaultInstance;
-  }
+  static GetSessionsOfUserRequest getDefault() => _defaultInstance ??= create()..freeze();
   static GetSessionsOfUserRequest _defaultInstance;
   static void $checkItem(GetSessionsOfUserRequest v) {
-    if (v is! GetSessionsOfUserRequest) $pb.checkItemFailed(v, 'GetSessionsOfUserRequest');
+    if (v is! GetSessionsOfUserRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -581,10 +671,8 @@ class GetSessionsOfUserRequest extends $pb.GeneratedMessage {
   void clearLimit() => clearField(2);
 }
 
-class _ReadonlyGetSessionsOfUserRequest extends GetSessionsOfUserRequest with $pb.ReadonlyMessageMixin {}
-
 class GetSessionsOfUserReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionsOfUserReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionsOfUserReply', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..pp<LightSession>(3, 'lightSessions', $pb.PbFieldType.PM, LightSession.$checkItem, LightSession.create)
@@ -595,16 +683,14 @@ class GetSessionsOfUserReply extends $pb.GeneratedMessage {
   GetSessionsOfUserReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetSessionsOfUserReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetSessionsOfUserReply clone() => new GetSessionsOfUserReply()..mergeFromMessage(this);
+  GetSessionsOfUserReply copyWith(void Function(GetSessionsOfUserReply) updates) => super.copyWith((message) => updates(message as GetSessionsOfUserReply));
   $pb.BuilderInfo get info_ => _i;
   static GetSessionsOfUserReply create() => new GetSessionsOfUserReply();
   static $pb.PbList<GetSessionsOfUserReply> createRepeated() => new $pb.PbList<GetSessionsOfUserReply>();
-  static GetSessionsOfUserReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetSessionsOfUserReply();
-    return _defaultInstance;
-  }
+  static GetSessionsOfUserReply getDefault() => _defaultInstance ??= create()..freeze();
   static GetSessionsOfUserReply _defaultInstance;
   static void $checkItem(GetSessionsOfUserReply v) {
-    if (v is! GetSessionsOfUserReply) $pb.checkItemFailed(v, 'GetSessionsOfUserReply');
+    if (v is! GetSessionsOfUserReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -620,10 +706,8 @@ class GetSessionsOfUserReply extends $pb.GeneratedMessage {
   List<LightSession> get lightSessions => $_getList(2);
 }
 
-class _ReadonlyGetSessionsOfUserReply extends GetSessionsOfUserReply with $pb.ReadonlyMessageMixin {}
-
 class GetSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('GetSessionRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..hasRequiredFields = false
@@ -633,16 +717,14 @@ class GetSessionRequest extends $pb.GeneratedMessage {
   GetSessionRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   GetSessionRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   GetSessionRequest clone() => new GetSessionRequest()..mergeFromMessage(this);
+  GetSessionRequest copyWith(void Function(GetSessionRequest) updates) => super.copyWith((message) => updates(message as GetSessionRequest));
   $pb.BuilderInfo get info_ => _i;
   static GetSessionRequest create() => new GetSessionRequest();
   static $pb.PbList<GetSessionRequest> createRepeated() => new $pb.PbList<GetSessionRequest>();
-  static GetSessionRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyGetSessionRequest();
-    return _defaultInstance;
-  }
+  static GetSessionRequest getDefault() => _defaultInstance ??= create()..freeze();
   static GetSessionRequest _defaultInstance;
   static void $checkItem(GetSessionRequest v) {
-    if (v is! GetSessionRequest) $pb.checkItemFailed(v, 'GetSessionRequest');
+    if (v is! GetSessionRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -656,10 +738,8 @@ class GetSessionRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(2);
 }
 
-class _ReadonlyGetSessionRequest extends GetSessionRequest with $pb.ReadonlyMessageMixin {}
-
 class NewSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('NewSessionRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('NewSessionRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'name')
     ..a<int>(3, 'maxPlayers', $pb.PbFieldType.OU3)
@@ -671,16 +751,14 @@ class NewSessionRequest extends $pb.GeneratedMessage {
   NewSessionRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   NewSessionRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   NewSessionRequest clone() => new NewSessionRequest()..mergeFromMessage(this);
+  NewSessionRequest copyWith(void Function(NewSessionRequest) updates) => super.copyWith((message) => updates(message as NewSessionRequest));
   $pb.BuilderInfo get info_ => _i;
   static NewSessionRequest create() => new NewSessionRequest();
   static $pb.PbList<NewSessionRequest> createRepeated() => new $pb.PbList<NewSessionRequest>();
-  static NewSessionRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyNewSessionRequest();
-    return _defaultInstance;
-  }
+  static NewSessionRequest getDefault() => _defaultInstance ??= create()..freeze();
   static NewSessionRequest _defaultInstance;
   static void $checkItem(NewSessionRequest v) {
-    if (v is! NewSessionRequest) $pb.checkItemFailed(v, 'NewSessionRequest');
+    if (v is! NewSessionRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -704,10 +782,8 @@ class NewSessionRequest extends $pb.GeneratedMessage {
   void clearPrivate() => clearField(4);
 }
 
-class _ReadonlyNewSessionRequest extends NewSessionRequest with $pb.ReadonlyMessageMixin {}
-
 class ListRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ListRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ListRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<int>(2, 'limit', $pb.PbFieldType.OU3)
     ..aOB(3, 'full')
@@ -718,16 +794,14 @@ class ListRequest extends $pb.GeneratedMessage {
   ListRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ListRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ListRequest clone() => new ListRequest()..mergeFromMessage(this);
+  ListRequest copyWith(void Function(ListRequest) updates) => super.copyWith((message) => updates(message as ListRequest));
   $pb.BuilderInfo get info_ => _i;
   static ListRequest create() => new ListRequest();
   static $pb.PbList<ListRequest> createRepeated() => new $pb.PbList<ListRequest>();
-  static ListRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyListRequest();
-    return _defaultInstance;
-  }
+  static ListRequest getDefault() => _defaultInstance ??= create()..freeze();
   static ListRequest _defaultInstance;
   static void $checkItem(ListRequest v) {
-    if (v is! ListRequest) $pb.checkItemFailed(v, 'ListRequest');
+    if (v is! ListRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -746,10 +820,8 @@ class ListRequest extends $pb.GeneratedMessage {
   void clearFull() => clearField(3);
 }
 
-class _ReadonlyListRequest extends ListRequest with $pb.ReadonlyMessageMixin {}
-
 class LeaveRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LeaveRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LeaveRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..hasRequiredFields = false
@@ -759,16 +831,14 @@ class LeaveRequest extends $pb.GeneratedMessage {
   LeaveRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   LeaveRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   LeaveRequest clone() => new LeaveRequest()..mergeFromMessage(this);
+  LeaveRequest copyWith(void Function(LeaveRequest) updates) => super.copyWith((message) => updates(message as LeaveRequest));
   $pb.BuilderInfo get info_ => _i;
   static LeaveRequest create() => new LeaveRequest();
   static $pb.PbList<LeaveRequest> createRepeated() => new $pb.PbList<LeaveRequest>();
-  static LeaveRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLeaveRequest();
-    return _defaultInstance;
-  }
+  static LeaveRequest getDefault() => _defaultInstance ??= create()..freeze();
   static LeaveRequest _defaultInstance;
   static void $checkItem(LeaveRequest v) {
-    if (v is! LeaveRequest) $pb.checkItemFailed(v, 'LeaveRequest');
+    if (v is! LeaveRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -782,10 +852,8 @@ class LeaveRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(2);
 }
 
-class _ReadonlyLeaveRequest extends LeaveRequest with $pb.ReadonlyMessageMixin {}
-
 class JoinRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('JoinRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('JoinRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..hasRequiredFields = false
@@ -795,16 +863,14 @@ class JoinRequest extends $pb.GeneratedMessage {
   JoinRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   JoinRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   JoinRequest clone() => new JoinRequest()..mergeFromMessage(this);
+  JoinRequest copyWith(void Function(JoinRequest) updates) => super.copyWith((message) => updates(message as JoinRequest));
   $pb.BuilderInfo get info_ => _i;
   static JoinRequest create() => new JoinRequest();
   static $pb.PbList<JoinRequest> createRepeated() => new $pb.PbList<JoinRequest>();
-  static JoinRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyJoinRequest();
-    return _defaultInstance;
-  }
+  static JoinRequest getDefault() => _defaultInstance ??= create()..freeze();
   static JoinRequest _defaultInstance;
   static void $checkItem(JoinRequest v) {
-    if (v is! JoinRequest) $pb.checkItemFailed(v, 'JoinRequest');
+    if (v is! JoinRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -818,10 +884,8 @@ class JoinRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(2);
 }
 
-class _ReadonlyJoinRequest extends JoinRequest with $pb.ReadonlyMessageMixin {}
-
 class KickPlayerRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('KickPlayerRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('KickPlayerRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..a<User>(3, 'user', $pb.PbFieldType.OM, User.getDefault, User.create)
@@ -832,16 +896,14 @@ class KickPlayerRequest extends $pb.GeneratedMessage {
   KickPlayerRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   KickPlayerRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   KickPlayerRequest clone() => new KickPlayerRequest()..mergeFromMessage(this);
+  KickPlayerRequest copyWith(void Function(KickPlayerRequest) updates) => super.copyWith((message) => updates(message as KickPlayerRequest));
   $pb.BuilderInfo get info_ => _i;
   static KickPlayerRequest create() => new KickPlayerRequest();
   static $pb.PbList<KickPlayerRequest> createRepeated() => new $pb.PbList<KickPlayerRequest>();
-  static KickPlayerRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyKickPlayerRequest();
-    return _defaultInstance;
-  }
+  static KickPlayerRequest getDefault() => _defaultInstance ??= create()..freeze();
   static KickPlayerRequest _defaultInstance;
   static void $checkItem(KickPlayerRequest v) {
-    if (v is! KickPlayerRequest) $pb.checkItemFailed(v, 'KickPlayerRequest');
+    if (v is! KickPlayerRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -860,10 +922,8 @@ class KickPlayerRequest extends $pb.GeneratedMessage {
   void clearUser() => clearField(3);
 }
 
-class _ReadonlyKickPlayerRequest extends KickPlayerRequest with $pb.ReadonlyMessageMixin {}
-
 class SetPrivateRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetPrivateRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetPrivateRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..aOB(3, 'private')
@@ -874,16 +934,14 @@ class SetPrivateRequest extends $pb.GeneratedMessage {
   SetPrivateRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   SetPrivateRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   SetPrivateRequest clone() => new SetPrivateRequest()..mergeFromMessage(this);
+  SetPrivateRequest copyWith(void Function(SetPrivateRequest) updates) => super.copyWith((message) => updates(message as SetPrivateRequest));
   $pb.BuilderInfo get info_ => _i;
   static SetPrivateRequest create() => new SetPrivateRequest();
   static $pb.PbList<SetPrivateRequest> createRepeated() => new $pb.PbList<SetPrivateRequest>();
-  static SetPrivateRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySetPrivateRequest();
-    return _defaultInstance;
-  }
+  static SetPrivateRequest getDefault() => _defaultInstance ??= create()..freeze();
   static SetPrivateRequest _defaultInstance;
   static void $checkItem(SetPrivateRequest v) {
-    if (v is! SetPrivateRequest) $pb.checkItemFailed(v, 'SetPrivateRequest');
+    if (v is! SetPrivateRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -902,10 +960,8 @@ class SetPrivateRequest extends $pb.GeneratedMessage {
   void clearPrivate() => clearField(3);
 }
 
-class _ReadonlySetPrivateRequest extends SetPrivateRequest with $pb.ReadonlyMessageMixin {}
-
 class SetMaxPlayersRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetMaxPlayersRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetMaxPlayersRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<int>(2, 'number', $pb.PbFieldType.OU3)
     ..aOS(3, 'sessionId')
@@ -916,16 +972,14 @@ class SetMaxPlayersRequest extends $pb.GeneratedMessage {
   SetMaxPlayersRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   SetMaxPlayersRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   SetMaxPlayersRequest clone() => new SetMaxPlayersRequest()..mergeFromMessage(this);
+  SetMaxPlayersRequest copyWith(void Function(SetMaxPlayersRequest) updates) => super.copyWith((message) => updates(message as SetMaxPlayersRequest));
   $pb.BuilderInfo get info_ => _i;
   static SetMaxPlayersRequest create() => new SetMaxPlayersRequest();
   static $pb.PbList<SetMaxPlayersRequest> createRepeated() => new $pb.PbList<SetMaxPlayersRequest>();
-  static SetMaxPlayersRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySetMaxPlayersRequest();
-    return _defaultInstance;
-  }
+  static SetMaxPlayersRequest getDefault() => _defaultInstance ??= create()..freeze();
   static SetMaxPlayersRequest _defaultInstance;
   static void $checkItem(SetMaxPlayersRequest v) {
-    if (v is! SetMaxPlayersRequest) $pb.checkItemFailed(v, 'SetMaxPlayersRequest');
+    if (v is! SetMaxPlayersRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -944,10 +998,8 @@ class SetMaxPlayersRequest extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(3);
 }
 
-class _ReadonlySetMaxPlayersRequest extends SetMaxPlayersRequest with $pb.ReadonlyMessageMixin {}
-
 class SetNameRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetNameRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('SetNameRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..aOS(2, 'sessionId')
     ..aOS(3, 'name')
@@ -958,16 +1010,14 @@ class SetNameRequest extends $pb.GeneratedMessage {
   SetNameRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   SetNameRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   SetNameRequest clone() => new SetNameRequest()..mergeFromMessage(this);
+  SetNameRequest copyWith(void Function(SetNameRequest) updates) => super.copyWith((message) => updates(message as SetNameRequest));
   $pb.BuilderInfo get info_ => _i;
   static SetNameRequest create() => new SetNameRequest();
   static $pb.PbList<SetNameRequest> createRepeated() => new $pb.PbList<SetNameRequest>();
-  static SetNameRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySetNameRequest();
-    return _defaultInstance;
-  }
+  static SetNameRequest getDefault() => _defaultInstance ??= create()..freeze();
   static SetNameRequest _defaultInstance;
   static void $checkItem(SetNameRequest v) {
-    if (v is! SetNameRequest) $pb.checkItemFailed(v, 'SetNameRequest');
+    if (v is! SetNameRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -986,10 +1036,8 @@ class SetNameRequest extends $pb.GeneratedMessage {
   void clearName() => clearField(3);
 }
 
-class _ReadonlySetNameRequest extends SetNameRequest with $pb.ReadonlyMessageMixin {}
-
 class ListReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ListReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('ListReply', package: const $pb.PackageName('session'))
     ..pp<Session>(1, 'sessions', $pb.PbFieldType.PM, Session.$checkItem, Session.create)
     ..aOS(2, 'status')
     ..aOS(3, 'statusMessage')
@@ -1000,16 +1048,14 @@ class ListReply extends $pb.GeneratedMessage {
   ListReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   ListReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   ListReply clone() => new ListReply()..mergeFromMessage(this);
+  ListReply copyWith(void Function(ListReply) updates) => super.copyWith((message) => updates(message as ListReply));
   $pb.BuilderInfo get info_ => _i;
   static ListReply create() => new ListReply();
   static $pb.PbList<ListReply> createRepeated() => new $pb.PbList<ListReply>();
-  static ListReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyListReply();
-    return _defaultInstance;
-  }
+  static ListReply getDefault() => _defaultInstance ??= create()..freeze();
   static ListReply _defaultInstance;
   static void $checkItem(ListReply v) {
-    if (v is! ListReply) $pb.checkItemFailed(v, 'ListReply');
+    if (v is! ListReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   List<Session> get sessions => $_getList(0);
@@ -1025,10 +1071,8 @@ class ListReply extends $pb.GeneratedMessage {
   void clearStatusMessage() => clearField(3);
 }
 
-class _ReadonlyListReply extends ListReply with $pb.ReadonlyMessageMixin {}
-
 class LeaveReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LeaveReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LeaveReply', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..hasRequiredFields = false
@@ -1038,16 +1082,14 @@ class LeaveReply extends $pb.GeneratedMessage {
   LeaveReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   LeaveReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   LeaveReply clone() => new LeaveReply()..mergeFromMessage(this);
+  LeaveReply copyWith(void Function(LeaveReply) updates) => super.copyWith((message) => updates(message as LeaveReply));
   $pb.BuilderInfo get info_ => _i;
   static LeaveReply create() => new LeaveReply();
   static $pb.PbList<LeaveReply> createRepeated() => new $pb.PbList<LeaveReply>();
-  static LeaveReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLeaveReply();
-    return _defaultInstance;
-  }
+  static LeaveReply getDefault() => _defaultInstance ??= create()..freeze();
   static LeaveReply _defaultInstance;
   static void $checkItem(LeaveReply v) {
-    if (v is! LeaveReply) $pb.checkItemFailed(v, 'LeaveReply');
+    if (v is! LeaveReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -1061,10 +1103,8 @@ class LeaveReply extends $pb.GeneratedMessage {
   void clearStatusMessage() => clearField(2);
 }
 
-class _ReadonlyLeaveReply extends LeaveReply with $pb.ReadonlyMessageMixin {}
-
 class User extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('User')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('User', package: const $pb.PackageName('session'))
     ..aOS(1, 'uid')
     ..aOS(2, 'name')
     ..aOB(3, 'readyInThisSession')
@@ -1076,16 +1116,14 @@ class User extends $pb.GeneratedMessage {
   User.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   User.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   User clone() => new User()..mergeFromMessage(this);
+  User copyWith(void Function(User) updates) => super.copyWith((message) => updates(message as User));
   $pb.BuilderInfo get info_ => _i;
   static User create() => new User();
   static $pb.PbList<User> createRepeated() => new $pb.PbList<User>();
-  static User getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyUser();
-    return _defaultInstance;
-  }
+  static User getDefault() => _defaultInstance ??= create()..freeze();
   static User _defaultInstance;
   static void $checkItem(User v) {
-    if (v is! User) $pb.checkItemFailed(v, 'User');
+    if (v is! User) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get uid => $_getS(0, '');
@@ -1109,10 +1147,8 @@ class User extends $pb.GeneratedMessage {
   void clearOnline() => clearField(4);
 }
 
-class _ReadonlyUser extends User with $pb.ReadonlyMessageMixin {}
-
 class NewCharacterRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('NewCharacterRequest')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('NewCharacterRequest', package: const $pb.PackageName('session'))
     ..aOS(1, 'authIdToken')
     ..a<Character>(2, 'character', $pb.PbFieldType.OM, Character.getDefault, Character.create)
     ..hasRequiredFields = false
@@ -1122,16 +1158,14 @@ class NewCharacterRequest extends $pb.GeneratedMessage {
   NewCharacterRequest.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   NewCharacterRequest.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   NewCharacterRequest clone() => new NewCharacterRequest()..mergeFromMessage(this);
+  NewCharacterRequest copyWith(void Function(NewCharacterRequest) updates) => super.copyWith((message) => updates(message as NewCharacterRequest));
   $pb.BuilderInfo get info_ => _i;
   static NewCharacterRequest create() => new NewCharacterRequest();
   static $pb.PbList<NewCharacterRequest> createRepeated() => new $pb.PbList<NewCharacterRequest>();
-  static NewCharacterRequest getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyNewCharacterRequest();
-    return _defaultInstance;
-  }
+  static NewCharacterRequest getDefault() => _defaultInstance ??= create()..freeze();
   static NewCharacterRequest _defaultInstance;
   static void $checkItem(NewCharacterRequest v) {
-    if (v is! NewCharacterRequest) $pb.checkItemFailed(v, 'NewCharacterRequest');
+    if (v is! NewCharacterRequest) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get authIdToken => $_getS(0, '');
@@ -1145,10 +1179,8 @@ class NewCharacterRequest extends $pb.GeneratedMessage {
   void clearCharacter() => clearField(2);
 }
 
-class _ReadonlyNewCharacterRequest extends NewCharacterRequest with $pb.ReadonlyMessageMixin {}
-
 class DeleteCharacterReply extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DeleteCharacterReply')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DeleteCharacterReply', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..hasRequiredFields = false
@@ -1158,16 +1190,14 @@ class DeleteCharacterReply extends $pb.GeneratedMessage {
   DeleteCharacterReply.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   DeleteCharacterReply.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   DeleteCharacterReply clone() => new DeleteCharacterReply()..mergeFromMessage(this);
+  DeleteCharacterReply copyWith(void Function(DeleteCharacterReply) updates) => super.copyWith((message) => updates(message as DeleteCharacterReply));
   $pb.BuilderInfo get info_ => _i;
   static DeleteCharacterReply create() => new DeleteCharacterReply();
   static $pb.PbList<DeleteCharacterReply> createRepeated() => new $pb.PbList<DeleteCharacterReply>();
-  static DeleteCharacterReply getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyDeleteCharacterReply();
-    return _defaultInstance;
-  }
+  static DeleteCharacterReply getDefault() => _defaultInstance ??= create()..freeze();
   static DeleteCharacterReply _defaultInstance;
   static void $checkItem(DeleteCharacterReply v) {
-    if (v is! DeleteCharacterReply) $pb.checkItemFailed(v, 'DeleteCharacterReply');
+    if (v is! DeleteCharacterReply) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -1181,10 +1211,8 @@ class DeleteCharacterReply extends $pb.GeneratedMessage {
   void clearStatusMessage() => clearField(2);
 }
 
-class _ReadonlyDeleteCharacterReply extends DeleteCharacterReply with $pb.ReadonlyMessageMixin {}
-
 class LightSession extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LightSession')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LightSession', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..aOS(3, 'sessionId')
@@ -1199,16 +1227,14 @@ class LightSession extends $pb.GeneratedMessage {
   LightSession.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   LightSession.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   LightSession clone() => new LightSession()..mergeFromMessage(this);
+  LightSession copyWith(void Function(LightSession) updates) => super.copyWith((message) => updates(message as LightSession));
   $pb.BuilderInfo get info_ => _i;
   static LightSession create() => new LightSession();
   static $pb.PbList<LightSession> createRepeated() => new $pb.PbList<LightSession>();
-  static LightSession getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLightSession();
-    return _defaultInstance;
-  }
+  static LightSession getDefault() => _defaultInstance ??= create()..freeze();
   static LightSession _defaultInstance;
   static void $checkItem(LightSession v) {
-    if (v is! LightSession) $pb.checkItemFailed(v, 'LightSession');
+    if (v is! LightSession) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -1247,10 +1273,8 @@ class LightSession extends $pb.GeneratedMessage {
   void clearState() => clearField(7);
 }
 
-class _ReadonlyLightSession extends LightSession with $pb.ReadonlyMessageMixin {}
-
 class Session extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Session')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Session', package: const $pb.PackageName('session'))
     ..aOS(1, 'status')
     ..aOS(2, 'statusMessage')
     ..aOS(3, 'sessionId')
@@ -1268,6 +1292,7 @@ class Session extends $pb.GeneratedMessage {
     ..aOS(15, 'lastUpdated')
     ..a<int>(16, 'readyUpExpiryTime', $pb.PbFieldType.OU3)
     ..pp<LightCharacter>(17, 'charactersInSession', $pb.PbFieldType.PM, LightCharacter.$checkItem, LightCharacter.create)
+    ..aOS(18, 'firstStartedTime')
     ..hasRequiredFields = false
   ;
 
@@ -1275,16 +1300,14 @@ class Session extends $pb.GeneratedMessage {
   Session.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Session.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Session clone() => new Session()..mergeFromMessage(this);
+  Session copyWith(void Function(Session) updates) => super.copyWith((message) => updates(message as Session));
   $pb.BuilderInfo get info_ => _i;
   static Session create() => new Session();
   static $pb.PbList<Session> createRepeated() => new $pb.PbList<Session>();
-  static Session getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySession();
-    return _defaultInstance;
-  }
+  static Session getDefault() => _defaultInstance ??= create()..freeze();
   static Session _defaultInstance;
   static void $checkItem(Session v) {
-    if (v is! Session) $pb.checkItemFailed(v, 'Session');
+    if (v is! Session) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get status => $_getS(0, '');
@@ -1362,12 +1385,15 @@ class Session extends $pb.GeneratedMessage {
   void clearReadyUpExpiryTime() => clearField(16);
 
   List<LightCharacter> get charactersInSession => $_getList(16);
+
+  String get firstStartedTime => $_getS(17, '');
+  set firstStartedTime(String v) { $_setString(17, v); }
+  bool hasFirstStartedTime() => $_has(17);
+  void clearFirstStartedTime() => clearField(18);
 }
 
-class _ReadonlySession extends Session with $pb.ReadonlyMessageMixin {}
-
 class LightCharacter extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LightCharacter')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('LightCharacter', package: const $pb.PackageName('session'))
     ..aOS(1, 'characterId')
     ..aOS(2, 'creatorId')
     ..aOS(3, 'name')
@@ -1385,16 +1411,14 @@ class LightCharacter extends $pb.GeneratedMessage {
   LightCharacter.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   LightCharacter.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   LightCharacter clone() => new LightCharacter()..mergeFromMessage(this);
+  LightCharacter copyWith(void Function(LightCharacter) updates) => super.copyWith((message) => updates(message as LightCharacter));
   $pb.BuilderInfo get info_ => _i;
   static LightCharacter create() => new LightCharacter();
   static $pb.PbList<LightCharacter> createRepeated() => new $pb.PbList<LightCharacter>();
-  static LightCharacter getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyLightCharacter();
-    return _defaultInstance;
-  }
+  static LightCharacter getDefault() => _defaultInstance ??= create()..freeze();
   static LightCharacter _defaultInstance;
   static void $checkItem(LightCharacter v) {
-    if (v is! LightCharacter) $pb.checkItemFailed(v, 'LightCharacter');
+    if (v is! LightCharacter) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get characterId => $_getS(0, '');
@@ -1448,10 +1472,8 @@ class LightCharacter extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(10);
 }
 
-class _ReadonlyLightCharacter extends LightCharacter with $pb.ReadonlyMessageMixin {}
-
 class Character extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Character')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Character', package: const $pb.PackageName('session'))
     ..aOS(1, 'characterId')
     ..a<User>(2, 'creator', $pb.PbFieldType.OM, User.getDefault, User.create)
     ..aOS(3, 'name')
@@ -1498,16 +1520,14 @@ class Character extends $pb.GeneratedMessage {
   Character.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Character.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Character clone() => new Character()..mergeFromMessage(this);
+  Character copyWith(void Function(Character) updates) => super.copyWith((message) => updates(message as Character));
   $pb.BuilderInfo get info_ => _i;
   static Character create() => new Character();
   static $pb.PbList<Character> createRepeated() => new $pb.PbList<Character>();
-  static Character getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyCharacter();
-    return _defaultInstance;
-  }
+  static Character getDefault() => _defaultInstance ??= create()..freeze();
   static Character _defaultInstance;
   static void $checkItem(Character v) {
-    if (v is! Character) $pb.checkItemFailed(v, 'Character');
+    if (v is! Character) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get characterId => $_getS(0, '');
@@ -1703,10 +1723,8 @@ class Character extends $pb.GeneratedMessage {
   void clearLastUpdated() => clearField(39);
 }
 
-class _ReadonlyCharacter extends Character with $pb.ReadonlyMessageMixin {}
-
 class Skills extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Skills')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Skills', package: const $pb.PackageName('session'))
     ..a<int>(1, 'acrobatics', $pb.PbFieldType.OS3)
     ..aOB(2, 'acrobaticsProficient')
     ..a<int>(3, 'animalHandling', $pb.PbFieldType.OS3)
@@ -1750,16 +1768,14 @@ class Skills extends $pb.GeneratedMessage {
   Skills.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Skills.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Skills clone() => new Skills()..mergeFromMessage(this);
+  Skills copyWith(void Function(Skills) updates) => super.copyWith((message) => updates(message as Skills));
   $pb.BuilderInfo get info_ => _i;
   static Skills create() => new Skills();
   static $pb.PbList<Skills> createRepeated() => new $pb.PbList<Skills>();
-  static Skills getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlySkills();
-    return _defaultInstance;
-  }
+  static Skills getDefault() => _defaultInstance ??= create()..freeze();
   static Skills _defaultInstance;
   static void $checkItem(Skills v) {
-    if (v is! Skills) $pb.checkItemFailed(v, 'Skills');
+    if (v is! Skills) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   int get acrobatics => $_get(0, 0);
@@ -1943,10 +1959,8 @@ class Skills extends $pb.GeneratedMessage {
   void clearSurvivalProficient() => clearField(36);
 }
 
-class _ReadonlySkills extends Skills with $pb.ReadonlyMessageMixin {}
-
 class Attacks_Spellcasting extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Attacks_Spellcasting')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Attacks_Spellcasting', package: const $pb.PackageName('session'))
     ..aOS(1, 'name1')
     ..aOS(2, 'name2')
     ..aOS(3, 'name3')
@@ -1963,16 +1977,14 @@ class Attacks_Spellcasting extends $pb.GeneratedMessage {
   Attacks_Spellcasting.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Attacks_Spellcasting.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Attacks_Spellcasting clone() => new Attacks_Spellcasting()..mergeFromMessage(this);
+  Attacks_Spellcasting copyWith(void Function(Attacks_Spellcasting) updates) => super.copyWith((message) => updates(message as Attacks_Spellcasting));
   $pb.BuilderInfo get info_ => _i;
   static Attacks_Spellcasting create() => new Attacks_Spellcasting();
   static $pb.PbList<Attacks_Spellcasting> createRepeated() => new $pb.PbList<Attacks_Spellcasting>();
-  static Attacks_Spellcasting getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyAttacks_Spellcasting();
-    return _defaultInstance;
-  }
+  static Attacks_Spellcasting getDefault() => _defaultInstance ??= create()..freeze();
   static Attacks_Spellcasting _defaultInstance;
   static void $checkItem(Attacks_Spellcasting v) {
-    if (v is! Attacks_Spellcasting) $pb.checkItemFailed(v, 'Attacks_Spellcasting');
+    if (v is! Attacks_Spellcasting) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get name1 => $_getS(0, '');
@@ -2021,10 +2033,8 @@ class Attacks_Spellcasting extends $pb.GeneratedMessage {
   void clearDamageType3() => clearField(9);
 }
 
-class _ReadonlyAttacks_Spellcasting extends Attacks_Spellcasting with $pb.ReadonlyMessageMixin {}
-
 class Hitpoints extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Hitpoints')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Hitpoints', package: const $pb.PackageName('session'))
     ..a<int>(1, 'armorClass', $pb.PbFieldType.OS3)
     ..a<int>(2, 'currentHitpoints', $pb.PbFieldType.OS3)
     ..a<int>(3, 'maxHitpoints', $pb.PbFieldType.OS3)
@@ -2037,16 +2047,14 @@ class Hitpoints extends $pb.GeneratedMessage {
   Hitpoints.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Hitpoints.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Hitpoints clone() => new Hitpoints()..mergeFromMessage(this);
+  Hitpoints copyWith(void Function(Hitpoints) updates) => super.copyWith((message) => updates(message as Hitpoints));
   $pb.BuilderInfo get info_ => _i;
   static Hitpoints create() => new Hitpoints();
   static $pb.PbList<Hitpoints> createRepeated() => new $pb.PbList<Hitpoints>();
-  static Hitpoints getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyHitpoints();
-    return _defaultInstance;
-  }
+  static Hitpoints getDefault() => _defaultInstance ??= create()..freeze();
   static Hitpoints _defaultInstance;
   static void $checkItem(Hitpoints v) {
-    if (v is! Hitpoints) $pb.checkItemFailed(v, 'Hitpoints');
+    if (v is! Hitpoints) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   int get armorClass => $_get(0, 0);
@@ -2075,10 +2083,8 @@ class Hitpoints extends $pb.GeneratedMessage {
   void clearHitdice() => clearField(5);
 }
 
-class _ReadonlyHitpoints extends Hitpoints with $pb.ReadonlyMessageMixin {}
-
 class Equipment extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Equipment')
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Equipment', package: const $pb.PackageName('session'))
     ..aOS(1, 'name')
     ..a<int>(2, 'value', $pb.PbFieldType.OS3)
     ..hasRequiredFields = false
@@ -2088,16 +2094,14 @@ class Equipment extends $pb.GeneratedMessage {
   Equipment.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
   Equipment.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Equipment clone() => new Equipment()..mergeFromMessage(this);
+  Equipment copyWith(void Function(Equipment) updates) => super.copyWith((message) => updates(message as Equipment));
   $pb.BuilderInfo get info_ => _i;
   static Equipment create() => new Equipment();
   static $pb.PbList<Equipment> createRepeated() => new $pb.PbList<Equipment>();
-  static Equipment getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyEquipment();
-    return _defaultInstance;
-  }
+  static Equipment getDefault() => _defaultInstance ??= create()..freeze();
   static Equipment _defaultInstance;
   static void $checkItem(Equipment v) {
-    if (v is! Equipment) $pb.checkItemFailed(v, 'Equipment');
+    if (v is! Equipment) $pb.checkItemFailed(v, _i.qualifiedMessageName);
   }
 
   String get name => $_getS(0, '');
@@ -2110,6 +2114,4 @@ class Equipment extends $pb.GeneratedMessage {
   bool hasValue() => $_has(1);
   void clearValue() => clearField(2);
 }
-
-class _ReadonlyEquipment extends Equipment with $pb.ReadonlyMessageMixin {}
 

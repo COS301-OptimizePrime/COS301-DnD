@@ -47,6 +47,8 @@ class GameSessionState extends State<GameSession>{
   int lastReadyUsers;
   var hasCharacterInSession;
 
+  String myCharID;
+
 
   GameSessionState() {
     GameSession.session = null;
@@ -107,7 +109,7 @@ class GameSessionState extends State<GameSession>{
      print('Session state changed to exploring');
       GameSessionState.timer.cancel();
       Navigator.of(context).pop();
-      Navigator.push(context, new MaterialPageRoute(builder: (context)=> (iAmGameMaster)?  new GameScreen.isDM() : new GameScreen()));
+      Navigator.push(context, new MaterialPageRoute(builder: (context)=> (iAmGameMaster)?  new GameScreen.isDM() : new GameScreen.isPlayer(charID: myCharID)));
 
      if(!iAmGameMaster)
        {
@@ -229,6 +231,7 @@ class GameSessionState extends State<GameSession>{
     AppData.lightCharacters[index].sessionId = AppData.currentSession.sessionId;
 
     print('added character ${AppData.lightCharacters[index].name} to game');
+    myCharID = AppData.lightCharacters[index].characterId;
     //update view
     setState(() {
       hasCharacterInSession=true;
@@ -659,13 +662,17 @@ class _SelectCharacterMasterState extends State<SelectCharacterMaster> {
         if (AppData.lightCharacters[index].sessionId == null || AppData.lightCharacters[index].sessionId == "") {
           widget.items.add(
               SelectCharacterWidget(AppData.lightCharacters[index]));
-          return GestureDetector(
-            onTap: () {
+          return FlatButton(
+            onPressed: () {
               widget.tapped(index);
             },
             child: widget.items.last,
           );
         }
+        else {
+          widget.items.add(null);
+        }
+
         return Container(child: null,);
       },
     );
@@ -680,7 +687,7 @@ class SelectCharacterWidget extends StatefulWidget {
   final LightCharacter character;
   final CharacterLightView clv;
 
-  SelectCharacterWidget(LightCharacter char,) : character = char, clv = CharacterLightView(lightChar: char) ,scws = new _SelectCharacterWidgetState(character: char);
+  SelectCharacterWidget(LightCharacter char,) : character = char, clv = CharacterLightView(titleStyle: null,lightChar: char) ,scws = new _SelectCharacterWidgetState(character: char);
 
   @override
   _SelectCharacterWidgetState createState() => scws;

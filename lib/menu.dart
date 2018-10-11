@@ -52,10 +52,10 @@ class Menu extends StatelessWidget {
                   title: new Text('Home Page'),
                   onTap: () {
                     Navigator.pop(context);
-                    if(currentPage==HomePage.tag) return;
+//                    if(currentPage==HomePage.tag) return;
 
                     Navigator.pushNamed(context, HomePage.tag);
-                    currentPage = HomePage.tag;
+//                    currentPage = HomePage.tag;
                   },
                 ),
                 new ListTile(
@@ -66,9 +66,9 @@ class Menu extends StatelessWidget {
                     // pop menu
                     Navigator.pop(context);
                     //if not this page - go
-                    if(currentPage==CharacterSelection.tag) return;
+//                    if(currentPage==CharacterSelection.tag) return;
                     Navigator.pushNamed(context, CharacterSelection.tag);
-                    currentPage = CharacterSelection.tag;
+//                    currentPage = CharacterSelection.tag;
                   },
                 ),
                 new ListTile(
@@ -89,10 +89,10 @@ class Menu extends StatelessWidget {
                     // Update the state of the app
                     // ...
                     Navigator.pop(context);
-                    if(currentPage==RaceViewer.tag) return;
+//                    if(currentPage==RaceViewer.tag) return;
 
                     Navigator.pushNamed(context, RaceViewer.tag);
-                    currentPage = RaceViewer.tag;
+//                    currentPage = RaceViewer.tag;
                   },
                 ),
                 const Divider(),

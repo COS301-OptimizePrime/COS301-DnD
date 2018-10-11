@@ -662,13 +662,17 @@ class _SelectCharacterMasterState extends State<SelectCharacterMaster> {
         if (AppData.lightCharacters[index].sessionId == null || AppData.lightCharacters[index].sessionId == "") {
           widget.items.add(
               SelectCharacterWidget(AppData.lightCharacters[index]));
-          return GestureDetector(
-            onTap: () {
+          return FlatButton(
+            onPressed: () {
               widget.tapped(index);
             },
             child: widget.items.last,
           );
         }
+        else {
+          widget.items.add(null);
+        }
+
         return Container(child: null,);
       },
     );

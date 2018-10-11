@@ -40,18 +40,18 @@ class GameScreen extends StatefulWidget {
   {
     if(MonstersTab.monstersInSession!=null){
       MonstersTab.monstersInSession.clear();
-      MonstersTab.monstersInSession=null;
+//      MonstersTab.monstersInSession=null;
     }
 
     if(SpellSlots.usedSpells!=null){
       SpellSlots.usedSpells.clear();
-      SpellSlots.usedSpells=null;
-      SpellSlots.resetMode = null;
+//      SpellSlots.usedSpells=null;
+      SpellSlots.resetMode = false;
     }
 
-    if(MonsterListItem.mid!=null){
-      MonsterListItem.mid=null;
-      MonsterListItem.colorSwap=null;
+    if(MonsterListItem.mid!=0){
+      MonsterListItem.mid=0;
+      MonsterListItem.colorSwap=false;
     }
 
     if(_PlayerSelfViewState.myChar!=null) _PlayerSelfViewState.myChar=null;
@@ -555,7 +555,7 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
 class SpellSlots extends StatelessWidget {
 
   final List<SpellSlot> slots = new List();
-  //@todo: dispose
+
   static List<int> usedSpells = [0,0,0,0,0,0,0,0,0];
 
   static void useSpell(int slot)
@@ -565,10 +565,11 @@ class SpellSlots extends StatelessWidget {
 
   SpellSlots({@required List<int> spellSlots})
   {
+    if(usedSpells.isEmpty) usedSpells = [0,0,0,0,0,0,0,0,0];
     for(int i = 0; i < 9;i++) slots.add(SpellSlot(i+1, (spellSlots.length>i)? spellSlots[i]: 0));
   }
 
-  //@todo: dispose
+
   static bool resetMode = false;
 
   static toggleReset()
@@ -718,7 +719,7 @@ class _PlayerFrameState extends State<PlayerFrame> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GestureDetector(
+      child: InkWell(
           onTap: (){
             Navigator.of(context).push(new MaterialPageRoute<int>(
                 builder: (BuildContext context) {
@@ -913,7 +914,7 @@ class _MonstersTabState extends State<MonstersTab> {
                   onPressed: (){
                     killMonstersAndGetXp();
                   },
-                  child: Icon(Icons.all_inclusive),
+                  child: Center(child: Text('XP'),),
                 ),
               ),
               FloatingActionButton(
@@ -1401,7 +1402,7 @@ class _HpIconState extends State<HpIcon> {
                           children: <Widget>[
                             Expanded(
                               child: TextField(
-                                controller: null,
+                                controller: TextEditingController(text: '${PlayerSelfView.currentHp}'),
                                 keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
                                 onSubmitted: (String val){
                                   int newHp = int.tryParse(val);
@@ -1412,7 +1413,7 @@ class _HpIconState extends State<HpIcon> {
                             Container(width: 30.0,child: Center(child: Text('/'))),
                             Expanded(
                               child: TextField(
-                                controller: null,
+                                controller: TextEditingController(text: '${PlayerSelfView.maxHp}'),
                                 keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
                                 onSubmitted: (String val){
                                   int newHp = int.tryParse(val);

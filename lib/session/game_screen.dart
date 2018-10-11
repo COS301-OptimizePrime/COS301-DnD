@@ -55,6 +55,9 @@ class GameScreen extends StatefulWidget {
     }
 
     if(_PlayerSelfViewState.myChar!=null) _PlayerSelfViewState.myChar=null;
+
+    PlayerSelfView.currentHp=null;
+    PlayerSelfView.maxHp=null;
   }
 }
 
@@ -259,6 +262,9 @@ class PlayerSelfView extends StatefulWidget {
 
   final String myCharID;
 
+  static int currentHp;
+  static int maxHp;
+
   PlayerSelfView({this.myCharID});
 
   @override
@@ -273,6 +279,11 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
   @override
   void initState() {
     super.initState();
+
+    if(PlayerSelfView.currentHp==null){
+      PlayerSelfView.currentHp = 100;
+      PlayerSelfView.maxHp = 100;
+    }
 
 //    getCharacter(widget.myCharID).then((c){
 //      if(this.mounted)
@@ -377,9 +388,14 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
                         classType: myChar.charClass,
                       ),
                     ),
-                    Container(
-                      height: 20.0,
-                      child: GenderIcon.str(myChar.charGender),
+//                    Container(
+//                      height: 20.0,
+//                      child: GenderIcon.str(myChar.charGender),
+//                    ),
+                    new HpIcon(
+                      diameter: 80.0,
+//                      currentHp: 60,
+//                      maxHp: 100,
                     ),
                     new Column(
                       children: <Widget>[
@@ -1141,34 +1157,6 @@ class _AddMonsterListItemState extends State<AddMonsterListItem> {
   @override
   Widget build(BuildContext context) {
     if(!capturingNewMonster){
-//      return Container(
-//        child: FlatButton(
-//          onPressed: (){
-//            //add new monster dialog or w/e
-//            setState(() {
-//              capturingNewMonster = true;
-//            });
-//          },
-//          child: Column(
-//              children: <Widget>[
-//                Row(
-//                  mainAxisAlignment: MainAxisAlignment.center,
-//                  children: [
-//                    Text('Add Custom Monster'),
-//                    Icon(Icons.add_circle_outline)
-//                  ],
-//                ),
-//                Row(
-//                  mainAxisAlignment: MainAxisAlignment.center,
-//                  children: [
-//                    Text('Add Monster From Journal'),
-//                    Icon(Icons.view_list)
-//                  ],
-//                ),
-//              ]
-//          ),
-//        ),
-//      );
 
       return Column(
         children: <Widget>[
@@ -1187,19 +1175,19 @@ class _AddMonsterListItemState extends State<AddMonsterListItem> {
                 ],
             ),
           ),
-          FlatButton(
-            onPressed: (){
-              //open journal to select monsters
-              getJournalMonsters();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                  Text('Add Monster From Journal'),
-                  Icon(Icons.view_list)
-              ],
-            ),
-          ),
+//          FlatButton(
+//            onPressed: (){
+//              //open journal to select monsters
+//              getJournalMonsters();
+//            },
+//            child: Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              children: [
+//                  Text('Add Monster From Journal'),
+//                  Icon(Icons.view_list)
+//              ],
+//            ),
+//          ),
         ],
       );
     }
@@ -1371,3 +1359,92 @@ class LoreView extends StatelessWidget {
     );
   }
 }
+
+class HpIcon extends StatefulWidget {
+
+//  final int currentHp;
+//  final int maxHp;
+  final double diameter;
+
+//  HpIcon({this.currentHp,this.maxHp,this.diameter});
+  HpIcon({this.diameter});
+
+  @override
+  _HpIconState createState() => _HpIconState();
+}
+
+class _HpIconState extends State<HpIcon> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+//      decoration: BoxDecoration(border: Border.all(width: 2.0)),
+      height: widget.diameter,
+      width: widget.diameter,
+      child: InkWell(
+        onTap: (){
+          //hp edit
+          showDialog(context: context,
+          barrierDismissible: true,
+            builder: (_)=> new SimpleDialog(
+              title: Text('Adjust Hp',style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+              children: <Widget>[
+                Container(
+//                  width: AppData.screenWidth/2,
+//                  height: AppData.screenHeight/3,
+                  child: Column(
+                    children: <Widget>[
+                      Center(child: Text('Current:   /     Max:')),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
+                                onSubmitted: (String val){
+                                  int newHp = int.tryParse(val);
+                                  if(newHp!=null && newHp<=PlayerSelfView.maxHp) PlayerSelfView.currentHp=newHp;
+                                } ,
+                              ),
+                            ),
+                            Container(width: 30.0,child: Center(child: Text('/'))),
+                            Expanded(
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
+                                onSubmitted: (String val){
+                                  int newHp = int.tryParse(val);
+                                  if(newHp!=null && newHp>=PlayerSelfView.currentHp) PlayerSelfView.maxHp=newHp;
+                                } ,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ]
+            )
+          );
+        },
+        child: Stack(
+          children: <Widget>[
+            Container(
+              child: Image.asset('assets/icon_assets/heart.png',color: Colors.red,)
+            ),
+            Center(
+//            top: 30.0,
+//            left: 18.0,
+//              child: Text('${widget.currentHp} / ${widget.maxHp}')
+              child: Text('${PlayerSelfView.currentHp} / ${PlayerSelfView.maxHp}')
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+

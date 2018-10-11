@@ -134,6 +134,8 @@ flutter:
     - assets/sword.png
     - assets/armor.png
 
+    #heart - hp icon
+    - assets/icon_assets/heart.png
 
   fonts:
         - family: Nunito

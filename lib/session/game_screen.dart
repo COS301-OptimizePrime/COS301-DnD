@@ -17,7 +17,7 @@ class GameScreen extends StatefulWidget {
 
 //  final List<PlayerFrame> playerCharacters = new List();
   final bool iAmDungeonMaster;
-  final List<Monster> sessionMonsters = new List();
+//  final List<Monster> sessionMonsters = new List();
   final String charID;
 //  static bool mustUpdateChar = false;
 
@@ -26,11 +26,36 @@ class GameScreen extends StatefulWidget {
 
 
   GameScreen.isPlayer({this.charID}) : iAmDungeonMaster = false;
-  GameScreen.isDM() : iAmDungeonMaster = true, charID =null ;
+
+  GameScreen.isDM() : iAmDungeonMaster = true, charID =null {
+    MonsterListItem.mid = 0;
+    MonsterListItem.colorSwap = false;
+  }
 
   @override
 //  _GameScreenState createState() => _GameScreenState(playerCharacters);
   _GameScreenState createState() => _GameScreenState();
+
+  static void cleanUp()
+  {
+    if(MonstersTab.monstersInSession!=null){
+      MonstersTab.monstersInSession.clear();
+      MonstersTab.monstersInSession=null;
+    }
+
+    if(SpellSlots.usedSpells!=null){
+      SpellSlots.usedSpells.clear();
+      SpellSlots.usedSpells=null;
+      SpellSlots.resetMode = null;
+    }
+
+    if(MonsterListItem.mid!=null){
+      MonsterListItem.mid=null;
+      MonsterListItem.colorSwap=null;
+    }
+
+    if(_PlayerSelfViewState.myChar!=null) _PlayerSelfViewState.myChar=null;
+  }
 }
 
 class _GameScreenState extends State<GameScreen> {
@@ -125,9 +150,10 @@ class _GameScreenState extends State<GameScreen> {
 
       //update full session object
       AppData.currentSession = tempSession;
+      AppData.currentSession.charactersInSession.clear();
+      AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
     }
 
-    ///@todo: implement update of PlayerView
 //    for (LightCharacter char in AppData.currentSession.charactersInSession) {
 //      PlayerFrame pf = playerCharacters.firstWhere((c) =>
 //      c.pfs.character.characterId == char.characterId, orElse: () {
@@ -171,22 +197,14 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
     if (timer != null)
       timer.cancel();
-//    if(GameScreen.mustUpdateChar)
-//      AppData.updateCharacter(_PlayerSelfViewState.myChar);
   }
 
-//  PlayerView pv;
-//  MonstersTab mt;
+
+
 
   @override
   Widget build(BuildContext context) {
     if (widget.iAmDungeonMaster) {
-
-//      if(pv ==null)
-//        pv = PlayerView.list(playerCharacters);
-//
-//      if(mt == null)
-//        mt = MonstersTab.list(widget.sessionMonsters);
 
       return new DefaultTabController(length: 2,
           child: Scaffold(
@@ -204,39 +222,15 @@ class _GameScreenState extends State<GameScreen> {
               children: [
 //                PlayerView.list(playerCharacters),
                 PartyView(),
-                MonstersTab.list(widget.sessionMonsters),
+                MonstersTab(),
               ],
             ),
           )
       );
 
-
-//      return Scaffold(
-//        drawer: Menu(),
-//        appBar: AppBar(
-//          title: Text(AppData.currentSession.name),
-//        ),
-//        body: TabWidget(
-//          tabHeadings: <Widget>[
-//            Text('Players'),
-//            Text('Monsters'),
-//          ],
-//          tabs: <Widget>[
-////            new PlayerView(playerCharacters),
-//            pv,
-////            Text('why hello there'),
-//            mt,
-////            new MonstersTab(widget.sessionMonsters)
-//          ],
-//        ),
-//      );
     }
     else {
       //if a user
-
-//      if(widget.charID == null)
-////        return Container(child: Center(child: Text("select a character"),),);
-
       return new DefaultTabController(length: 2,
           child: Scaffold(
             drawer: Menu(),
@@ -291,7 +285,7 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
 
   Future<LocalCharacter> getCharacter(String id) async
   {
-    if(id == null) id = AppData.currentSession.charactersInSession.firstWhere((c)=>c.creatorId==AppData.user.uid,orElse: (){print('Shits fucked yo'); return null;})?.characterId;
+    if(id == null) id = AppData.currentSession.charactersInSession.firstWhere((c)=>c.creatorId==AppData.user.uid,orElse: (){return null;})?.characterId;
     if(id == null) return null;
 
     return await AppData.getCharacterById(id);
@@ -727,20 +721,27 @@ class _PlayerFrameState extends State<PlayerFrame> {
 
 class MonstersTab extends StatefulWidget {
 
-  final List<Monster> monstersInSession;
+  static List<Monster> monstersInSession;
   final List<MonsterListItem> markedForReclaim = new List();
 
-  MonstersTab() : monstersInSession = new List();
-  MonstersTab.list(List<Monster> list) : monstersInSession = new List();
+  MonstersTab(){
+    if(monstersInSession==null) monstersInSession = new List();
+  }
+  MonstersTab.list(List<Monster> list){
+    monstersInSession = new List();
+    monstersInSession.addAll(list);
+  }
 
 
 
   @override
-  MonstersTabState createState() => new MonstersTabState();
+  _MonstersTabState createState() => new _MonstersTabState();
 }
-class MonstersTabState extends State<MonstersTab> {
+class _MonstersTabState extends State<MonstersTab> {
 
   final List<MonsterListItem> monstersToAdd = new List();
+
+
 
   MonstersTabState()
   {
@@ -759,7 +760,7 @@ class MonstersTabState extends State<MonstersTab> {
   addMonsters(List<MonsterListItem> list)
   {
     List<Monster> temp = list.map((mli){return mli.monster;}).toList();
-    widget.monstersInSession.addAll(
+    MonstersTab.monstersInSession.addAll(
         temp
     );
 
@@ -809,7 +810,7 @@ class MonstersTabState extends State<MonstersTab> {
       total+=mli.monster.xp;
 //      int index = monsters.indexOf(mli);
 //      widget.monstersInSession.removeAt(index);
-      widget.monstersInSession.remove(mli.monster);
+      MonstersTab.monstersInSession.remove(mli.monster);
     });
 
     reclaimList.clear();
@@ -873,9 +874,9 @@ class MonstersTabState extends State<MonstersTab> {
               Expanded(
                 child: new ListView.builder(
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),//adds padding between cards and screen
-                  itemCount: widget.monstersInSession.length,
+                  itemCount: MonstersTab.monstersInSession.length,
                   itemBuilder: (BuildContext context, int index){
-                    monsters.add(MonsterListItem((){markForXpReclaim(index);},monster: widget.monstersInSession[index],));
+                    monsters.add(MonsterListItem((){markForXpReclaim(index);},monster: MonstersTab.monstersInSession[index],));
                     return monsters.last;
                   },
 //                children: widget.monstersInSession.map((m){
@@ -993,6 +994,11 @@ class MonstersTabState extends State<MonstersTab> {
 
       }
 
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 
@@ -1126,27 +1132,78 @@ class _AddMonsterListItemState extends State<AddMonsterListItem> {
     });
   }
 
+  Future<List<Monster>> getJournalMonsters() async{
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    if(!capturingNewMonster){
+//      return Container(
+//        child: FlatButton(
+//          onPressed: (){
+//            //add new monster dialog or w/e
+//            setState(() {
+//              capturingNewMonster = true;
+//            });
+//          },
+//          child: Column(
+//              children: <Widget>[
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.center,
+//                  children: [
+//                    Text('Add Custom Monster'),
+//                    Icon(Icons.add_circle_outline)
+//                  ],
+//                ),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.center,
+//                  children: [
+//                    Text('Add Monster From Journal'),
+//                    Icon(Icons.view_list)
+//                  ],
+//                ),
+//              ]
+//          ),
+//        ),
+//      );
 
-    if(!capturingNewMonster)
-      return Container(
-        child: FlatButton(
-          onPressed: (){
-            //add new monster dialog or w/e
+      return Column(
+        children: <Widget>[
+          FlatButton(
+            onPressed: (){
+//          add new monster dialog or w/e
             setState(() {
               capturingNewMonster = true;
             });
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Add Monster'),
-              Icon(Icons.add_circle_outline)
-            ],
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Add Custom Monster'),
+                  Icon(Icons.add_circle_outline)
+                ],
+            ),
           ),
-        ),
+          FlatButton(
+            onPressed: (){
+              //open journal to select monsters
+              getJournalMonsters();
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                  Text('Add Monster From Journal'),
+                  Icon(Icons.view_list)
+              ],
+            ),
+          ),
+        ],
       );
+    }
+
     else{
       String amount = "Amount";
 

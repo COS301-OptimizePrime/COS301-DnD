@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dnd_301_final/character/character_creation.dart';
 import 'package:dnd_301_final/character/character_selection.dart';
 import 'package:dnd_301_final/character/races_and_classes.dart';
+import 'package:dnd_301_final/session/game_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:grpc/grpc.dart";
@@ -133,6 +134,8 @@ class AppData{
     user = null;
     readyInSession = false;
     currentSession=null;
+
+    GameScreen.cleanUp();
   }
 
   static void connectToServer()

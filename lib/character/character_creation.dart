@@ -332,7 +332,7 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
                   new DropdownButton(items: [
                     new DropdownMenuItem<String>(child: new Text("Male"), value: "Male",),
                     new DropdownMenuItem<String>(child: new Text("Female"), value: "Female",),
-                    new DropdownMenuItem<String>(child: new Text("Apache Helicopter"), value: "Apache Helicopter",),
+//                    new DropdownMenuItem<String>(child: new Text("Apache Helicopter"), value: "Apache Helicopter",),
                   ], isDense: true,onChanged: (val){widget.newCharGender = val; _saveNeeded=true; setState(() {});},
                     value: widget.newCharGender,)
                 ],

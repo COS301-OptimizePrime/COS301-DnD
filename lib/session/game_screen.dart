@@ -156,6 +156,8 @@ class _GameScreenState extends State<GameScreen> {
       AppData.currentSession = tempSession;
       AppData.currentSession.charactersInSession.clear();
       AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
+
+      _PlayerSelfViewState.myChar = await AppData.getCharacterById(_PlayerSelfViewState.myChar.characterId);
     }
 
 //    for (LightCharacter char in AppData.currentSession.charactersInSession) {

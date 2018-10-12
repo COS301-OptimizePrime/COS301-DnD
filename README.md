@@ -2,7 +2,7 @@
 
 | Branch  |                                                                               Status                                                                               |
 | ------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| Master  | [![Build Status](https://travis-ci.org/COS301-OptimizePrime/COS301-DnD.svg?branch=master)](https://travis-ci.org/COS301-OptimizePrime/COS301_DND)  |
+| Master  | [![Build Status](https://travis-ci.org/COS301-OptimizePrime/COS301-DnD.svg?branch=master)](https://travis-ci.org/COS301-OptimizePrime/COS301-DnD)  |
 
 Flutter application containing Google Login functionality.
 

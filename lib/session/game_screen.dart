@@ -8,6 +8,7 @@ import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 //import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
@@ -214,6 +215,44 @@ class _GameScreenState extends State<GameScreen> {
             drawer: Menu(),
             appBar: AppBar(
               title: Text(AppData.currentSession.name),
+              actions: <Widget>[
+                new IconButton(
+                  icon: new Icon(Icons.person_add),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) => new Dialog(child: new Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            new Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: new Container(
+                                child: new Text("Scan the QR code to join!",style: new TextStyle(fontSize: 20.0,color: Colors.deepOrange),),
+                              ),
+                            ),
+                            new Container(
+                              color: Colors.white,
+                              child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    new QrImage(data: AppData.currentSession.sessionId, size: 250.0,)
+                                  ]),
+                            ),
+                          ]),
+                      ),
+                      //child:  new QrMakerWidget(),
+                    );
+                  },
+                ),
+                new IconButton(icon: new Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      AppData.leaveSessions(AppData.currentSession.sessionId);
+                      Navigator.pop(context);
+                    }
+                ),
+              ],
               bottom: TabBar(
                 tabs: [
                   Tab(text: 'Adventurers',),
@@ -239,6 +278,14 @@ class _GameScreenState extends State<GameScreen> {
             drawer: Menu(),
             appBar: AppBar(
               title: Text(AppData.currentSession.name),
+              actions: <Widget>[
+                new IconButton(icon: new Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      AppData.leaveSessions(AppData.currentSession.sessionId);
+                      Navigator.pop(context);
+                    }
+                ),
+              ],
               bottom: TabBar(
                 tabs: [
                   Tab(text: 'Myself',),

@@ -226,7 +226,7 @@ class GameSessionState extends State<GameSession>{
 
     //@todo: remember to re-enable
     //performs server calls to add the selected character to this session
-    AppData.addCharacterToCurrentSession(AppData.lightCharacters[index].characterId);
+    AppData.addCharacterToCurrentSession(AppData.currentSession.sessionId,AppData.lightCharacters[index].characterId);
     //local update - not strictly necessary
     AppData.lightCharacters[index].sessionId = AppData.currentSession.sessionId;
 
@@ -657,6 +657,7 @@ class _SelectCharacterMasterState extends State<SelectCharacterMaster> {
 
     return ListView.builder(
       itemCount: AppData.lightCharacters.length,
+      shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         print('${AppData.lightCharacters[index].name} : ${AppData.lightCharacters[index].sessionId}');
         if (AppData.lightCharacters[index].sessionId == null || AppData.lightCharacters[index].sessionId == "") {

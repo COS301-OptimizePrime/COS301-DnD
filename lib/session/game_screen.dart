@@ -20,6 +20,8 @@ class GameScreen extends StatefulWidget {
   final bool iAmDungeonMaster;
 //  final List<Monster> sessionMonsters = new List();
   final String charID;
+
+//  static bool getCharacters = false;
 //  static bool mustUpdateChar = false;
 
 //  final PlayerView pv = PlayerView();
@@ -62,7 +64,7 @@ class GameScreen extends StatefulWidget {
   }
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateMixin{
 
   Timer timer;
   bool busy;
@@ -123,6 +125,14 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
 
+    if(!iAmGameMaster){
+      print('updating party...');
+      AppData.currentSession.charactersInSession.clear();
+      AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
+      print('updated party');
+    }
+
+
     if (response == null) {
       print('response is null');
       busy = false;
@@ -130,6 +140,18 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     bool needToUpdateView = false;
+
+//    if(GameScreen.getCharacters){
+//      GameScreen.getCharacters =false;
+//    print('updating party...');
+//    //update characters
+////      AppData.currentSession = tempSession;
+//    AppData.currentSession.charactersInSession.clear();
+//    AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
+//    needToUpdateView = true;
+//    print('updated party');
+//  }
+
 
     //check if session has changed - and fetch full object if necessary
     if (AppData.currentSession.lastUpdated != response.lastUpdated) {
@@ -157,30 +179,8 @@ class _GameScreenState extends State<GameScreen> {
       AppData.currentSession.charactersInSession.clear();
       AppData.currentSession.charactersInSession.addAll(await AppData.getGameCharacters(AppData.currentSession.sessionId));
 
-      _PlayerSelfViewState.myChar = await AppData.getCharacterById(_PlayerSelfViewState.myChar.characterId);
+      if(!iAmGameMaster) _PlayerSelfViewState.myChar = await AppData.getCharacterById(_PlayerSelfViewState.myChar.characterId);
     }
-
-//    for (LightCharacter char in AppData.currentSession.charactersInSession) {
-//      PlayerFrame pf = playerCharacters.firstWhere((c) =>
-//      c.pfs.character.characterId == char.characterId, orElse: () {
-//        return null;
-//      });
-//      LightCharacter c = (pf != null) ? pf.pfs.character : null;
-//
-//      //character not found in local list
-//      if (c == null) {
-//        playerCharacters.add(new PlayerFrame(char: char,));
-//        needToUpdateView = true;
-//      }
-//      else if (c.lastUpdated != char.lastUpdated) {
-//        //character and local do not match
-//        c = char;
-//        pf.pfs.update(char);
-//        needToUpdateView = true;
-//      }
-
-//      print('${char.name} : updated');
-//    }
 
     busy = false;
 
@@ -205,7 +205,17 @@ class _GameScreenState extends State<GameScreen> {
       timer.cancel();
   }
 
+//  TabController _tabController;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+//    _tabController = TabController(length: 2, vsync: this,);
+//    _tabController.animation = CurvedAnimation(
+//      parent:
+//    );
+  }
 
 
   @override
@@ -263,6 +273,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
             body: TabBarView(
+//              controller: ,
               children: [
 //                PlayerView.list(playerCharacters),
                 PartyView(),
@@ -334,12 +345,6 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
       PlayerSelfView.maxHp = 100;
     }
 
-//    getCharacter(widget.myCharID).then((c){
-//      if(this.mounted)
-//        setState(() {
-//          myChar = c;
-//        });
-//    });
   }
 
 
@@ -380,12 +385,13 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
   void dispose() {
     super.dispose();
 //    AppData.updateCharacter(myChar);
+//    myChar = null;
   }
 
 
   @override
   Widget build(BuildContext context) {
-    if(myChar==null) {
+    if(myChar==null || myChar.sessionId!=AppData.currentSession.sessionId) {
       getCharacter(widget.myCharID).then((c){
           setState(() {
             myChar = c;
@@ -443,8 +449,8 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
 //                    ),
                     new HpIcon(
                       diameter: 80.0,
-//                      currentHp: 60,
-//                      maxHp: 100,
+                      currentHp: myChar.currentHp,
+                      maxHp: myChar.maxHp,
                     ),
                     new Column(
                       children: <Widget>[
@@ -575,11 +581,15 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
                     color: Theme.of(context).accentColor,
                   ),
                 ),
-                Shield.list(myChar.equipment),
+//                Shield.list(equipmentList: myChar.equipment),
                 Container(
                   width: AppData.screenWidth,
-                  height: AppData.screenHeight / 4,
-                  child: EquipmentList.add(char: myChar),
+//                  height: AppData.screenHeight / 4,
+                  child: EquipmentList.add(
+                    char: myChar,
+                    height: AppData.screenHeight / 4,
+                    shield: true
+                  ),
                 ),
                 new Padding(
                   padding: new EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -598,7 +608,25 @@ class _PlayerSelfViewState extends State<PlayerSelfView> {
               ])
       );
     }
-  }
+}
+
+
+//class MonsterSelector extends StatefulWidget {
+//  @override
+//  _MonsterSelectorState createState() => _MonsterSelectorState();
+//}
+//
+//class _MonsterSelectorState extends State<MonsterSelector> {
+//  @override
+//  Widget build(BuildContext context) {
+//    return ListView.builder(
+//      itemBuilder: (BuildContext context, int index){
+//        return
+//      },
+//    );
+//  }
+//}
+
 
 
 class SpellSlots extends StatelessWidget {
@@ -713,27 +741,61 @@ class _SpellSlotState extends State<SpellSlot> {
 
 
 
-class PartyView extends StatelessWidget {
+class PartyView extends StatefulWidget {
 
   final List<PlayerFrame> playerCharacters;
 
 
   PartyView() : playerCharacters = new List();
-  PartyView.list(List<PlayerFrame> list): playerCharacters = list;
+//  PartyView.list(List<PlayerFrame> list): playerCharacters = list;
+
+  @override
+  _PartyViewState createState() => _PartyViewState();
+}
+
+class _PartyViewState extends State<PartyView> {
+
+//  int lastUpdate = DateTime.now().millisecondsSinceEpoch;
+//
+//  @override
+//  void didUpdateWidget(PartyView oldWidget) {
+//    // TODO: implement didUpdateWidget
+//    super.didUpdateWidget(oldWidget);
+//    widget.playerCharacters.clear();
+//  }
 
   @override
   Widget build(BuildContext context) {
-    if(playerCharacters==null || playerCharacters.isEmpty){
 
-      AppData.currentSession.charactersInSession.forEach((c)=>playerCharacters.add(PlayerFrame(char: c,)));
+//    if(DateTime.now().millisecondsSinceEpoch - lastUpdate > 10000) {
+//      lastUpdate = DateTime.now().millisecondsSinceEpoch;
+//      GameScreen.getCharacters = true;
+//    }
 
-      if(playerCharacters.length==0)
-        return Container(child: null,);
-    }
+//    if(widget.playerCharacters==null || widget.playerCharacters.isEmpty){
+//
+//      AppData.currentSession.charactersInSession.forEach((c)=>widget.playerCharacters.add(PlayerFrame(char: c,)));
+//
+//      if(widget.playerCharacters.length==0)
+//        return Container(child: null,);
+//    }
 
-    return Column(
-      children: playerCharacters,
+
+    if(AppData.currentSession.charactersInSession.isEmpty)
+      return Container();
+
+    return Container(
+      child: ListView.builder(
+        itemCount: AppData.currentSession.charactersInSession.length,
+        itemBuilder: (BuildContext context, int index){
+            return PlayerFrame(char: AppData.currentSession.charactersInSession[index]);
+        }
+      ),
     );
+
+//    return Column(
+//      children: widget.playerCharacters,
+//    );
   }
 }
 
@@ -1412,18 +1474,29 @@ class LoreView extends StatelessWidget {
 
 class HpIcon extends StatefulWidget {
 
-//  final int currentHp;
-//  final int maxHp;
+  final int currentHp;
+  final int maxHp;
   final double diameter;
+  final bool interactable;
 
-//  HpIcon({this.currentHp,this.maxHp,this.diameter});
-  HpIcon({this.diameter});
+  HpIcon({this.currentHp=50,this.maxHp=100,this.diameter,this.interactable=true});
+//  HpIcon({this.diameter});
 
   @override
   _HpIconState createState() => _HpIconState();
 }
 
 class _HpIconState extends State<HpIcon> {
+
+  int currentHp;
+  int maxHp;
+
+  @override
+  void initState() {
+    super.initState();
+    currentHp = widget.currentHp;
+    maxHp = widget.maxHp;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1432,53 +1505,75 @@ class _HpIconState extends State<HpIcon> {
       height: widget.diameter,
       width: widget.diameter,
       child: InkWell(
-        onTap: (){
+        onTap: (!widget.interactable)? null : (){
           //hp edit
-          showDialog(context: context,
-          barrierDismissible: true,
-            builder: (_)=> new SimpleDialog(
-              title: Text('Adjust Hp',style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-              children: <Widget>[
-                Container(
-//                  width: AppData.screenWidth/2,
-//                  height: AppData.screenHeight/3,
-                  child: Column(
-                    children: <Widget>[
-                      Center(child: Text('Current:   /     Max:')),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                controller: TextEditingController(text: '${PlayerSelfView.currentHp}'),
-                                keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
-                                onSubmitted: (String val){
-                                  int newHp = int.tryParse(val);
-                                  if(newHp!=null && newHp<=PlayerSelfView.maxHp) PlayerSelfView.currentHp=newHp;
-                                } ,
-                              ),
+            showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context){
+
+              return new SimpleDialog(
+                  title: Text('Adjust Hp',style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+                  children: <Widget>[
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Center(child: Text('Current:   /     Max:')),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextField(
+                                    controller: TextEditingController(text: '$currentHp'),
+                                    keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
+                                    onSubmitted: (String val){
+                                      int newHp = int.tryParse(val);
+                                      if(newHp!=null && newHp<=maxHp && newHp!=currentHp) {
+                                        currentHp=newHp;
+                                      }
+                                    } ,
+                                  ),
+                                ),
+                                Container(width: 30.0,child: Center(child: Text('/'))),
+                                Expanded(
+                                  child: TextField(
+                                    controller: TextEditingController(text: '$maxHp'),
+                                    keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
+                                    onSubmitted: (String val){
+                                      int newHp = int.tryParse(val);
+                                      if(newHp!=null && newHp>=currentHp && newHp!=maxHp) {
+                                        maxHp=newHp;
+                                      }
+                                    } ,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(width: 30.0,child: Center(child: Text('/'))),
-                            Expanded(
-                              child: TextField(
-                                controller: TextEditingController(text: '${PlayerSelfView.maxHp}'),
-                                keyboardType: TextInputType.numberWithOptions(signed: true,decimal: false),
-                                onSubmitted: (String val){
-                                  int newHp = int.tryParse(val);
-                                  if(newHp!=null && newHp>=PlayerSelfView.currentHp) PlayerSelfView.maxHp=newHp;
-                                } ,
-                              ),
+                          ),
+                          FlatButton(
+                            child: Container(
+                              child: Text('Adjust'),
                             ),
-                          ],
-                        ),
+                            onPressed: (){
+                              Navigator.pop(context,(widget.currentHp!=currentHp || widget.maxHp!=maxHp));
+                            },
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ]
-            )
-          );
+                    )
+                  ]
+              );
+            }
+          ).then((var shouldUpdate){
+            if(shouldUpdate==null)
+              return;
+            if(shouldUpdate){
+              _PlayerSelfViewState.myChar.currentHp = currentHp;
+              _PlayerSelfViewState.myChar.maxHp = maxHp;
+              AppData.updateCharacter(_PlayerSelfViewState.myChar);
+            }
+          });
         },
         child: Stack(
           children: <Widget>[
@@ -1489,7 +1584,7 @@ class _HpIconState extends State<HpIcon> {
 //            top: 30.0,
 //            left: 18.0,
 //              child: Text('${widget.currentHp} / ${widget.maxHp}')
-              child: Text('${PlayerSelfView.currentHp} / ${PlayerSelfView.maxHp}')
+              child: Text('$currentHp / $maxHp')
             )
           ],
         ),

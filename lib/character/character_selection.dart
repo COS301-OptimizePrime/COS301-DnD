@@ -8,6 +8,7 @@ import 'package:dnd_301_final/character/character_preview.dart';
 import 'package:dnd_301_final/character/races_and_classes.dart';
 import 'package:dnd_301_final/journals/monster_journal_new.dart';
 import 'package:dnd_301_final/menu.dart';
+import 'package:dnd_301_final/session/game_screen.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,10 @@ class LocalCharacter {
     this.flaws = '',
     this.featuresTraits = '',
     this.equipment,
-    this.xp
+    this.xp,
+    this.currentHp,
+    this.maxHp,
+    this.armorValue = 0,
   });
 
   final String title;
@@ -65,6 +69,9 @@ class LocalCharacter {
   ClassType classType;
 
   int xp;
+  int currentHp;
+  int maxHp;
+  int armorValue;
 
   bool isValid() {
     return (title != null &&
@@ -171,12 +178,12 @@ class CharacterLightView extends StatelessWidget {
     Key key,
     @required this.lightChar,
     @required this.titleStyle,
-    this.armorValue,
+//    this.armorValue,
   }) : super(key: key);
 
   final LightCharacter lightChar;
   final TextStyle titleStyle;
-  final Shield armorValue;
+//  final Shield armorValue;
 
   @override
   Widget build(BuildContext context) {
@@ -221,16 +228,17 @@ class CharacterLightView extends StatelessWidget {
                   height: 20.0,
                   child: GenderIcon.str(lightChar.gender)
               ),
-              //@TODO: armor class viewable
+
               Container(
-                child: (armorValue!=null)? armorValue : null,
+                child: Shield.value(
+                  (lightChar.hitpoints.armorClass!=null)? lightChar.hitpoints.armorClass : 0,),
               ) ,
-//              RacePreview(
-//                race: Race.getRace(lightChar.race),
-//              ),
-//              ClassPreview(
-//                charClass: ClassType.getClass(lightChar.characterClass),
-//              ),
+              HpIcon(
+                diameter: 60.0,
+                maxHp: lightChar.hitpoints.maxHitpoints,
+                currentHp: lightChar.hitpoints.currentHitpoints,
+                interactable: false,
+              ),
               new Column(
                 children: <Widget>[
 //                  new Text(lightChar.gender),
@@ -588,7 +596,7 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
               new Text(char.flaws),
               new Text(char.featuresTraits),
               new Divider(),
-              Shield.list(char.equipment),
+              Shield.list(equipmentList: char.equipment),
               Container(
                 width: AppData.screenWidth,
                 height: AppData.screenHeight / 2,
@@ -613,13 +621,19 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
 class EquipmentList extends StatefulWidget {
   final LocalCharacter char;
   final bool addItem;
+  final bool shield;
+  final double height;
 
   EquipmentList({
     this.char,
+    this.shield = false,
+    this.height = 200.0,
   }) : addItem=false;
 
   EquipmentList.add({
     this.char,
+    this.shield=false,
+    this.height = 200.0,
   }) : addItem=true;
 
 
@@ -647,95 +661,77 @@ class _EquipmentListState extends State<EquipmentList> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.char.equipment==null || widget.char.equipment.length<1)
-      ListView.builder(
-        padding: EdgeInsets.all(8.0),
-        itemCount: 1,
-        itemBuilder: (context,index){
-          return GestureDetector(
-            onTap: () async{
-              if(busy) return;
-              busy = true;
-              await EquipmentList.addNewItem(context).then((LocalEquipment e) async{
-                widget.char.equipment.add(e);
-                if(widget.addItem)
-                  await AppData.updateCharacter(widget.char);
 
-                setState(() {
-                  //update view
-                  print('updated char');
-                });
-              });
-              busy = false;
-            },
-            child: Container(
-              child: EquipmentWidget.add(),
-              padding: EdgeInsets.all(5.0),
-            ),
-          );
-      });
-    return ListView.builder(
-        padding: EdgeInsets.all(8.0),
-        itemCount: (widget.addItem)? widget.char.equipment.length +1 : widget.char.equipment.length,
-        itemBuilder: (context, index) {
+    return Column(
+      children: <Widget>[
+        (widget.shield)? Shield.list(equipmentList: widget.char.equipment,diameter: 80.0,) : Container(),
+        Container(
+          height: widget.height,
+          child: ListView.builder(
+              padding: EdgeInsets.all(8.0),
+              itemCount: (widget.addItem)? widget.char.equipment.length +1 : widget.char.equipment.length,
+              itemBuilder: (context, index) {
 
-          if(index==widget.char.equipment.length)
-            return GestureDetector(
-              onTap: () async{
-                if(busy) return;
-                busy = true;
-                await EquipmentList.addNewItem(context).then((LocalEquipment e) async{
-                  widget.char.equipment.add(e);
-                  if(widget.addItem)
-                    await AppData.updateCharacter(widget.char);
+                if(index==widget.char.equipment.length)
+                  return GestureDetector(
+                    onTap: () async{
+                      if(busy) return;
+                      busy = true;
+                      await EquipmentList.addNewItem(context).then((LocalEquipment e) async{
+                        widget.char.equipment.add(e);
+                        if(widget.addItem)
+                          await AppData.updateCharacter(widget.char);
 
-                  setState(() {
-                    //update view
-                    print('updated char');
-                  });
-                });
-                busy = false;
-              },
-              child: Container(
-                child: EquipmentWidget.add(),
-                padding: EdgeInsets.all(5.0),
-              ),
-            );
+                        setState(() {
+                          //update view
+                          print('updated char');
+                        });
+                      });
+                      busy = false;
+                    },
+                    child: Container(
+                      child: EquipmentWidget.add(),
+                      padding: EdgeInsets.all(5.0),
+                    ),
+                  );
 
-          final item = widget.char.equipment[index];
+                final item = widget.char.equipment[index];
 
-          if (item == null) return Container();
+                if (item == null) return Container();
 
-          return Dismissible(
-            child: new Container(
-              padding: EdgeInsets.all(5.0),
-              child: EquipmentWidget(
-                item: item,
-              ),
-            ),
-            // Each Dismissible must contain a Key. Keys allow Flutter to
-            // uniquely identify Widgets.
-            key: UniqueKey(),
-            // We also need to provide a function that will tell our app
-            // what to do after an item has been swiped away.
-            onDismissed: (direction) {
+                return Dismissible(
+                  child: new Container(
+                    padding: EdgeInsets.all(5.0),
+                    child: EquipmentWidget(
+                      item: item,
+                    ),
+                  ),
+                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                  // uniquely identify Widgets.
+                  key: UniqueKey(),
+                  // We also need to provide a function that will tell our app
+                  // what to do after an item has been swiped away.
+                  onDismissed: (direction) {
 
-              ///@todo: implement confirm action
-              widget.char.equipment.removeAt(index);
+                    ///@todo: implement confirm action
+                    widget.char.equipment.removeAt(index);
 
-              AppData.removeEquipment(widget.char, index);
+                    AppData.removeEquipment(widget.char, index);
 
-              setState(() {
-                //redraw list
-              });
+                    setState(() {
+                      //redraw list
+                    });
 
-              Scaffold
-                  .of(context)
-                  .showSnackBar(SnackBar(content: Text("$item deleted")));
-            },
-            background: Container(color: Colors.red),
-          );
-        });
+                    Scaffold
+                        .of(context)
+                        .showSnackBar(SnackBar(content: Text("$item deleted")));
+                  },
+                  background: Container(color: Colors.red),
+                );
+              }),
+        ),
+      ],
+    );
   }
 }
 

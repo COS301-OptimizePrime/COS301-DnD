@@ -62,6 +62,7 @@ class _SessionViewListState extends State<SessionViewList> {
                   title: new Text('${item.name}'),
                   trailing: (item.dungeonMaster.uid==AppData.user.uid)? Text("DM",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),) : null,
                   onTap: () async {
+//                    GameScreen.cleanUp();
                     Session fullSession = await AppData.getSessionById(AppData.activeSessions.elementAt(index).sessionId);
                     if(fullSession!=null && fullSession.firstStartedTime!='None')//go to game
                       {

@@ -86,7 +86,9 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       bonds: lit.bonds,
       featuresTraits: lit.featuresTraits,
       equipment:  ListToArray(eit.equipment),
-      sessionId: ""
+      sessionId: "",
+      currentHp: 0,
+      maxHp: 0,
     );
 
     print("New Character ${bit.newCharName = ""} created.");
@@ -619,9 +621,10 @@ class _EquipInfoTabState extends State<EquipInfoTab> {
 class Shield extends StatelessWidget {
   int armorClass = 0;
   final List equipmentList;
+  final double diameter;
 
-  Shield.value(this.armorClass) : equipmentList=null;
-  Shield.list(this.equipmentList)
+  Shield.value(this.armorClass,{this.diameter=60.0}) : equipmentList=null;
+  Shield.list({this.equipmentList,this.diameter=60.0})
   {
     if (equipmentList != null) {
       equipmentList.forEach((item) {
@@ -638,7 +641,8 @@ class Shield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppData.screenHeight / 8,
+      height: diameter,
+      width: diameter,
       child: Stack(
         children: <Widget>[
           new Center(child: Image.asset('assets/shield.png',color: Colors.deepOrange,)),

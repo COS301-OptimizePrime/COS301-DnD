@@ -2,6 +2,7 @@ import 'package:dnd_301_final/app_data.dart';
 import 'package:dnd_301_final/menu.dart';
 import 'package:dnd_301_final/plugins/qr_handler.dart';
 import 'package:dnd_301_final/session/SessionViewList.dart';
+import 'package:dnd_301_final/session/game_screen.dart';
 import 'package:dnd_301_final/session/lobby_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
@@ -81,16 +82,58 @@ class HomePage extends StatelessWidget {
 
                       Session s = await AppData.joinSession(sid);
 
+
                       if (s.status != "SUCCESS") {
                         //snackBar.content = new Text(s.statusMessage);
                         Navigator.of(context).pop();
                         Scaffold.of(context).showSnackBar(
                             new SnackBar(duration: new Duration(seconds: 3) ,content: new Text(s.statusMessage)));
                       } else {
-                        Navigator.pop(context);
-                        Navigator.push(context, new MaterialPageRoute(
-                          builder: (BuildContext context) => new GameSession(s),
-                        ));
+                        GameScreen.cleanUp();
+                        if(s.firstStartedTime!='None'){
+                          Navigator.pop(context);//remove spinner and QR code
+                          //must select a character
+                          showDialog<String>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context){
+
+                                return new SimpleDialog(
+                                    title: Text('Pick a Characcter to join!',style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+                                    children: <Widget>[
+                                      Container(
+                                        height: AppData.screenHeight/2,
+                                        width: AppData.screenWidth/1.5,
+                                        child: SelectCharacterMaster((int index){
+                                          //performs server calls to add the selected character to this session
+                                          AppData.addCharacterToCurrentSession(s.sessionId,AppData.lightCharacters[index].characterId);
+                                          //local update - not strictly necessary
+                                          AppData.lightCharacters[index].sessionId = AppData.currentSession.sessionId;
+
+                                          print('added character ${AppData.lightCharacters[index].name} to ${s.name}');
+                                          Navigator.pop(context,AppData.lightCharacters[index].characterId);
+                                        }),
+                                      )
+                                    ]
+                                );
+                              }
+                          ).then((String val){
+                            if(val!=null){
+                              Navigator.pop(context);
+                              Navigator.push(context, new MaterialPageRoute(
+                                builder: (BuildContext context) => new GameScreen.isPlayer(charID: val),
+                              ));
+                            }
+                            else
+                              Navigator.pop(context);
+                          });
+                        }
+                        else{
+                          Navigator.pop(context);
+                          Navigator.push(context, new MaterialPageRoute(
+                            builder: (BuildContext context) => new GameSession(s),
+                          ));
+                        }
                       }
                     }
                   },

@@ -401,8 +401,8 @@ String formatStringList(List<String> myList) {
 }
 
 class ExpandableMonsterItem extends StatefulWidget {
-  Monster expMonster;
-  bool colorSwap;
+  final Monster expMonster;
+  final bool colorSwap;
 
   ExpandableMonsterItem(this.expMonster, this.colorSwap);
 

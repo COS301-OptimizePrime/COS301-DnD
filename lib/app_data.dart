@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show sleep;
 
 import 'package:dnd_301_final/character/character_creation.dart';
 import 'package:dnd_301_final/character/character_selection.dart';
@@ -24,6 +25,7 @@ class AppData{
 
   // The current active game session
   static Session currentSession;
+//  static Timer refreshLogin;
 
   static List<LightSession> activeSessions;
   static ClientChannel channel;
@@ -44,6 +46,7 @@ class AppData{
     //this class contains data to be passed around the app
     //DO NOT instantiate new AppData classes with 'new'
     //use AppData.instance() or call AppData.staticField
+
   }
 
   static AppData instance()
@@ -73,6 +76,10 @@ class AppData{
 
     final FirebaseUser currentUser = await auth.currentUser();
     assert(user.uid == currentUser.uid);
+//    if(refreshLogin == null)
+//      refreshLogin = new Timer.periodic(const Duration(minutes: 1), (Timer t){
+//        user.getIdToken(refresh: true).then((String newToken)=>token = newToken);
+//      });
 
     userGoogleImage = new GoogleUserCircleAvatar(identity: googleUser,placeholderPhotoUrl: googleUser.photoUrl);
   }
@@ -82,10 +89,17 @@ class AppData{
     try{
       user = await (auth.signInWithEmailAndPassword(email: email, password: pass));
       token = await user.getIdToken();
+
     }
     catch(PlatformException) {
       status = false;
     }
+
+//    if(status)
+//      if(refreshLogin == null)
+//        refreshLogin = new Timer.periodic(const Duration(minutes: 1), (Timer t){
+//          user.getIdToken(refresh: true).then((String newToken)=>token = newToken);
+//        });
 
     return status;
   }
@@ -134,6 +148,8 @@ class AppData{
     user = null;
     readyInSession = false;
     currentSession=null;
+//    refreshLogin.cancel();
+//    refreshLogin = null;
 
     GameScreen.cleanUp();
   }
@@ -142,8 +158,8 @@ class AppData{
   {
     channel = new ClientChannel('develop.optimizeprime.co.za', port: 50051,
         options: const ChannelOptions(
-            credentials: const ChannelCredentials.insecure()));
-
+            credentials: const ChannelCredentials.insecure(),
+        ));
   }
 
   static Future<Session> createSession(String name, int maxPlayers)
@@ -198,7 +214,7 @@ class AppData{
     gsur.limit = 10;
     gsur.authIdToken = token;
 
-    final response = await sessionStub.getSessionsOfUser(gsur);
+    final response = await sessionStub.getSessionsOfUser(gsur).catchError((e){print(e.toString());});
 
     if(activeSessions==null || activeSessions.length!=response.lightSessions.length) {
       activeSessions = response.lightSessions;
@@ -207,7 +223,7 @@ class AppData{
     else print('not updating ActiveSessions list');
 
     print('   Status: ${response.status}');
-    print('   Status Message: ${response.status}');
+    print('   Status Message: ${response.statusMessage}');
 
     return response;
   }
@@ -322,7 +338,10 @@ class AppData{
       flaws: netChar.flaws,
       featuresTraits: netChar.featuresAndTraits,
       equipment: convertToLocalEquip(netChar.equipment),
-      xp: netChar.xp
+      xp: netChar.xp,
+      currentHp: netChar.hitpoints.currentHitpoints,
+      maxHp: netChar.hitpoints.maxHitpoints,
+      armorValue: netChar.hitpoints.armorClass
     );
   }
 
@@ -338,19 +357,25 @@ class AppData{
     return newList;
   }
 
-  static convertToNetEquip(List<Equipment> netList ,List<LocalEquipment> localList)
+  static convertToNetEquip(Character netChar ,List<LocalEquipment> localList)
   {
+    int armorClass = 0;
+
     localList.forEach((item){
       var isWep = 'n';
       if(item.isWep)
         isWep='y';
+      else
+        armorClass+=item.val;
 
       Equipment temp = new Equipment();
       temp.name=item.name+'日本'+item.type+'日本'+isWep.toString();
       temp.value = item.val;
-      netList.add(temp);
+      netChar.equipment.add(temp);
 
     });
+
+    netChar.hitpoints.armorClass = armorClass;
   }
 
   static Character convertToNetChar(LocalCharacter char) {
@@ -374,7 +399,11 @@ class AppData{
     temp.flaws = char.flaws;
     temp.featuresAndTraits = char.featuresTraits;
 //    temp.xp = char.xp;
-    convertToNetEquip(temp.equipment ,char.equipment);
+    temp.hitpoints = new Hitpoints();
+    temp.hitpoints.maxHitpoints = char.maxHp;
+    temp.hitpoints.currentHitpoints = char.currentHp;
+    temp.hitpoints.armorClass = char.armorValue;
+    convertToNetEquip(temp ,char.equipment);
 
     return temp;
   }
@@ -579,18 +608,29 @@ class AppData{
     gsr.authIdToken = token;
     gsr.sessionId = sessionId;
 
-    final response = await (sessionStub.getLightSessionById(gsr));
+    final response = await (sessionStub.getLightSessionById(gsr)).catchError((_)async{
 
-    print('Retrieved light session: \'${response.name}\' with id: ${response.sessionId}');
+      print('disconnect detected - sleeping for 1 secong and trying again');
+      sleep(Duration(seconds: 1));
 
-    if(response!=null && response.status!=null && response.status!="FAILED")
+      print('attempting to reconnect');
+      connectToServer();
+      sessionStub = new SessionsManagerClient(channel);
+//      return await getLightSessionById(sessionId);
+    });
+
+
+    if(response!=null && response.status!=null && response.status!="FAILED"){
+      print('Retrieved light session: \'${response.name}\' with id: ${response.sessionId}');
       return response;
+
+    }
     else
       return null;
 
   }
 
-  static Future addCharacterToCurrentSession(String charId) async
+  static Future addCharacterToCurrentSession(String sessionId,String charId) async
   {
     if(channel==null)
       connectToServer();
@@ -599,7 +639,7 @@ class AppData{
       sessionStub = new SessionsManagerClient(channel);
 
     final request = AddCharacterToSessionRequest();
-    request.sessionId = currentSession.sessionId;
+    request.sessionId = sessionId;
     request.characterId = charId;
     request.authIdToken = token;
 
@@ -668,6 +708,13 @@ class AppData{
   {
 
   }
+
+
+//  static void updateHp(int currentHp, int maxHp, LocalCharacter char)
+//  {
+//    char.currentHp = currentHp;
+//    char.maxHp = maxHp;
+//  }
 
 //  static Future setUpdatedFlag() {
 //
